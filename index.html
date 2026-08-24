@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+  <title>Passagem de Plantão - Edifício Laguna Hall</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
+    
+    /* Estilos do Cabeçalho e Logo */
+    header { text-align: center; margin-bottom: 20px; }
+    .logo { max-width: 180px; height: auto; display: block; margin: 0 auto; }
+
+    .container { max-width: 700px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: auto; }
+    h1 { text-align: center; color: #1a365d; margin-bottom: 5px; }
+    .section { border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px; }
+    label { font-weight: bold; display: block; margin-top: 10px; color: #2d3748; }
+    input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+    .dynamic-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+    .dynamic-row input, .dynamic-row select { margin-top: 0; }
+    button.add-btn { background-color: #3182ce; color: white; border: none; padding: 6px 12px; margin-top: 8px; border-radius: 4px; cursor: pointer; }
+    button.remove-btn { background-color: #e53e3e; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; }
+    .actions { display: flex; gap: 10px; margin-top: 20px; }
+    .btn-submit { background-color: #25D366; color: white; border: none; padding: 12px; width: 100%; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+    .btn-reset { background-color: #718096; color: white; border: none; padding: 12px; width: 100%; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+    
+    /* Estilos do Rodapé */
+    footer { text-align: center; margin-top: 30px; padding: 15px 0; color: #718096; font-size: 14px; }
+    footer img { display: block; margin: 0 auto 8px auto; height: auto; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="imagens/logo.png" alt="Logo Edifício Laguna Hall" class="logo">           
+  </header>
+
+  <div class="container">
+    <h1>🏢 Edifício Laguna Hall</h1>
+    <p style="text-align: center; color: #666; margin-top: 0;">Relatório de Passagem de Plantão</p>
+
+    <form id="plantaoForm">
+      
+      <div class="section">
+        <label for="porteiroSaindo">Porteiro que está saindo:</label>
+        <input type="text" id="porteiroSaindo" required placeholder="Nome do porteiro">
+
+        <label for="porteiroAssumindo">Porteiro que está assumindo:</label>
+        <input type="text" id="porteiroAssumindo" required placeholder="Nome do porteiro">
+
+        <label for="dataPlantao">Data:</label>
+        <input type="date" id="dataPlantao" required>
+      </div>
+
+      <div class="section">
+        <label for="ocorrencias">Ocorrências:</label>
+        <textarea id="ocorrencias" maxlength="1000" rows="4" placeholder="Descreva as ocorrências do turno (máx. 1000 caracteres)..."></textarea>
+      </div>
+
+      <div class="section">
+        <label>Entregas Pendentes:</label>
+        <div id="entregasContainer">
+          <div class="dynamic-row">
+            <input type="text" placeholder="Apto" style="width: 25%;">
+            <input type="text" placeholder="Nome" style="width: 50%;">
+            <input type="number" placeholder="Qtd" style="width: 25%;">
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addEntrega()">+ Adicionar Entrega</button>
+      </div>
+
+      <div class="section">
+        <label>Cartas e Envelopes:</label>
+        <div id="cartasContainer">
+          <div class="dynamic-row">
+            <input type="text" placeholder="Apto" style="width: 20%;">
+            <input type="text" placeholder="Nome" style="width: 35%;">
+            <input type="number" placeholder="Qtd" style="width: 15%;">
+            <select style="width: 30%;">
+              <option value="Geral">Outros</option>
+              <option value="Boleto Condomínio">Boleto Condomínio</option>
+              <option value="Conta de Energia">Conta de Energia</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addCarta()">+ Adicionar Carta</button>
+      </div>
+
+      <div class="section">
+        <label>Chaves na Portaria:</label>
+        <div id="chavesContainer">
+          <div class="dynamic-row">
+            <input type="text" placeholder="Apto" style="width: 25%;">
+            <input type="text" placeholder="Nome / Identificação" style="width: 50%;">
+            <input type="number" placeholder="Qtd" style="width: 25%;">
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addChave()">+ Adicionar Chave</button>
+      </div>
+
+      <div class="section">
+        <label>Encomendas para Recolher / Transportadora:</label>
+        <div id="recolherContainer">
+          <div class="dynamic-row">
+            <input type="text" placeholder="Apto" style="width: 20%;">
+            <input type="text" placeholder="Nome" style="width: 30%;">
+            <input type="number" placeholder="Qtd" style="width: 15%;">
+            <input type="text" placeholder="Quem vai recolher" style="width: 35%;">
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addRecolher()">+ Adicionar Item</button>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-submit" onclick="enviarWhatsapp()">Enviar para WhatsApp</button>
+        <button type="reset" class="btn-reset">Limpar</button>
+      </div>
+
+    </form>
+  </div>
+
+  <footer>
+    <img src="imagens/lodo-dev-removebg-preview.png" alt="Logo Desenvolvedor" width="100px">
+    <p>&copy; Ger Santos Desenvolvimento Web. Todos os direitos reservados.</p>              
+  </footer>
+
+<script>
+  function addEntrega() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Apto" style="width: 25%;">
+      <input type="text" placeholder="Nome" style="width: 50%;">
+      <input type="number" placeholder="Qtd" style="width: 25%;">
+      <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
+    `;
+    document.getElementById('entregasContainer').appendChild(div);
+  }
+
+  function addCarta() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Apto" style="width: 20%;">
+      <input type="text" placeholder="Nome" style="width: 35%;">
+      <input type="number" placeholder="Qtd" style="width: 15%;">
+      <select style="width: 30%;">
+        <option value="Geral">Outros</option>
+        <option value="Boleto Condomínio">Boleto Condomínio</option>
+        <option value="Conta de Energia">Conta de Energia</option>
+      </select>
+      <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
+    `;
+    document.getElementById('cartasContainer').appendChild(div);
+  }
+
+  function addChave() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Apto" style="width: 25%;">
+      <input type="text" placeholder="Nome / Identificação" style="width: 50%;">
+      <input type="number" placeholder="Qtd" style="width: 25%;">
+      <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
+    `;
+    document.getElementById('chavesContainer').appendChild(div);
+  }
+
+  function addRecolher() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Apto" style="width: 20%;">
+      <input type="text" placeholder="Nome" style="width: 30%;">
+      <input type="number" placeholder="Qtd" style="width: 15%;">
+      <input type="text" placeholder="Quem vai recolher" style="width: 35%;">
+      <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
+    `;
+    document.getElementById('recolherContainer').appendChild(div);
+  }
+
+  function enviarWhatsapp() {
+    const saindo = document.getElementById('porteiroSaindo').value;
+    const assumindo = document.getElementById('porteiroAssumindo').value;
+    const dataRaw = document.getElementById('dataPlantao').value;
+    const dataFormatada = dataRaw ? dataRaw.split('-').reverse().join('/') : '';
+    const ocorrencias = document.getElementById('ocorrencias').value || 'Nenhuma ocorrência registrada.';
+
+    let texto = `📋 *PASSAGEM DE PLANTÃO - EDIFÍCIO LAGUNA HALL*\n\n`;
+    texto += `📅 *Data:* ${dataFormatada}\n`;
+    texto += `👤 *Saindo:* ${saindo}\n`;
+    texto += `👤 *Assumindo:* ${assumindo}\n\n`;
+    texto += `🚨 *OCORRÊNCIAS:*\n${ocorrencias}\n\n`;
+
+    // Processar Entregas
+    texto += `📦 *ENTREGAS PENDENTES:*\n`;
+    const entregas = document.querySelectorAll('#entregasContainer .dynamic-row');
+    let temEntrega = false;
+    entregas.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      if (inputs[0].value) {
+        texto += `• Apto ${inputs[0].value} - ${inputs[1].value} (${inputs[2].value} vol)\n`;
+        temEntrega = true;
+      }
+    });
+    if (!temEntrega) texto += `• Nenhum item pendente.\n`;
+
+    // Processar Cartas
+    texto += `\n✉️ *CARTAS E ENVELOPES:*\n`;
+    const cartas = document.querySelectorAll('#cartasContainer .dynamic-row');
+    let temCarta = false;
+    cartas.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      const select = row.querySelector('select');
+      if (inputs[0].value) {
+        texto += `• Apto ${inputs[0].value} - ${inputs[1].value} (${inputs[2].value} un) - Tipo: ${select.value}\n`;
+        temCarta = true;
+      }
+    });
+    if (!temCarta) texto += `• Nenhum item pendente.\n`;
+
+    // Processar Chaves
+    texto += `\n🔑 *CHAVES NA PORTARIA:*\n`;
+    const chaves = document.querySelectorAll('#chavesContainer .dynamic-row');
+    let temChave = false;
+    chaves.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      if (inputs[0].value) {
+        texto += `• Apto/Local: ${inputs[0].value} - ${inputs[1].value} (${inputs[2].value} un)\n`;
+        temChave = true;
+      }
+    });
+    if (!temChave) texto += `• Nenhuma chave retida.\n`;
+
+    // Processar Encomendas para recolher
+    texto += `\n🚚 *ENCOMENDAS A SEREM RECOLHIDAS:*\n`;
+    const recolher = document.querySelectorAll('#recolherContainer .dynamic-row');
+    let temRecolher = false;
+    recolher.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      if (inputs[0].value) {
+        texto += `• Apto ${inputs[0].value} - ${inputs[1].value} (${inputs[2].value} vol) - Quem recolhe: ${inputs[3].value}\n`;
+        temRecolher = true;
+      }
+    });
+    if (!temRecolher) texto += `• Nenhum agendamento.\n`;
+
+    // Gerar link do WhatsApp
+    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
+    window.open(url, '_blank');
+  }
+</script>
+
+</body>
+</html>
+
