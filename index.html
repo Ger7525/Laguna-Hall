@@ -59,7 +59,7 @@
       </div>
 
       <div class="section">
-        <label for="observacoesGenerais">Observações Geral:</label>
+        <label for="observacoesGenerais">Observações Gerais:</label>
         <textarea id="observacoesGenerais" maxlength="1000" rows="6" placeholder="Observações gerais do turno (máx. 1000 caracteres)..."></textarea>
       </div>
 
@@ -79,6 +79,49 @@
           </div>
         </div>
         <button type="button" class="add-btn" onclick="addPrestador()">+ Adicionar Prestador</button>
+      </div>
+
+      <!-- NOVA SEÇÃO: Salão de Festas -->
+      <div class="section">
+        <label>Uso do Salão de Festas:</label>
+        <div id="salaoContainer">
+          <div class="dynamic-row">
+            <input type="text" placeholder="Apto" style="width: 25%;">
+            <input type="text" placeholder="Nome do Morador" style="width: 45%;">
+            <input type="text" placeholder="Data / Período" style="width: 30%;">
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addSalao()">+ Adicionar Reserva de Salão</button>
+      </div>
+
+      <!-- NOVA SEÇÃO: Aluguel de Churrasqueira -->
+      <div class="section">
+        <label>Aluguel de Churrasqueira:</label>
+        <div id="churrasqueiraContainer">
+          <div class="dynamic-row">
+            <input type="text" placeholder="Apto" style="width: 25%;">
+            <input type="text" placeholder="Nome do Morador" style="width: 45%;">
+            <input type="text" placeholder="Data / Período" style="width: 30%;">
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addChurrasqueira()">+ Adicionar Reserva de Churrasqueira</button>
+      </div>
+
+      <!-- NOVA SEÇÃO: Agendamento de Mudança -->
+      <div class="section">
+        <label>Mudanças Agendadas:</label>
+        <div id="mudancaContainer">
+          <div class="dynamic-row">
+            <input type="text" placeholder="Apto" style="width: 20%;">
+            <input type="text" placeholder="Nome do Morador" style="width: 35%;">
+            <select style="width: 20%;">
+              <option value="Entrada">Entrada</option>
+              <option value="Saída">Saída</option>
+            </select>
+            <input type="text" placeholder="Data / Horário" style="width: 25%;">
+          </div>
+        </div>
+        <button type="button" class="add-btn" onclick="addMudanca()">+ Adicionar Mudança</button>
       </div>
 
       <div class="section">
@@ -160,6 +203,46 @@
       <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
     `;
     document.getElementById('prestadoresContainer').appendChild(div);
+  }
+
+  function addSalao() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Apto" style="width: 25%;">
+      <input type="text" placeholder="Nome do Morador" style="width: 45%;">
+      <input type="text" placeholder="Data / Período" style="width: 30%;">
+      <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
+    `;
+    document.getElementById('salaoContainer').appendChild(div);
+  }
+
+  function addChurrasqueira() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Apto" style="width: 25%;">
+      <input type="text" placeholder="Nome do Morador" style="width: 45%;">
+      <input type="text" placeholder="Data / Período" style="width: 30%;">
+      <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
+    `;
+    document.getElementById('churrasqueiraContainer').appendChild(div);
+  }
+
+  function addMudanca() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Apto" style="width: 20%;">
+      <input type="text" placeholder="Nome do Morador" style="width: 35%;">
+      <select style="width: 20%;">
+        <option value="Entrada">Entrada</option>
+        <option value="Saída">Saída</option>
+      </select>
+      <input type="text" placeholder="Data / Horário" style="width: 25%;">
+      <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
+    `;
+    document.getElementById('mudancaContainer').appendChild(div);
   }
 
   function addEntrega() {
@@ -248,6 +331,46 @@
     });
     if (!temPrestador) texto += `• Nenhum prestador de serviço registrado.\n`;
 
+    // Processar Salão de Festas
+    texto += `\n🎉 *SALÃO DE FESTAS:*\n`;
+    const saloes = document.querySelectorAll('#salaoContainer .dynamic-row');
+    let temSalao = false;
+    saloes.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      if (inputs[0].value) {
+        texto += `• Apto ${inputs[0].value} - ${inputs[1].value} (${inputs[2].value || 'Período não informado'})\n`;
+        temSalao = true;
+      }
+    });
+    if (!temSalao) texto += `• Nenhuma reserva para o salão de festas.\n`;
+
+    // Processar Churrasqueira
+    texto += `\n🍖 *ALUGUEL DE CHURRASQUEIRA:*\n`;
+    const churrasqueiras = document.querySelectorAll('#churrasqueiraContainer .dynamic-row');
+    let temChurras = false;
+    churrasqueiras.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      if (inputs[0].value) {
+        texto += `• Apto ${inputs[0].value} - ${inputs[1].value} (${inputs[2].value || 'Período não informado'})\n`;
+        temChurras = true;
+      }
+    });
+    if (!temChurras) texto += `• Nenhuma reserva para churrasqueira.\n`;
+
+    // Processar Mudanças
+    texto += `\n🚚 *MUDANÇAS AGENDADAS:*\n`;
+    const mudancas = document.querySelectorAll('#mudancaContainer .dynamic-row');
+    let temMudanca = false;
+    mudancas.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      const select = row.querySelector('select');
+      if (inputs[0].value) {
+        texto += `• Apto ${inputs[0].value} - ${inputs[1].value} [${select.value}] - ${inputs[2].value || 'Horário não informado'}\n`;
+        temMudanca = true;
+      }
+    });
+    if (!temMudanca) texto += `• Nenhuma mudança agendada.\n`;
+
     // Processar Entregas
     texto += `\n📦 *ENTREGAS PENDENTES:*\n`;
     const entregas = document.querySelectorAll('#entregasContainer .dynamic-row');
@@ -289,7 +412,7 @@
     if (!temChave) texto += `• Nenhuma chave retida.\n`;
 
     // Processar Encomendas para recolher
-    texto += `\n🚚 *ENCOMENDAS A SEREM RECOLHIDAS:*\n`;
+    texto += `\n📦 *ENCOMENDAS A SEREM RECOLHIDAS:*\n`;
     const recolher = document.querySelectorAll('#recolherContainer .dynamic-row');
     let temRecolher = false;
     recolher.forEach(row => {
