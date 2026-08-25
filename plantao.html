@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <link
+        rel="shortcut icon"
+        href="imagens/favicon.ico"
+        type="image/x-icon"
+    >
+
+    <link
+        rel="stylesheet"
+        href="estilo/style.css"
+    >
+
+    <title>
+        Passagem de Plantão - Laguna Hall
+    </title>
+
+
+    <style>
+
+        .user-bar {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            padding: 10px 15px;
+
+            background: #173c2f;
+
+            color: white;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0, 0, 0, 0.15);
+
+            font-size: 14px;
+
+        }
+
+
+        .user-bar button {
+
+            border:
+                1px solid
+                rgba(255,255,255,.5);
+
+            background: transparent;
+
+            color: white;
+
+            border-radius: 6px;
+
+            padding: 6px 12px;
+
+            cursor: pointer;
+
+        }
+
+
+        .user-bar button:hover {
+
+            background:
+                rgba(255,255,255,.15);
+
+        }
+
+
+        .identificacao-porteiro {
+
+            text-align: center;
+
+            margin-bottom: 20px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            background: #f1f5f3;
+
+            color: #444;
+
+        }
+
+
+        .identificacao-porteiro strong {
+
+            color: #173c2f;
+
+        }
+
+
+        #saveStatus {
+
+            font-size: 12px;
+
+        }
+
+
+        /*
+        ================================================
+        CAMPO DO PORTEIRO QUE ESTÁ SAINDO
+        ================================================
+        */
+
+        #porteiroSaindo {
+
+            background: #eeeeee;
+
+            cursor: not-allowed;
+
+            font-weight: bold;
+
+        }
+
+
+        /*
+        ================================================
+        BOTÃO DE REMOVER
+        ================================================
+        */
+
+        .remove-btn {
+
+            width: 32px !important;
+
+            min-width: 32px;
+
+            padding: 7px !important;
+
+            border: none;
+
+            border-radius: 5px;
+
+            background: #b42318;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+        }
+
+
+        .remove-btn:hover {
+
+            background: #8f1c13;
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .user-bar {
+
+                font-size: 13px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =================================================
+         BARRA DO USUÁRIO
+    ================================================== -->
+
+    <div class="user-bar">
+
+
+        <span>
+
+            👤 Porteiro:
+
+            <strong id="usuarioAtual">
+                Carregando...
+            </strong>
+
+        </span>
+
+
+        <span id="saveStatus">
+
+            ✓ Sistema pronto
+
+        </span>
+
+
+        <button
+            type="button"
+            onclick="novoPlantao()"
+        >
+
+            Novo plantão
+
+        </button>
+
+
+        <button
+            type="button"
+            onclick="sairSistema()"
+        >
+
+            Sair
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =================================================
+         CABEÇALHO
+    ================================================== -->
+
+    <header>
+
+        <img
+            src="imagens/logo.png"
+            alt="Logo Edifício Laguna Hall"
+            class="logo"
+        >
+
+    </header>
+
+
+    <!-- =================================================
+         CONTEÚDO
+    ================================================== -->
+
+    <div class="container">
+
+
+        <h1>
+            🏢 Edifício Laguna Hall
+        </h1>
+
+
+        <p
+            style="
+                text-align:center;
+                color:#666;
+            "
+        >
+
+            Relatório de Passagem de Plantão
+
+        </p>
+
+
+        <!-- IDENTIFICAÇÃO -->
+
+        <div class="identificacao-porteiro">
+
+            👤 Plantão sendo preenchido por:
+
+            <strong id="usuarioAtualTexto">
+                Carregando...
+            </strong>
+
+        </div>
+
+
+        <!-- =================================================
+             FORMULÁRIO
+        ================================================== -->
+
+        <form id="plantaoForm">
+
+
+            <!-- DADOS DO PLANTÃO -->
+
+            <div class="section">
+
+
+                <label for="porteiroSaindo">
+
+                    Porteiro que está saindo:
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="porteiroSaindo"
+                    readonly
+                    required
+                    placeholder="Nome do porteiro"
+                >
+
+
+                <label for="porteiroAssumindo">
+
+                    Porteiro que está assumindo:
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="porteiroAssumindo"
+                    required
+                    placeholder="Nome do porteiro"
+                >
+
+
+                <label for="dataPlantao">
+
+                    Data:
+
+                </label>
+
+
+                <input
+                    type="date"
+                    id="dataPlantao"
+                    required
+                >
+
+
+            </div>
+
+
+            <!-- OCORRÊNCIAS -->
+
+            <div class="section">
+
+
+                <label for="ocorrencias">
+
+                    Ocorrências:
+
+                </label>
+
+
+                <textarea
+                    id="ocorrencias"
+                    maxlength="1000"
+                    rows="4"
+                    placeholder="Descreva as ocorrências do turno..."
+                ></textarea>
+
+
+            </div>
+
+
+            <!-- OBSERVAÇÕES GERAIS -->
+
+            <div class="section">
+
+
+                <label for="observacoesGenerais">
+
+                    Observações Gerais:
+
+                </label>
+
+
+                <textarea
+                    id="observacoesGenerais"
+                    maxlength="1000"
+                    rows="6"
+                    placeholder="Observações gerais do turno..."
+                ></textarea>
+
+
+            </div>
+
+
+            <!-- OBSERVAÇÕES DA PORTARIA -->
+
+            <div class="section">
+
+
+                <label for="observacoesPortaria">
+
+                    Observações da Portaria:
+
+                </label>
+
+
+                <textarea
+                    id="observacoesPortaria"
+                    maxlength="1000"
+                    rows="6"
+                    placeholder="Observações específicas da portaria..."
+                ></textarea>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 PRESTADORES
+            ================================================== -->
+
+            <div class="section">
+
+
+                <label>
+                    Prestadores de Serviço:
+                </label>
+
+
+                <div id="prestadoresContainer">
+
+
+                    <div class="dynamic-row">
+
+
+                        <input
+                            type="text"
+                            placeholder="Nome / Empresa"
+                            style="width:30%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Serviço Realizado"
+                            style="width:35%;"
+                        >
+
+
+                        <input
+                            type="time"
+                            title="Horário de Entrada"
+                            style="width:17.5%;"
+                        >
+
+
+                        <input
+                            type="time"
+                            title="Horário de Saída"
+                            style="width:17.5%;"
+                        >
+
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addPrestador()"
+                >
+
+                    + Adicionar Prestador
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 SALÃO
+            ================================================== -->
+
+            <div class="section">
+
+
+                <label>
+                    Uso do Salão de Festas:
+                </label>
+
+
+                <div id="salaoContainer">
+
+
+                    <div class="dynamic-row">
+
+
+                        <input
+                            type="text"
+                            placeholder="Apto"
+                            style="width:25%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Nome do Morador"
+                            style="width:45%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Data / Período"
+                            style="width:30%;"
+                        >
+
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addSalao()"
+                >
+
+                    + Adicionar Reserva de Salão
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 CHURRASQUEIRA
+            ================================================== -->
+
+            <div class="section">
+
+
+                <label>
+                    Aluguel de Churrasqueira:
+                </label>
+
+
+                <div id="churrasqueiraContainer">
+
+
+                    <div class="dynamic-row">
+
+
+                        <input
+                            type="text"
+                            placeholder="Apto"
+                            style="width:25%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Nome do Morador"
+                            style="width:45%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Data / Período"
+                            style="width:30%;"
+                        >
+
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addChurrasqueira()"
+                >
+
+                    + Adicionar Reserva de Churrasqueira
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 MUDANÇAS
+            ================================================== -->
+
+            <div class="section">
+
+
+                <label>
+                    Mudanças Agendadas:
+                </label>
+
+
+                <div id="mudancaContainer">
+
+
+                    <div class="dynamic-row">
+
+
+                        <input
+                            type="text"
+                            placeholder="Apto"
+                            style="width:20%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Nome do Morador"
+                            style="width:35%;"
+                        >
+
+
+                        <select style="width:20%;">
+
+                            <option value="Entrada">
+                                Entrada
+                            </option>
+
+                            <option value="Saída">
+                                Saída
+                            </option>
+
+                        </select>
+
+
+                        <input
+                            type="text"
+                            placeholder="Data / Horário"
+                            style="width:25%;"
+                        >
+
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addMudanca()"
+                >
+
+                    + Adicionar Mudança
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 ENTREGAS
+            ================================================== -->
+
+            <div class="section">
+
+
+                <label>
+                    Entregas Pendentes:
+                </label>
+
+
+                <div id="entregasContainer">
+
+
+                    <div class="dynamic-row">
+
+
+                        <input
+                            type="text"
+                            placeholder="Apto"
+                            style="width:25%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Nome"
+                            style="width:50%;"
+                        >
+
+
+                        <input
+                            type="number"
+                            placeholder="Qtd"
+                            style="width:25%;"
+                        >
+
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addEntrega()"
+                >
+
+                    + Adicionar Entrega
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 CARTAS
+            ================================================== -->
+
+            <div class="section">
+
+
+                <label>
+                    Cartas e Envelopes:
+                </label>
+
+
+                <div id="cartasContainer">
+
+
+                    <div class="dynamic-row">
+
+
+                        <input
+                            type="text"
+                            placeholder="Apto"
+                            style="width:20%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Nome"
+                            style="width:35%;"
+                        >
+
+
+                        <input
+                            type="number"
+                            placeholder="Qtd"
+                            style="width:15%;"
+                        >
+
+
+                        <select style="width:30%;">
+
+                            <option value="Geral">
+                                Outros
+                            </option>
+
+                            <option value="Boleto Condomínio">
+                                Boleto Condomínio
+                            </option>
+
+                            <option value="Conta de Energia">
+                                Conta de Energia
+                            </option>
+
+                        </select>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addCarta()"
+                >
+
+                    + Adicionar Carta
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 CHAVES
+            ================================================== -->
+
+            <div class="section">
+
+
+                <label>
+                    Chaves na Portaria:
+                </label>
+
+
+                <div id="chavesContainer">
+
+
+                    <div class="dynamic-row">
+
+
+                        <input
+                            type="text"
+                            placeholder="Apto"
+                            style="width:25%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Nome / Identificação"
+                            style="width:50%;"
+                        >
+
+
+                        <input
+                            type="number"
+                            placeholder="Qtd"
+                            style="width:25%;"
+                        >
+
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addChave()"
+                >
+
+                    + Adicionar Chave
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 RECOLHER
+            ================================================== -->
+
+            <div class="section">
+
+
+                <label>
+                    Encomendas para Recolher / Transportadora:
+                </label>
+
+
+                <div id="recolherContainer">
+
+
+                    <div class="dynamic-row">
+
+
+                        <input
+                            type="text"
+                            placeholder="Apto"
+                            style="width:20%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Nome"
+                            style="width:30%;"
+                        >
+
+
+                        <input
+                            type="number"
+                            placeholder="Qtd"
+                            style="width:15%;"
+                        >
+
+
+                        <input
+                            type="text"
+                            placeholder="Quem vai recolher"
+                            style="width:35%;"
+                        >
+
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addRecolher()"
+                >
+
+                    + Adicionar Item
+
+                </button>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 AÇÕES
+            ================================================== -->
+
+            <div class="actions">
+
+
+                <button
+                    type="button"
+                    class="btn-submit"
+                    onclick="enviarWhatsapp()"
+                >
+
+                    📱 Enviar para WhatsApp
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn-reset"
+                    onclick="limparFormulario()"
+                >
+
+                    Limpar
+
+                </button>
+
+
+            </div>
+
+
+            <p
+                id="autosaveNotice"
+                style="
+                    text-align:center;
+                    color:#777;
+                    font-size:12px;
+                "
+            >
+
+                ✓ Os dados são salvos automaticamente.
+
+            </p>
+
+
+        </form>
+
+
+    </div>
+
+
+    <!-- =================================================
+         RODAPÉ
+    ================================================== -->
+
+    <footer>
+
+
+        <img
+            src="imagens/lodo-dev-removebg-preview.png"
+            alt="Logo Desenvolvedor"
+            width="100"
+        >
+
+
+        <p>
+
+            &copy; Ger Santos Desenvolvimento Web.
+            Todos os direitos reservados.
+
+        </p>
+
+
+    </footer>
+
+
+    <!-- =================================================
+         JAVASCRIPT
+    ================================================== -->
+
+    <script src="js/app.js"></script>
+
+
+</body>
+
+</html>
