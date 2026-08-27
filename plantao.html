@@ -310,15 +310,20 @@ button:active {
     margin-right: 15px;
     font-weight: 600;
 }
-.dev-brand flex-center img{
-
-}
-
 
 /* ================================================
    RESPONSIVIDADE (MOBILE E TABLETS)
    ================================================ */
 @media (max-width: 850px) {
+    
+    .header, 
+    .section-card, 
+    .actions-bar, 
+    .footer {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
     .form-grid-3, .form-grid-2 {
         grid-template-columns: 1fr;
     }
@@ -327,6 +332,7 @@ button:active {
         flex-direction: column;
         gap: 15px;
         align-items: stretch;
+        width: 100%;
     }
 
     .actions-bar > div {
@@ -345,7 +351,7 @@ button:active {
         margin-right: 0;
         margin-bottom: 5px;
     }
-   
+    
 }
 </style>
 </head>
@@ -463,7 +469,6 @@ button:active {
             <p>Operador atual: <span id="usuarioAtualTexto">Carregando...</span></p>
             <div class="dev-brand flex-center">
                 <span>&copy G Santos todos direitos Reservados...</span>
-               
             </div>
         </footer>
     </div>
