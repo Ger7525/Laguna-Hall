@@ -2,351 +2,257 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="estilo/style.css">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>Login - Edifício Laguna Hall</title>
 
-    <link
-        rel="shortcut icon"
-        href="imagens/favicon.ico"
-        type="image/x-icon"
-    >
-
-    <link
-        rel="stylesheet"
-        href="estilo/style.css"
-    >
-
-    <title>
-        Login - Edifício Laguna Hall
-    </title>
-
-    <style>
+   <style>
+        /* ================================================
+           VARIÁVEIS E CONFIGURAÇÕES GERAIS (PADRÃO PLANTÃO)
+           ================================================ */
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --border-color: #475569;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-green: #22c55e;
+            --accent-green-hover: #16a34a;
+            --accent-red: #ef4444;
+            --radius: 8px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+        }
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
-
-            margin: 0;
-
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.5;
             min-height: 100vh;
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .login-overlay {
-
-            min-height: 100vh;
-
+            width: 100%;
             display: flex;
-
-            align-items: center;
-
             justify-content: center;
-
-            padding: 20px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #eef5f1,
-                    #dfeae5
-                );
-
         }
 
         .login-card {
-
             width: 100%;
-
-            max-width: 430px;
-
-            background: #ffffff;
-
-            padding: 35px;
-
-            border-radius: 18px;
-
-            box-shadow:
-                0 15px 40px
-                rgba(0, 0, 0, 0.15);
-
+            max-width: 440px;
+            background: var(--bg-card);
+            padding: 35px 30px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
             text-align: center;
-
         }
 
         .login-logo {
-
-            width: 130px;
-
-            max-height: 100px;
-
+            width: 120px;
+            max-height: 90px;
             object-fit: contain;
-
             margin-bottom: 15px;
-
         }
 
         .login-card h1 {
-
-            margin: 5px 0;
-
-            color: #1f4d3b;
-
-            font-size: 28px;
-
+            font-size: 1.6rem;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
         .login-card h2 {
-
-            margin:
-                0 0 10px;
-
-            font-size: 18px;
-
-            color: #444;
-
+            font-size: 0.95rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
         .login-card p {
-
+            font-size: 0.85rem;
+            color: var(--text-muted);
             margin-bottom: 25px;
-
-            color: #777;
-
-            font-size: 14px;
-
         }
 
         .login-card label {
-
             display: block;
-
             text-align: left;
-
-            margin-bottom: 7px;
-
-            font-weight: bold;
-
-            color: #333;
-
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
-        .login-card input {
-
+        .login-card select {
             width: 100%;
-
-            padding: 14px;
-
-            border:
-                1px solid #ccc;
-
-            border-radius: 9px;
-
-            font-size: 16px;
-
+            padding: 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 0.95rem;
             outline: none;
-
-            margin-bottom: 15px;
-
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .login-card input:focus {
+        .login-card select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
 
-            border-color: #1f4d3b;
-
-            box-shadow:
-                0 0 0 3px
-                rgba(31, 77, 59, 0.12);
-
+        .login-card select option {
+            background: var(--bg-card);
+            color: var(--text-main);
         }
 
         .login-button {
-
             width: 100%;
-
-            padding: 14px;
-
+            padding: 12px;
             border: none;
-
-            border-radius: 9px;
-
-            background: #1f4d3b;
-
+            border-radius: 6px;
+            background: var(--accent-green);
             color: #ffffff;
-
-            font-size: 16px;
-
-            font-weight: bold;
-
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-
+            transition: background 0.2s, transform 0.1s;
         }
 
         .login-button:hover {
+            background: var(--accent-green-hover);
+        }
 
-            background: #163a2c;
-
+        .login-button:active {
+            transform: scale(0.98);
         }
 
         .login-help {
-
-            margin-top: 18px;
-
-            font-size: 12px;
-
-            color: #888;
-
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-muted);
             line-height: 1.5;
+            text-align: left;
+        }
 
+        .login-help strong {
+            color: var(--accent-blue);
         }
 
         .login-footer {
-
-            margin-top: 25px;
-
-            font-size: 12px;
-
-            color: #999;
-
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            opacity: 0.8;
+        }
+        .login-footer img{
+            width: 100px;
+            border-radius: 100%;
+            margin-top: 15px ;
+            margin:15px 10px 0 ;
+            border: 1px solid white;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.788);
         }
 
         .erro-login {
-
             display: none;
-
             margin-bottom: 15px;
-
             padding: 10px;
-
-            border-radius: 7px;
-
-            background: #ffe7e7;
-
-            color: #b00020;
-
-            font-size: 13px;
-
+            border-radius: 6px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--accent-red);
+            font-size: 0.85rem;
+            text-align: left;
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-
     <main class="login-overlay">
-
-
         <section class="login-card">
+            <img src="imagens/laguna-logo-removebg-preview (1).png" alt="Logo Edifício Laguna Hall" class="login-logo">
 
+            <h1>🏢 Laguna Hall</h1>
+            <h2>Passagem de Plantão</h2>
+            <p>Selecione seu nome para iniciar o plantão.</p>
 
-            <img
-                src="imagens/logo.png"
-                alt="Logo Edifício Laguna Hall"
-                class="login-logo"
-            >
-
-
-            <h1>
-                🏢 Laguna Hall
-            </h1>
-
-
-            <h2>
-                Passagem de Plantão
-            </h2>
-
-
-            <p>
-                Digite seu nome para iniciar o plantão.
-            </p>
-
-
-            <div
-                id="erroLogin"
-                class="erro-login"
-            >
-                Por favor, informe seu nome.
+            <div id="erroLogin" class="erro-login">
+                Por favor, selecione seu nome.
             </div>
-
 
             <form id="loginForm">
+                <label for="nomeUsuario">Nome do Porteiro</label>
 
+                <select id="nomeUsuario" name="nomeUsuario" required>
+                    <option value="" disabled selected>Selecione seu nome...</option>
+                    <option value="Germano Santos">Germano Santos</option>
+                    <option value="Jonas Paulo">Jonas Paulo</option>
+                    <option value="Luiz Carlos">Luiz Carlos</option>
+                    <option value="Alexandre">Alexandre</option>
+                </select>
 
-                <label for="nomeUsuario">
-
-                    Nome do Porteiro
-
-                </label>
-
-
-                <input
-                    type="text"
-                    id="nomeUsuario"
-                    name="nomeUsuario"
-                    placeholder="Digite seu nome"
-                    maxlength="80"
-                    autocomplete="name"
-                    required
-                >
-
-
-                <button
-                    type="submit"
-                    class="login-button"
-                >
-
+                <button type="submit" class="login-button">
                     ENTRAR
-
                 </button>
-
-
             </form>
 
-
             <div class="login-help">
-
-                Ao entrar, seu nome será registrado
-                automaticamente como o
+                Ao entrar, seu nome será registrado automaticamente como o
                 <strong>porteiro que está saindo</strong>.
-
                 <br><br>
-
-                O plantão será salvo automaticamente
-                enquanto você estiver preenchendo.
-
+                O plantão será salvo automaticamente enquanto você estiver preenchendo.
             </div>
-
 
             <div class="login-footer">
-
-                Ger Santos Desenvolvimento Web
-
+              <img src="imagens/lodo-dev.png" alt=""> <br>
+               <p>Versão 2.0.0 </p>
             </div>
-
-
         </section>
-
-
     </main>
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
 
-    <script src="js/app.js"></script>
+            const selectUsuario = document.getElementById('nomeUsuario');
+            const erroBox = document.getElementById('erroLogin');
+            const usuario = selectUsuario.value;
 
+            if (!usuario) {
+                erroBox.style.display = 'block';
+                return;
+            }
 
+            erroBox.style.display = 'none';
+
+            // Salva o usuário logado para carregar na tela de plantão
+            localStorage.setItem('usuarioLogado', usuario);
+
+            // Redireciona para a página principal do plantão
+            window.location.href = 'plantao.html';
+        });
+    </script>
 </body>
 
 </html>
