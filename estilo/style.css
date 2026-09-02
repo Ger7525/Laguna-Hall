@@ -1,152 +1,375 @@
 @charset "UTF-8";
 
-body { 
-    font-family: Arial, sans-serif; 
-    margin: 20px; 
-    background-color: #f4f6f9; 
+/* ================================================
+   SISTEMA DE SEGURANÇA E PORTARIA - TEMA PROFISSIONAL CLARO
+   ================================================ */
+:root {
+    --bg-main: #f1f5f9;
+    --bg-card: #ffffff;
+    --bg-input: #f8fafc;
+    --border-color: #cbd5e1;
+    --border-focus: #2563eb;
+    
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    
+    --accent-blue: #1e3a8a;
+    --accent-blue-hover: #1e40af;
+    --accent-green: #059669;
+    --accent-green-hover: #047857;
+    --accent-red: #dc2626;
+    --accent-red-hover: #b91c1c;
+    
+    --radius: 6px;
+    --shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
 }
 
-/* Estilos do Cabeçalho e Logo */
-header { 
-    text-align: center; 
-    margin-bottom: 20px; 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 }
 
-.logo { 
-    max-width: 180px; 
-    height: auto;
-    display: block; 
-    margin: 0 auto; 
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 20px 10px;
+    display: flex;
+    justify-content: center;
 }
 
-.container { 
-    max-width: 700px;
-    background: white;
-    padding: 20px; 
-    border-radius: 8px; 
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin: auto;
+/* ================================================
+   TELA DE LOGIN / MODAL
+   ================================================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
 }
 
-h1 { 
-    text-align: center; 
-    color: #1a365d; 
-    margin-bottom: 20px;
+.modal-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+    text-align: center;
 }
 
-.section { 
-    border-bottom: 1px solid #ddd; 
-    padding-bottom: 15px; 
-    margin-bottom: 15px;
+.modal-header h2 {
+    font-size: 1.3rem;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    margin-bottom: 4px;
 }
 
-label { 
-    font-weight: bold; 
-    display: block; 
-    margin-top: 10px; 
-    color: #2d3748; 
+.modal-header p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
 }
 
-input, textarea, select {
+.btn-login {
     width: 100%;
-    padding: 8px; 
-    margin-top: 5px; 
-    box-sizing: border-box; 
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.dynamic-row { 
-    display: flex; 
-    gap: 8px; 
-    margin-top: 8px; 
-    align-items: center; 
-}
-
-.dynamic-row input, .dynamic-row select { 
-    margin-top: 0; 
-}
-
-button.add-btn { 
-    background-color: #3182ce; 
-    color: white; 
-    border: none; 
-    padding: 6px 12px;
-    margin-top: 8px; 
-    border-radius: 4px; 
-    cursor: pointer; 
-}
-
-button.remove-btn { 
-    background-color: #e53e3e; 
-    color: white; 
-    border: none; 
-    padding: 6px 10px; 
-    border-radius: 4px; 
-    cursor: pointer;
-}
-
-.actions { 
-    display: flex; 
-    gap: 10px; 
+    background: var(--accent-blue);
+    color: #ffffff;
+    padding: 12px;
     margin-top: 20px;
 }
 
-.btn-submit { 
-    background-color: #25D366; 
-    color: white; 
-    border: none; 
-    padding: 12px; 
-    width: 100%; 
-    font-size: 16px; 
-    font-weight: bold; 
-    border-radius: 4px; 
-    cursor: pointer; 
+.btn-login:hover {
+    background: var(--accent-blue-hover);
 }
 
-.btn-draft { 
-    background-color: #d69e2e; 
-    color: white; 
-    border: none; 
-    padding: 12px; 
-    width: 100%; 
-    font-size: 16px; 
-    font-weight: bold; 
-    border-radius: 4px; 
-    cursor: pointer; 
+
+.hidden {
+    display: none !important;
 }
 
-.btn-reset { 
-    background-color: #718096; 
-    color: white; 
-    border: none; 
-    padding: 12px; 
-    width: 100%; 
-    font-size: 16px; 
-    font-weight: bold; 
-    border-radius: 4px; 
+/* ================================================
+   CONTAINER E LAYOUT
+   ================================================ */
+.container {
+    width: 100%;
+    max-width: 1050px;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ================================================
+   CABEÇALHO E SEÇÕES
+   ================================================ */
+.header {
+    background: var(--bg-card);
+    padding: 22px 28px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--accent-blue);
+    box-shadow: var(--shadow);
+}
+
+.header-title h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.header-title p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.user-session {
+    font-size: 0.9rem;
+    background: #f1f5f9;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.user-session strong {
+    color: var(--accent-blue);
+}
+
+.section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+legend {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--accent-blue);
+    padding: 0 8px;
+    text-transform: uppercase;
+}
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.form-grid-1 {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+}
+
+label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--border-focus);
+    background-color: #ffffff;
+}
+
+input[readonly] {
+    opacity: 0.85;
+    cursor: not-allowed;
+    background: #e2e8f0;
+    color: var(--text-muted);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ================================================
+   LINHAS DINÂMICAS E BOTÕES
+   ================================================ */
+.dynamic-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.dynamic-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+button {
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    padding: 10px 16px;
     cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
 }
 
-.status-message {
-    font-size: 14px;
-    color: #2b6cb0;
-    margin-top: 10px;
-    text-align: center;
-    font-weight: bold;
+.btn-add {
+    background: transparent;
+    color: var(--border-focus);
+    border: 1px dashed var(--border-focus);
+    width: 100%;
 }
 
-/* Estilos do Rodapé */
+.btn-add:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.remove-btn {
+    background: rgba(220, 38, 38, 0.08);
+    color: var(--accent-red);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.remove-btn:hover {
+    background: var(--accent-red);
+    color: #ffffff;
+}
+
+.actions-bar {
+    background: var(--bg-card);
+    padding: 18px 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+.btn-whatsapp {
+    background: var(--accent-green);
+    color: #ffffff;
+}
+
+.btn-whatsapp:hover {
+    background: var(--accent-green-hover);
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+}
+
+.btn-danger {
+    background: transparent;
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+}
+
+.btn-danger:hover {
+    background: var(--accent-red);
+    color: #ffffff;
+}
+
+.status-badge {
+    font-size: 0.85rem;
+    color: var(--accent-green);
+    margin-right: 12px;
+    font-weight: 600;
+}
+
 footer { 
-    text-align: center;
     margin-top: 30px;
-    padding: 15px 0; 
-    color: #718096; 
-    font-size: 14px; 
+    padding: 16px;
+    text-align: center;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.8rem;
 }
 
 footer img {
-    display: block; 
-    margin: 0 auto 8px auto; 
-    height: auto; 
+    margin-top: 8px;
+    width: 200px;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .form-grid-3, .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+    .flex-between {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    .actions-bar > div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .actions-bar button {
+        width: 100%;
+    }
 }

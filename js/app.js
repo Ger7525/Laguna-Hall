@@ -1,208 +1,162 @@
 // ================================================
-// INICIALIZAÇÃO E SESSÃO
+// SISTEMA DE PASSAGEM DE PLANTÃO - LÓGICA PRINCIPAL
 // ================================================
+
 document.addEventListener('DOMContentLoaded', () => {
-    carregarUsuario();
-    definirDataAtual();
-    carregarDadosSalvos();
-    configurarAutoSave();
-});
-
-function carregarUsuario() {
-    const usuarioLogado = localStorage.getItem('usuarioLogado') || 'Germano Santos';
-    
-    document.getElementById('usuarioAtual').innerText = usuarioLogado;
-    document.getElementById('usuarioAtualTexto').innerText = usuarioLogado;
-    document.getElementById('porteiroSaindo').value = usuarioLogado;
-}
-
-function definirDataAtual() {
+    // Define a data atual por padrão no campo de data (YYYY-MM-DD)
+    const hoje = new Date().toISOString().split('T')[0];
     const inputData = document.getElementById('dataPlantao');
-    if (!inputData.value) {
-        const hoje = new Date().toISOString().split('T')[0];
+    if (inputData && !inputData.value) {
         inputData.value = hoje;
     }
-}
 
-// ================================================
-// GERADORES DE LINHAS DINÂMICAS COM SUPORTE A DADOS SALVOS
-// ================================================
-function criarBotaoRemover() {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'remove-btn';
-    btn.innerText = '✕';
-    btn.onclick = function() {
-        this.parentElement.remove();
-        salvarDadosLocais();
-    };
-    return btn;
-}
+    // Verifica se já existe uma sessão ativa
+    verificarSessao();
+});
 
-function addPrestador(val = {}) {
-    const container = document.getElementById('prestadoresContainer');
-    const row = document.createElement('div');
-    row.className = 'dynamic-row';
-    row.innerHTML = `
-        <input type="text" placeholder="Nome / Empresa" style="width:30%;" value="${val.nome || ''}">
-        <input type="text" placeholder="Serviço Realizado" style="width:35%;" value="${val.servico || ''}">
-        <input type="time" title="Horário de Entrada" style="width:15%;" value="${val.entrada || ''}">
-        <input type="time" title="Horário de Saída" style="width:15%;" value="${val.saida || ''}">
-    `;
-    row.appendChild(criarBotaoRemover());
-    container.appendChild(row);
-}
+// Lógica de Autenticação / Login Local
+function iniciarSessao() {
+    const select = document.getElementById('selectPorteiroLogin');
+    const nome = select ? select.value : '';
 
-function addEntrega(val = {}) {
-    const container = document.getElementById('entregasContainer');
-    const row = document.createElement('div');
-    row.className = 'dynamic-row';
-    row.innerHTML = `
-        <input type="text" placeholder="Apto" style="width:20%;" value="${val.apto || ''}">
-        <input type="text" placeholder="Nome" style="width:50%;" value="${val.nome || ''}">
-        <input type="number" placeholder="Qtd" style="width:20%;" value="${val.qtd || ''}">
-    `;
-    row.appendChild(criarBotaoRemover());
-    container.appendChild(row);
-}
-
-function addCarta(val = {}) {
-    const container = document.getElementById('cartasContainer');
-    const row = document.createElement('div');
-    row.className = 'dynamic-row';
-    const tipoVal = val.tipo || 'Geral';
-    row.innerHTML = `
-        <input type="text" placeholder="Apto" style="width:18%;" value="${val.apto || ''}">
-        <input type="text" placeholder="Nome" style="width:32%;" value="${val.nome || ''}">
-        <input type="number" placeholder="Qtd" style="width:15%;" value="${val.qtd || ''}">
-        <select style="width:25%;">
-            <option value="Geral" ${tipoVal === 'Geral' ? 'selected' : ''}>Outros</option>
-            <option value="Boleto Condomínio" ${tipoVal === 'Boleto Condomínio' ? 'selected' : ''}>Boleto Condomínio</option>
-            <option value="Conta de Energia" ${tipoVal === 'Conta de Energia' ? 'selected' : ''}>Conta de Energia</option>
-        </select>
-    `;
-    row.appendChild(criarBotaoRemover());
-    container.appendChild(row);
-}
-
-function addChave(val = {}) {
-    const container = document.getElementById('chavesContainer');
-    const row = document.createElement('div');
-    row.className = 'dynamic-row';
-    row.innerHTML = `
-        <input type="text" placeholder="Apto" style="width:20%;" value="${val.apto || ''}">
-        <input type="text" placeholder="Nome / Identificação" style="width:50%;" value="${val.nome || ''}">
-        <input type="number" placeholder="Qtd" style="width:20%;" value="${val.qtd || ''}">
-    `;
-    row.appendChild(criarBotaoRemover());
-    container.appendChild(row);
-}
-
-function addRecolher(val = {}) {
-    const container = document.getElementById('recolherContainer');
-    const row = document.createElement('div');
-    row.className = 'dynamic-row';
-    row.innerHTML = `
-        <input type="text" placeholder="Apto" style="width:18%;" value="${val.apto || ''}">
-        <input type="text" placeholder="Nome" style="width:27%;" value="${val.nome || ''}">
-        <input type="number" placeholder="Qtd" style="width:15%;" value="${val.qtd || ''}">
-        <input type="text" placeholder="Quem vai recolher" style="width:30%;" value="${val.retira || ''}">
-    `;
-    row.appendChild(criarBotaoRemover());
-    container.appendChild(row);
-}
-
-// ================================================
-// PERSISTÊNCIA CONTINUA (SALVA ATÉ SAIR)
-// ================================================
-function configurarAutoSave() {
-    document.getElementById('plantaoForm').addEventListener('input', () => {
-        salvarDadosLocais();
-    });
-    document.getElementById('plantaoForm').addEventListener('change', () => {
-        salvarDadosLocais();
-    });
-}
-
-function extrairLinhas(containerId) {
-    const rows = document.querySelectorAll(`#${containerId} .dynamic-row`);
-    const lista = [];
-    rows.forEach(row => {
-        const inputs = row.querySelectorAll('input, select');
-        const valores = Array.from(inputs).map(i => i.value);
-        lista.push(valores);
-    });
-    return lista;
-}
-
-function salvarDadosLocais() {
-    const dados = {
-        porteiroAssumindo: document.getElementById('porteiroAssumindo').value,
-        dataPlantao: document.getElementById('dataPlantao').value,
-        ocorrencias: document.getElementById('ocorrencias').value,
-        observacoesGenerais: document.getElementById('observacoesGenerais').value,
-        observacoesPortaria: document.getElementById('observacoesPortaria').value,
-        
-        prestadores: extrairLinhas('prestadoresContainer'),
-        entregas: extrairLinhas('entregasContainer'),
-        cartas: extrairLinhas('cartasContainer'),
-        chaves: extrairLinhas('chavesContainer'),
-        recolher: extrairLinhas('recolherContainer')
-    };
-    
-    localStorage.setItem('draft_plantao', JSON.stringify(dados));
-    
-    const status = document.getElementById('saveStatus');
-    status.innerText = '💾 Salvo';
-    setTimeout(() => { status.innerText = '✓ Sistema pronto'; }, 1500);
-}
-
-function carregarDadosSalvos() {
-    const salvo = localStorage.getItem('draft_plantao');
-    if (!salvo) return;
-
-    const dados = JSON.parse(salvo);
-
-    if (dados.porteiroAssumindo) document.getElementById('porteiroAssumindo').value = dados.porteiroAssumindo;
-    if (dados.dataPlantao) document.getElementById('dataPlantao').value = dados.dataPlantao;
-    if (dados.ocorrencias) document.getElementById('ocorrencias').value = dados.ocorrencias;
-    if (dados.observacoesGenerais) document.getElementById('observacoesGenerais').value = dados.observacoesGenerais;
-    if (dados.observacoesPortaria) document.getElementById('observacoesPortaria').value = dados.observacoesPortaria;
-
-    if (dados.prestadores) {
-        dados.prestadores.forEach(p => addPrestador({ nome: p[0], servico: p[1], entrada: p[2], saida: p[3] }));
-    }
-    if (dados.entregas) {
-        dados.entregas.forEach(e => addEntrega({ apto: e[0], nome: e[1], qtd: e[2] }));
-    }
-    if (dados.cartas) {
-        dados.cartas.forEach(c => addCarta({ apto: c[0], nome: c[1], qtd: c[2], tipo: c[3] }));
-    }
-    if (dados.chaves) {
-        dados.chaves.forEach(k => addChave({ apto: k[0], nome: k[1], qtd: k[2] }));
-    }
-    if (dados.recolher) {
-        dados.recolher.forEach(r => addRecolher({ apto: r[0], nome: r[1], qtd: r[2], retira: r[3] }));
-    }
-}
-
-// ================================================
-// ENVIO DE MENSAGEM PARA WHATSAPP
-// ================================================
-function enviarWhatsapp() {
-    const saindo = document.getElementById('porteiroSaindo').value;
-    const assumindo = document.getElementById('porteiroAssumindo').value;
-    const data = document.getElementById('dataPlantao').value;
-
-    if (!assumindo) {
-        alert('Por favor, informe o porteiro que está assumindo.');
-        document.getElementById('porteiroAssumindo').focus();
+    if (!nome) {
+        alert('Por favor, selecione seu nome para continuar.');
         return;
     }
 
+    // Salva na memória do navegador
+    sessionStorage.setItem('operadorAtivo', nome);
+    carregarInterface(nome);
+}
+
+function verificarSessao() {
+    const operador = sessionStorage.getItem('operadorAtivo');
+    if (operador) {
+        carregarInterface(operador);
+    }
+}
+
+function carregarInterface(nome) {
+    // Esconde o Login e Exibe o Sistema
+    const modalLogin = document.getElementById('modalLogin');
+    const conteudoSistema = document.getElementById('conteudoSistema');
+    
+    if (modalLogin) modalLogin.classList.add('hidden');
+    if (conteudoSistema) conteudoSistema.classList.remove('hidden');
+
+    // Preenche a identificação do operador no topo
+    const elNomeOperador = document.getElementById('nomeOperador');
+    if (elNomeOperador) elNomeOperador.innerText = nome;
+
+    // Preenche e deixa O CAMPO EDITÁVEL para alterações
+    const inputAssumindo = document.getElementById('porteiroAssumindo');
+    if (inputAssumindo) {
+        inputAssumindo.value = nome;
+        inputAssumindo.removeAttribute('disabled');
+        inputAssumindo.removeAttribute('readonly');
+    }
+
+    // Carrega rascunho anterior se houver
+    carregarRascunho();
+}
+
+function trocarOperador() {
+    if (confirm('Deseja encerrar a sessão do operador atual?')) {
+        sessionStorage.removeItem('operadorAtivo');
+        location.reload();
+    }
+}
+
+// Funções para adicionar linhas dinâmicas
+function criarLinhaRemovivel(htmlConteudo) {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row';
+    div.innerHTML = `${htmlConteudo} <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>`;
+    return div;
+}
+
+function adicionarPrestador() {
+    const html = `
+        <input type="text" placeholder="Nome do Prestador / Empresa" style="flex: 2;">
+        <input type="text" placeholder="Serviço Realizado" style="flex: 2;">
+        <input type="time" title="Entrada" style="flex: 1;">
+        <input type="time" title="Saída" style="flex: 1;">
+    `;
+    document.getElementById('prestadoresContainer').appendChild(criarLinhaRemovivel(html));
+}
+
+function adicionarEntrega() {
+    const html = `
+        <input type="text" placeholder="Apto/Bloco" style="flex: 1;">
+        <input type="text" placeholder="Descrição (Ex: Amazon/Mercado Livre)" style="flex: 3;">
+        <input type="number" placeholder="Qtd" value="1" style="flex: 1;">
+    `;
+    document.getElementById('entregasContainer').appendChild(criarLinhaRemovivel(html));
+}
+
+function adicionarCarta() {
+    const html = `
+        <input type="text" placeholder="Apto/Bloco" style="flex: 1;">
+        <input type="text" placeholder="Destinatário / Descrição" style="flex: 3;">
+        <input type="number" placeholder="Qtd" value="1" style="flex: 1;">
+        <select style="flex: 1.5;">
+            <option value="Simples">Simples</option>
+            <option value="Registrada">Registrada</option>
+        </select>
+    `;
+    document.getElementById('cartasContainer').appendChild(criarLinhaRemovivel(html));
+}
+
+function adicionarChave() {
+    const html = `
+        <input type="text" placeholder="Apto/Ambiente" style="flex: 2;">
+        <input type="text" placeholder="Identificação da Chave" style="flex: 3;">
+        <input type="number" placeholder="Qtd" value="1" style="flex: 1;">
+    `;
+    document.getElementById('chavesContainer').appendChild(criarLinhaRemovivel(html));
+}
+
+function adicionarRecolher() {
+    const html = `
+        <input type="text" placeholder="Apto/Bloco" style="flex: 1;">
+        <input type="text" placeholder="Item a Recolher" style="flex: 2;">
+        <input type="number" placeholder="Qtd" value="1" style="flex: 1;">
+        <input type="text" placeholder="Quem Retira" style="flex: 2;">
+    `;
+    document.getElementById('recolherContainer').appendChild(criarLinhaRemovivel(html));
+}
+
+// ================================================
+// MONTAGEM E ENVIO DO RELATÓRIO VIA WHATSAPP
+// ================================================
+function enviarWhatsapp() {
+    // Captura os valores digitados no momento do clique
+    const elSaindo = document.getElementById('porteiroSaindo');
+    const elAssumindo = document.getElementById('porteiroAssumindo');
+    const elData = document.getElementById('dataPlantao');
+
+    const saindo = elSaindo ? elSaindo.value.trim() : '';
+    const assumindo = elAssumindo ? elAssumindo.value.trim() : '';
+    const dataInput = elData ? elData.value : '';
+
+    // Formatação segura de Data (DD/MM/AAAA)
+    let dataFormatada = '';
+    if (dataInput) {
+        const partes = dataInput.split('-');
+        if (partes.length === 3) {
+            dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+    }
+
+    if (!assumindo) {
+        alert('Por favor, informe o porteiro que está assumindo.');
+        return;
+    }
+
+    // Montagem do texto final
     let msg = `📋 *PASSAGEM DE PLANTÃO - LAGUNA HALL*\n`;
-    msg += `📅 *Data:* ${data}\n`;
-    msg += `👤 *Saindo:* ${saindo}\n`;
+    msg += `📅 *Data:* ${dataFormatada || 'Não informada'}\n`;
+    msg += `👤 *Saindo:* ${saindo || 'Não informado'}\n`;
     msg += `👤 *Assumindo:* ${assumindo}\n\n`;
 
     const ocorrencias = document.getElementById('ocorrencias').value.trim();
@@ -219,44 +173,51 @@ function enviarWhatsapp() {
         let textoBloco = '';
         rows.forEach(row => {
             const inputs = row.querySelectorAll('input, select');
-            const linhaFormatada = formatador(Array.from(inputs).map(i => i.value));
+            const vals = Array.from(inputs).map(i => i.value.trim());
+            const linhaFormatada = formatador(vals);
             if (linhaFormatada) textoBloco += ` • ${linhaFormatada}\n`;
         });
         if (textoBloco) msg += `*${titulo}:*\n${textoBloco}\n`;
     };
 
-    processarBloco('prestadoresContainer', '🔧 Prestadores de Serviço', vals => vals[0] ? `${vals[0]} - ${vals[1]} (${vals[2] || '?' } às ${vals[3] || '?'})` : null);
-    processarBloco('entregasContainer', '📬 Entregas Pendentes', vals => vals[0] ? `Apto ${vals[0]} - ${vals[1]} (${vals[2]} vol)` : null);
-    processarBloco('cartasContainer', '✉️ Cartas/Envelopes', vals => vals[0] ? `Apto ${vals[0]} - ${vals[1]} (${vals[2]}x ${vals[3]})` : null);
-    processarBloco('chavesContainer', '🔑 Chaves na Portaria', vals => vals[0] ? `Apto ${vals[0]} - ${vals[1]} (${vals[2]} chave(s))` : null);
-    processarBloco('recolherContainer', '🚛 Encomendas a Recolher', vals => vals[0] ? `Apto ${vals[0]} - ${vals[1]} (${vals[2]} vol) -> Retira: ${vals[3]}` : null);
+    processarBloco('prestadoresContainer', '🔧 Prestadores de Serviço', vals => vals[0] ? `${vals[0]} - ${vals[1]} (${vals[2] || '?'} às ${vals[3] || '?'})` : null);
+    processarBloco('entregasContainer', '📬 Entregas Pendentes', vals => vals[0] ? `Apto ${vals[0]} - ${vals[1]} (${vals[2] || '1'} vol)` : null);
+    processarBloco('cartasContainer', '✉️ Cartas/Envelopes', vals => vals[0] ? `Apto ${vals[0]} - ${vals[1]} (${vals[2] || '1'}x ${vals[3]})` : null);
+    processarBloco('chavesContainer', '🔑 Chaves na Portaria', vals => vals[0] ? `Apto ${vals[0]} - ${vals[1]} (${vals[2] || '1'} chave(s))` : null);
+    processarBloco('recolherContainer', '🚛 Encomendas a Recolher', vals => vals[0] ? `Apto ${vals[0]} - ${vals[1]} (${vals[2] || '1'} vol) -> Retira: ${vals[3] || 'Não especificado'}` : null);
 
-    const foneNumero = ""; // Insira o número com DDD se desejar fixar destinatário
+    const foneNumero = "";
     const url = `https://api.whatsapp.com/send?phone=${foneNumero}&text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
 }
 
-// ================================================
-// ENCERRAMENTO E LIMPEZA DE DADOS
-// ================================================
-function limparFormulario() {
-    document.getElementById('plantaoForm').reset();
-    document.querySelectorAll('.dynamic-container').forEach(container => container.innerHTML = '');
-    localStorage.removeItem('draft_plantao');
-    carregarUsuario();
-    definirDataAtual();
-}
-
-function novoPlantao() {
-    if (confirm('Deseja iniciar um novo plantão? Isso limpará os dados salvos do relatório atual.')) {
-        limparFormulario();
+// Persistência em Rascunho
+function salvarRascunho() {
+    const dados = {
+        data: document.getElementById('dataPlantao').value,
+        saindo: document.getElementById('porteiroSaindo').value,
+        assumindo: document.getElementById('porteiroAssumindo').value,
+        ocorrencias: document.getElementById('ocorrencias').value,
+        obsGerais: document.getElementById('observacoesGenerais').value,
+        obsPortaria: document.getElementById('observacoesPortaria').value
+    };
+    localStorage.setItem('rascunhoPlantao', JSON.stringify(dados));
+    const badge = document.getElementById('statusSalvo');
+    if (badge) {
+        badge.innerText = 'Rascunho salvo!';
+        setTimeout(() => badge.innerText = '', 3000);
     }
 }
 
-function sairSistema() {
-    if (confirm('Deseja encerrar a sessão? Todos os dados gravados serão apagados.')) {
-        limparFormulario();
-        localStorage.removeItem('usuarioLogado');
-        window.location.reload();
+function carregarRascunho() {
+    const salvo = localStorage.getItem('rascunhoPlantao');
+    if (salvo) {
+        const dados = JSON.parse(salvo);
+        if (dados.data) document.getElementById('dataPlantao').value = dados.data;
+        if (dados.saindo) document.getElementById('porteiroSaindo').value = dados.saindo;
+        if (dados.assumindo) document.getElementById('porteiroAssumindo').value = dados.assumindo;
+        if (dados.ocorrencias) document.getElementById('ocorrencias').value = dados.ocorrencias;
+        if (dados.obsGerais) document.getElementById('observacoesGenerais').value = dados.obsGerais;
+        if (dados.obsPortaria) document.getElementById('observacoesPortaria').value = dados.obsPortaria;
     }
 }
