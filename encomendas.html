@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo/style.css">
+    <title>Encomendas - Edifício Laguna Hall</title>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header flex-between">
+            <div>
+                <h1>Sistema Operacional do Edifício Laguna Hall</h1>
+                <p class="subtitle">Módulo de Notificação de Encomendas</p>
+            </div>
+            <div class="user-session">
+                <nav class="nav-links" id="menuNavegacao"></nav>
+                <div class="operator-badge">Operador: <strong id="nomeOperador">-</strong></div>
+            </div>
+        </header>
+
+        <!-- Formulário de Cadastro -->
+        <section class="section-card">
+            <h2>Registro de Chegada de Encomenda</h2>
+            
+            <form id="formEncomenda" onsubmit="adicionarEncomenda(event)">
+                <div class="form-grid-2" style="margin-top: 15px;">
+                    
+                    <div class="form-group">
+                        <label for="selectApto">Selecione o Apartamento:</label>
+                        <select id="selectApto" onchange="carregarMoradoresApto()" required>
+                            <option value="">-- Escolha o Apto --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectMorador">Selecione o Morador:</label>
+                        <select id="selectMorador" required>
+                            <option value="">-- Selecione o Apto primeiro --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qtdEncomenda">Quantidade:</label>
+                        <input type="number" id="qtdEncomenda" value="1" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipoEncomenda">Tipo / Origem do Recebimento:</label>
+                        <select id="tipoEncomenda">
+                            <option value="Amazon">Amazon</option>
+                            <option value="Mercado Livre">Mercado Livre</option>
+                            <option value="Shopee">Shopee</option>
+                            <option value="Shein">Shein</option>
+                            <option value="Netshoes">Netshoes</option>
+                            <option value="iFood">iFood</option>
+                            <option value="99">99</option>
+                            <option value="Zé Delivery">Zé Delivery</option>
+                            <option value="Compras">Compras</option>
+                            <option value="Farmácia">Farmácia</option>
+                            <option value="Boleto do Condomínio">Boleto do Condomínio</option>
+                            <option value="Boleto Gás">Boleto Gás</option>
+                            <option value="Conta Neoenergia">Conta Neoenergia</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div style="margin-top: 25px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="background-color: #2563eb; color: #fff; padding: 10px 18px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">📦 Registrar Encomenda</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Seção de Listagem das Encomendas Registradas -->
+        <section class="section-card" style="margin-top: 20px;">
+            <h2>Encomendas Aguardando Retirada</h2>
+            <div id="lista-encomendas-container" style="margin-top: 15px;">
+                <!-- Os cards de encomendas e botões do WhatsApp serão inseridos aqui dinamicamente pelo JS -->
+            </div>
+        </section>
+
+        <div class="actions-bar">
+            <button type="button" class="btn btn-danger" onclick="fazerLogout()">🔒 Sair / Trocar</button>
+        </div>
+
+        <footer>
+            <figure class="logo-gs">
+                <img src="imagem/logo-azul-removebg-preview-removebg-preview.png" alt="logo" width="300px">
+            </figure>
+        </footer>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/encomendas.js"></script>
+</body>
+</html>
