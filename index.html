@@ -3,157 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="estilo/style.css">
-    <title>Sistema de Passagem de Plantão | GS Interactive</title>
-   
+    <title>Acesso - Sistema Operacional do Edifício Laguna Hall</title>
 </head>
 <body>
 
-    <!-- MODAL DE LOGIN (TELA DE BLOQUEIO) -->
-    <div id="modalLogin" class="modal-overlay">
+    <div class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <figure></figure>
-                    <img src="imagens/logo-predio-p.png" alt="Logo da Portaria" width="100px">
-                </figure>
-                <h2>Portaria Laguna Hall</h2>
-                <p>Acesso ao Sistema de Plantão</p>
+                <h1>Sistema Operacional</h1>
+                <h1>Condomínio Laguna Hall</h1>
+                <p>Acesso e Identificação de Operador</p>
             </div>
-            <div class="form-group">
-                <label for="selectPorteiroLogin">Selecione o seu Nome:</label>
-                <select id="selectPorteiroLogin">
-                    <option value="">-- Selecione o Porteiro --</option>
-                    <option value="Germano">Germano</option>
-                    <option value="Jonas Paulo">Jonas Paulo</option>
-                    <option value="Luis Carlos">Luis Carlos</option>
-                    <option value="substituto">Alexandre Florencio</option>
-                </select>
-            </div>
-            <button type="button" class="btn-login" onclick="iniciarSessao()">🔓 Iniciar Plantão</button>
-            <figure class="img-login">
-                <img src="imagens/gs-p.png" alt="Imagem de login">
+
+            <form onsubmit="iniciarSessao(event)">
+                <div class="form-group">
+                    <label for="selectUsuarioLogin">Selecione o Colaborador:</label>
+                    <select id="selectUsuarioLogin" required>
+                        <option value="">-- Selecione seu Nome --</option>
+                        <option value="Germano Santos">Germano Santos (Porteiro)</option>
+                        <option value="Jonas Paulo">Jonas Paulo (Porteiro)</option>
+                        <option value="Alexandre Florêncio">Alexandre Florêncio (Porteiro)</option>
+                        <option value="Luiz Carlos">Luiz Carlos (Porteiro)</option>
+                        <option value="Cícero">Cícero (Zelador)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full" style="margin-top: 20px;">🔓 Entrar no Sistema</button>
+            </form>
+            <figure class="logo-gs">
+                <img src="imagem/logo-login-p.png" alt="">
             </figure>
         </div>
     </div>
 
-    <!-- CONTEÚDO PRINCIPAL (INICIA OCULTO) -->
-    <div id="conteudoSistema" class="container hidden">
-        <!-- CABEÇALHO DA PÁGINA -->
-        <header class="header flex-between">
-            <div class="header-title">
-                <h1>Portaria Laguna Hall</h1>
-                <p>Relatório de Passagem de Plantão</p>
-            </div>
-            <div class="user-session">
-                <span>Operador: <strong id="nomeOperador">-</strong></span>
-            </div>
-        </header>
-
-        <!-- INFORMACÕES DO PLANTÃO -->
-        <fieldset class="section-card">
-            <legend>Informações do Plantão</legend>
-            <div class="form-grid-3">
-                <div class="form-group">
-                    <label for="dataPlantao">Data do Plantão</label>
-                    <input type="date" id="dataPlantao">
-                </div>
-                <div class="form-group">
-                    <label for="porteiroSaindo">Porteiro Saindo</label>
-                     <select id="porteiroSaindo">
-                    <option value="">-- Selecione o Porteiro --</option>
-                    <option value="Germano">Germano</option>
-                    <option value="Jonas Paulo">Jonas Paulo</option>
-                    <option value="Luis Carlos">Luis Carlos</option>
-                    <option value="substituto">Alexandre Florencio</option>
-                </select>
-                </div>
-                <div class="form-group">
-                    <label for="porteiroAssumindo">Porteiro Assumindo</label>
-                     <select id="porteiroAssumindo">
-                    <option value="">-- Selecione o Porteiro --</option>
-                    <option value="Germano">Germano</option>
-                    <option value="Jonas Paulo">Jonas Paulo</option>
-                    <option value="Luis Carlos">Luis Carlos</option>
-                    <option value="substituto">Alexandre Florencio</option>
-                </select>
-                </div>
-            </div>
-        </fieldset>
-
-        <!-- OCORRÊNCIAS E OBSERVAÇÕES -->
-        <fieldset class="section-card">
-            <legend>Ocorrências e Registros</legend>
-            <div class="form-grid-1">
-                <div class="form-group">
-                    <label for="ocorrencias">Ocorrências do Plantão</label>
-                    <textarea id="ocorrencias" placeholder="Descreva as ocorrências relevantes do turno..."></textarea>
-                </div>
-                <div class="form-grid-2" style="margin-top: 12px;">
-                    <div class="form-group">
-                        <label for="observacoesGenerais">Observações Gerais</label>
-                        <textarea id="observacoesGenerais" placeholder="Avisos gerais, notas ou pendências..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="observacoesPortaria">Observações da Portaria</label>
-                        <textarea id="observacoesPortaria" placeholder="Informações de equipamentos, chaves, etc..."></textarea>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
-        <!-- PRESTADORES DE SERVIÇO -->
-        <fieldset class="section-card">
-            <legend>Prestadores de Serviço</legend>
-            <div id="prestadoresContainer" class="dynamic-container"></div>
-            <button type="button" class="btn-add" onclick="adicionarPrestador()">+ Adicionar Prestador</button>
-        </fieldset>
-
-        <!-- ENTREGAS PENDENTES -->
-        <fieldset class="section-card">
-            <legend>Entregas Pendentes</legend>
-            <div id="entregasContainer" class="dynamic-container"></div>
-            <button type="button" class="btn-add" onclick="adicionarEntrega()">+ Adicionar Entrega</button>
-        </fieldset>
-
-        <!-- CARTAS / ENVELOPES -->
-        <fieldset class="section-card">
-            <legend>Cartas e Envelopes</legend>
-            <div id="cartasContainer" class="dynamic-container"></div>
-            <button type="button" class="btn-add" onclick="adicionarCarta()">+ Adicionar Carta/Envelope</button>
-        </fieldset>
-
-        <!-- CHAVES NA PORTARIA -->
-        <fieldset class="section-card">
-            <legend>Chaves na Portaria</legend>
-            <div id="chavesContainer" class="dynamic-container"></div>
-            <button type="button" class="btn-add" onclick="adicionarChave()">+ Adicionar Chave</button>
-        </fieldset>
-
-        <!-- ENCOMENDAS A RECOLHER -->
-        <fieldset class="section-card">
-            <legend>Encomendas a Recolher</legend>
-            <div id="recolherContainer" class="dynamic-container"></div>
-            <button type="button" class="btn-add" onclick="adicionarRecolher()">+ Adicionar Item a Recolher</button>
-        </fieldset>
-
-        <!-- BARRA DE AÇÕES -->
-        <div class="actions-bar flex-between">
-            <span id="statusSalvo" class="status-badge"></span>
-            <div class="flex-center">
-                <button type="button" class="btn-secondary" onclick="salvarRascunho()">💾 Salvar Rascunho</button>
-                <button type="button" class="btn-danger" onclick="trocarOperador()">🔒 Trocar Operador</button>
-                <button type="button" class="btn-whatsapp" onclick="enviarWhatsapp()">📲 Enviar via WhatsApp</button>
-            </div>
-        </div>
-
-        <!-- RODAPÉ -->
-        <footer>
-            
-           <p>&copy 2026 GS Interactive Ltda. Todos os direitos reservados. Recife, Pernambuco, Brasil.</p>
-        </footer>
-    </div>
-
-    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
