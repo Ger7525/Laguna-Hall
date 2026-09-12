@@ -1,487 +1,253 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passagem de Plantão - Laguna Hall</title>
-    <link rel="stylesheet" href="estilo/style.css">
-    <style>
-/* ================================================
-   VARIÁVEIS E CONFIGURAÇÕES GERAIS
-   ================================================ */
-:root {
-    --bg-primary: #0f172a;
-    --bg-card: #1e293b;
-    --bg-input: #334155;
-    --border-color: #475569;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent-blue: #3b82f6;
-    --accent-blue-hover: #2563eb;
-    --accent-green: #22c55e;
-    --accent-green-hover: #16a34a;
-    --accent-red: #ef4444;
-    --accent-red-hover: #dc2626;
-    --radius: 8px;
-    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-}
-
-body {
-    background-color: var(--bg-primary);
-    color: var(--text-main);
-    line-height: 1.5;
-    padding: 20px 10px;
-    display: flex;
-    justify-content: center;
-}
-
-.container {
-    width: 100%;
-    max-width: 1100px;
-    background: transparent;
-}
-
-/* ================================================
-   CABEÇALHO E RODAPÉ
-   ================================================ */
-.flex-between {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.flex-center {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.header {
-    background: var(--bg-card);
-    padding: 20px 25px;
-    border-radius: var(--radius);
-    margin-bottom: 20px;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow);
-}
-
-.header-title h1 {
-    font-size: 1.6rem;
-    color: var(--text-main);
-    letter-spacing: 0.5px;
-}
-
-.header-title p {
-    font-size: 0.9rem;
-    color: var(--accent-blue);
-    font-weight: 600;
-}
-
-.user-session {
-    font-size: 0.95rem;
-    background: var(--bg-input);
-    padding: 8px 16px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border-color);
-}
-
-.user-session strong {
-    color: var(--accent-blue);
-}
-
-.footer {
-    margin-top: 30px;
-    padding: 15px 20px;
-    background: var(--bg-card);
-    border-radius: var(--radius);
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-.dev-brand img {
-    object-fit: contain;
-}
-.dev-logo{
-    width: 70px;
-    border-radius: 100%;
-    margin-top: 15px ;
-    margin:15px 10px 0 ;
-    border: 1px solid white;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.788);
-}
-
-/* ================================================
-   CARDS DE SEÇÃO E ESTRUTURA
-   ================================================ */
-.section-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-}
-
-legend {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--text-main);
-    padding: 0 10px;
-}
-
-.form-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-}
-
-.form-grid-2 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.form-group label {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    font-weight: 600;
-}
-
-/* ================================================
-   INPUTS, SELECTS E TEXTAREAS
-   ================================================ */
-input, select, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    color: var(--text-main);
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-input:focus, select:focus, textarea:focus {
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-input[readonly] {
-    opacity: 0.7;
-    cursor: not-allowed;
-    background: #1e293b;
-}
-
-textarea {
-    resize: vertical;
-}
-
-/* ================================================
-   LINHAS DINÂMICAS E BOTÕES DE AÇÃO
-   ================================================ */
-.dynamic-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-
-.dynamic-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    animation: fadeIn 0.25s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.remove-btn {
-    background: rgba(239, 68, 68, 0.15);
-    color: var(--accent-red);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    width: 38px;
-    height: 38px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-    flex-shrink: 0;
-}
-
-.remove-btn:hover {
-    background: var(--accent-red);
-    color: #fff;
-}
-
-/* ================================================
-   BOTÕES E BARRA DE AÇÕES
-   ================================================ */
-button {
-    font-weight: 600;
-    font-size: 0.9rem;
-    border-radius: 6px;
-    padding: 10px 18px;
-    cursor: pointer;
-    border: none;
-    transition: background 0.2s, transform 0.1s;
-}
-
-button:active {
-    transform: scale(0.98);
-}
-
-.btn-add {
-    background: rgba(59, 130, 246, 0.15);
-    color: var(--accent-blue);
-    border: 1px dashed var(--accent-blue);
-    width: 100%;
-    margin-top: 5px;
-}
-
-.btn-add:hover {
-    background: var(--accent-blue);
-    color: #fff;
-}
-
-.actions-bar {
-    background: var(--bg-card);
-    padding: 18px 25px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow);
-}
-
-.btn-whatsapp {
-    background: var(--accent-green);
-    color: #fff;
-    font-size: 1rem;
-    padding: 12px 24px;
-}
-
-.btn-whatsapp:hover {
-    background: var(--accent-green-hover);
-}
-
-.btn-secondary {
-    background: var(--bg-input);
-    color: var(--text-main);
-    border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover {
-    background: #475569;
-}
-
-.btn-danger {
-    background: rgba(239, 68, 68, 0.2);
-    color: var(--accent-red);
-    border: 1px solid var(--accent-red);
-}
-
-.btn-danger:hover {
-    background: var(--accent-red);
-    color: #fff;
-}
-
-.status-badge {
-    font-size: 0.85rem;
-    color: var(--accent-green);
-    margin-right: 15px;
-    font-weight: 600;
-}
-
-/* ================================================
-   RESPONSIVIDADE (MOBILE E TABLETS)
-   ================================================ */
-@media (max-width: 850px) {
-    
-    body {
-        padding: 10px 0;
-    }
-
-    .container {
-        width: 95%;
-    }
-
-    .header, 
-    .section-card, 
-    .actions-bar, 
-    .footer {
-        margin-left: 5px;
-        margin-right: 5px;
-        padding: 15px 12px;
-    }
-
-    .form-grid-3, .form-grid-2 {
-        grid-template-columns: 1fr;
-    }
-
-    .flex-between {
-        flex-direction: column;
-        gap: 15px;
-        align-items: stretch;
-        width: 100%;
-    }
-
-    .actions-bar > div {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-    }
-
-    .actions-bar button {
-        width: 100%;
-    }
-
-    .status-badge {
-        text-align: center;
-        margin-right: 0;
-        margin-bottom: 5px;
-    }
-    
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="estilo/style.css">
+  <title>Passagem de Plantão - Edifício Laguna Hall</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #f4f6f9; padding: 20px; color: #333; }
+    .container { max-width: 850px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .header-title { text-align: center; margin-bottom: 20px; }
+    .header-title h1 { color: #1a2a3a; font-size: 1.4rem; }
+    .header-title p { color: #666; font-size: 0.9rem; margin-top: 4px; }
+    .nav-bar { display: flex; justify-content: space-between; align-items: center; background: #e2e8f0; padding: 10px 15px; border-radius: 6px; margin-bottom: 20px; }
+    .nav-links a { text-decoration: none; color: #334155; font-weight: bold; margin-right: 10px; padding: 6px 12px; border-radius: 4px; }
+    .nav-links a.active { background: #1e3a8a; color: white; }
+    .section-box { border: 1px solid #e0e0e0; background: #fafafa; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+    .section-box h3 { margin-bottom: 12px; color: #2c3e50; font-size: 1.1rem; }
+    .form-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 10px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.88rem; }
+    input[type="text"], input[type="date"], select, textarea { width: 100%; padding: 9px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    textarea { height: 85px; resize: vertical; }
+    .char-count { font-size: 12px; color: #666; text-align: right; margin-top: -6px; margin-bottom: 10px; }
+    button { background-color: #27ae60; color: white; border: none; padding: 9px 15px; font-size: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    button:hover { background-color: #219150; }
+    .btn-danger { background-color: #dc2626; }
+    .btn-danger:hover { background-color: #b91c1c; }
+    .btn-whatsapp { background-color: #25d366; }
+    .btn-whatsapp:hover { background-color: #1ebd59; }
+    .records-list { margin-top: 10px; list-style: none; }
+    .records-list li { background: #fff; border: 1px solid #ddd; padding: 8px 12px; margin-bottom: 6px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .btn-del { background-color: #e74c3c; padding: 4px 8px; font-size: 12px; }
+    .actions-bar { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- CABEÇALHO COM LOGO E SESSÃO -->
-        <header class="header flex-between">
-            <div class="header-title">
-                <img src="imagens/laguna-logo-removebg-preview (1).png" alt="logo" width="200px">
-                <h1>Passagem de Plantão</h1>
-                <p>Edifício Laguna Hall</p>
-            </div>
-            <div class="user-session flex-center">
-                <span>Operador: <strong id="usuarioAtual">Buscando...</strong></span>
-                <button type="button" class="btn-secondary" onclick="sairSistema()">Sair</button>
-            </div>
-        </header>
 
-        <!-- FORMULÁRIO PRINCIPAL -->
-        <form id="plantaoForm">
-            <!-- PAINEL DE CONTROLE / INFORMAÇÕES INICIAIS -->
-            <fieldset class="section-card">
-                <legend>Informações do Plantão</legend>
-                <div class="form-grid-3">
-                    <div class="form-group">
-                        <label for="porteiroSaindo">Porteiro (Saindo):</label>
-                        <input type="text" id="porteiroSaindo" name="porteiroSaindo" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="porteiroAssumindo">Porteiro (Assumindo):</label>
-                        <input type="text" id="porteiroAssumindo" name="porteiroAssumindo" required placeholder="Digite o nome de quem assume">
-                    </div>
-                    <div class="form-group">
-                        <label for="dataPlantao">Data do Plantão:</label>
-                        <input type="date" id="dataPlantao" name="dataPlantao" required>
-                    </div>
-                </div>
-            </fieldset>
+<div class="container">
+  <div class="header-title">
+    <h1>Sistema Operacional do Edifício Laguna Hall</h1>
+    <p>Módulo de Passagem de Plantão</p>
+  </div>
 
-            <!-- OCORRÊNCIAS -->
-            <fieldset class="section-card">
-                <legend>⚠️ Ocorrências do Plantão</legend>
-                <div class="form-group">
-                    <textarea id="ocorrencias" name="ocorrencias" rows="4" placeholder="Descreva aqui qualquer anormalidade ou evento importante..."></textarea>
-                </div>
-            </fieldset>
+  <div class="nav-bar">
+    <div class="nav-links" id="menuNavegacao"></div>
+    <div>Operador: <strong id="nomeOperador">-</strong> | <a href="#" onclick="fazerLogout()" style="color: #dc2626; text-decoration: none; font-weight: bold;">Sair</a></div>
+  </div>
 
-            <!-- PRESTADORES DE SERVIÇO -->
-            <fieldset class="section-card">
-                <legend>🔧 Prestadores de Serviço</legend>
-                <div id="prestadoresContainer" class="dynamic-container"></div>
-                <button type="button" class="btn-add" onclick="addPrestador()">+ Adicionar Prestador</button>
-            </fieldset>
-
-            <!-- ENTREGAS E CORRESPONDÊNCIAS -->
-            <div class="form-grid-2">
-                <fieldset class="section-card">
-                    <legend>📬 Entregas Pendentes</legend>
-                    <div id="entregasContainer" class="dynamic-container"></div>
-                    <button type="button" class="btn-add" onclick="addEntrega()">+ Adicionar Entrega</button>
-                </fieldset>
-
-                <fieldset class="section-card">
-                    <legend>✉️ Cartas e Envelopes</legend>
-                    <div id="cartasContainer" class="dynamic-container"></div>
-                    <button type="button" class="btn-add" onclick="addCarta()">+ Adicionar Carta</button>
-                </fieldset>
-            </div>
-
-            <!-- CHAVES E ENCOMENDAS A RECOLHER -->
-            <div class="form-grid-2">
-                <fieldset class="section-card">
-                    <legend>🔑 Chaves na Portaria</legend>
-                    <div id="chavesContainer" class="dynamic-container"></div>
-                    <button type="button" class="btn-add" onclick="addChave()">+ Adicionar Chave</button>
-                </fieldset>
-
-                <fieldset class="section-card">
-                    <legend>🚛 Encomendas a Recolher</legend>
-                    <div id="recolherContainer" class="dynamic-container"></div>
-                    <button type="button" class="btn-add" onclick="addRecolher()">+ Adicionar Encomenda</button>
-                </fieldset>
-            </div>
-
-            <!-- OBSERVAÇÕES GERAIS E PORTARIA -->
-            <fieldset class="section-card">
-                <legend>📝 Observações Gerais & Portaria</legend>
-                <div class="form-grid-2">
-                    <div class="form-group">
-                        <label for="observacoesGenerais">Observações Gerais:</label>
-                        <textarea id="observacoesGenerais" name="observacoesGenerais" rows="3" placeholder="Avisos gerais, trocas de lâmpadas, etc..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="observacoesPortaria">Observações da Portaria:</label>
-                        <textarea id="observacoesPortaria" name="observacoesPortaria" rows="3" placeholder="Assuntos diretos do posto de trabalho..."></textarea>
-                    </div>
-                </div>
-            </fieldset>
-
-            <!-- BARRA DE AÇÕES -->
-            <div class="actions-bar flex-between">
-                <div>
-                    <button type="button" class="btn-danger" onclick="limparFormulario()">Limpar Relatório</button>
-                    <button type="button" class="btn-secondary" onclick="novoPlantao()">Novo Plantão</button>
-                </div>
-                <div>
-                    <span id="saveStatus" class="status-badge">✓ Sistema pronto</span>
-                    <button type="button" class="btn-whatsapp" onclick="enviarWhatsapp()">Enviar via WhatsApp</button>
-                </div>
-            </div>
-        </form>
-
-        <!-- RODAPÉ DA APLICAÇÃO -->
-        <footer class="footer flex-between">
-            <p>Operador atual: <span id="usuarioAtualTexto">Carregando...</span></p>
-            <div class="dev-brand flex-center">
-                <span>&copy G Santos todos direitos Reservados...</span>
-            </div>
-        </footer>
+  <!-- SEÇÃO: DADOS DO TURNO -->
+  <div class="section-box">
+    <h3>Dados do Plantão</h3>
+    <div class="form-grid-3">
+      <div>
+        <label for="dataPlantao">Data do Plantão:</label>
+        <input type="date" id="dataPlantao">
+      </div>
+      <div>
+        <label for="porteiroSaindo">Porteiro Saindo:</label>
+        <select id="porteiroSaindo">
+          <option value="">-- Selecione --</option>
+          <option value="Germano Santos">Germano Santos</option>
+          <option value="Jonas Paulo">Jonas Paulo</option>
+          <option value="Alexandre Florêncio">Alexandre Florêncio</option>
+          <option value="Luiz Carlos">Luiz Carlos</option>
+        </select>
+      </div>
+      <div>
+        <label for="porteiroAssumindo">Porteiro Assumindo:</label>
+        <select id="porteiroAssumindo">
+          <option value="">-- Selecione --</option>
+          <option value="Germano Santos">Germano Santos</option>
+          <option value="Jonas Paulo">Jonas Paulo</option>
+          <option value="Alexandre Florêncio">Alexandre Florêncio</option>
+          <option value="Luiz Carlos">Luiz Carlos</option>
+        </select>
+      </div>
     </div>
+  </div>
 
-    <script src="js/app.js"></script>
+  <!-- 1. SEÇÃO DE ENCOMENDAS -->
+  <div class="section-box">
+    <h3>1. Encomendas</h3>
+    <input type="text" id="enc-titulo" placeholder="Apto / Nome / Quantidade / Tipo">
+    <textarea id="enc-texto" maxlength="1000" placeholder="Digite as observações da encomenda (máx. 1.000 caracteres)..." oninput="atualizarContador('enc-texto', 'enc-count')"></textarea>
+    <div id="enc-count" class="char-count">0 / 1000 caracteres</div>
+    <button type="button" onclick="adicionarRegistro('enc-titulo', 'enc-texto', 'lista-encomendas')">➕ Adicionar Encomenda</button>
+    <ul id="lista-encomendas" class="records-list"></ul>
+  </div>
+
+  <!-- 2. SEÇÃO DE PRESTADORES DE SERVIÇO -->
+  <div class="section-box">
+    <h3>2. Prestador de Serviço</h3>
+    <input type="text" id="prest-titulo" placeholder="Nome / Empresa / Serviço / Horário">
+    <textarea id="prest-texto" maxlength="1000" placeholder="Digite as observações sobre o serviço (máx. 1.000 caracteres)..." oninput="atualizarContador('prest-texto', 'prest-count')"></textarea>
+    <div id="prest-count" class="char-count">0 / 1000 caracteres</div>
+    <button type="button" onclick="adicionarRegistro('prest-titulo', 'prest-texto', 'lista-prestadores')">➕ Adicionar Prestador</button>
+    <ul id="lista-prestadores" class="records-list"></ul>
+  </div>
+
+  <!-- 3. SEÇÃO DE DEMAIS OCORRÊNCIAS -->
+  <div class="section-box">
+    <h3>3. Demais Ocorrências / Observações</h3>
+    <input type="text" id="outros-titulo" placeholder="Chaves, Envelopes, Cartas ou Ocorrências">
+    <textarea id="outros-texto" maxlength="1000" placeholder="Digite o registro detalhado (máx. 1.000 caracteres)..." oninput="atualizarContador('outros-texto', 'outros-count')"></textarea>
+    <div id="outros-count" class="char-count">0 / 1000 caracteres</div>
+    <button type="button" onclick="adicionarRegistro('outros-titulo', 'outros-texto', 'lista-outros')">➕ Adicionar Registro</button>
+    <ul id="lista-outros" class="records-list"></ul>
+  </div>
+
+  <!-- BARRA DE AÇÕES COM OS BOTÕES SOLICITADOS -->
+  <div class="actions-bar">
+    <button type="button" class="btn-danger" onclick="limparFormulario()">🗑️ Limpar Tudo</button>
+    <button type="button" class="btn-whatsapp" onclick="enviarWhatsAppPlantao()">📲 Enviar via WhatsApp</button>
+  </div>
+   <figure class="logo-gs">
+                <img src="imagem/logo-login-p.png" alt="">
+    </figure>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  // Define a data atual por padrão
+  document.addEventListener("DOMContentLoaded", () => {
+    const hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('dataPlantao').value = hoje;
+  });
+
+  function atualizarContador(textareaId, countId) {
+    const textarea = document.getElementById(textareaId);
+    const countDisplay = document.getElementById(countId);
+    countDisplay.textContent = `${textarea.value.length} / 1000 caracteres`;
+  }
+
+  function adicionarRegistro(inputId, textareaId, ulId) {
+    const input = document.getElementById(inputId);
+    const textarea = document.getElementById(textareaId);
+    const ul = document.getElementById(ulId);
+
+    const titulo = input.value.trim();
+    const texto = textarea.value.trim();
+
+    if (texto === '' && titulo === '') {
+      alert('Preencha ao menos um campo para adicionar!');
+      return;
+    }
+
+    const li = document.createElement('li');
+    const rotulo = titulo ? `<strong>${titulo}:</strong> ` : '';
+    li.innerHTML = `<span class="item-conteudo">${rotulo}${texto}</span>`;
+
+    const btnRemover = document.createElement('button');
+    btnRemover.textContent = '✕';
+    btnRemover.className = 'btn-del';
+    btnRemover.onclick = () => li.remove();
+
+    li.appendChild(btnRemover);
+    ul.appendChild(li);
+
+    input.value = '';
+    textarea.value = '';
+    atualizarContador(textareaId, textareaId === 'enc-texto' ? 'enc-count' : textareaId === 'prest-texto' ? 'prest-count' : 'outros-count');
+  }
+
+  // Função para limpar todos os campos e listas
+  function limparFormulario() {
+    if (confirm("Tem certeza que deseja limpar todos os campos e registros do plantão?")) {
+      document.getElementById('porteiroSaindo').value = '';
+      document.getElementById('porteiroAssumindo').value = '';
+
+      // Limpa os inputs e textareas
+      ['enc-titulo', 'enc-texto', 'prest-titulo', 'prest-texto', 'outros-titulo', 'outros-texto'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+
+      // Reseta contadores
+      ['enc-count', 'prest-count', 'outros-count'].forEach(id => {
+        document.getElementById(id).textContent = '0 / 1000 caracteres';
+      });
+
+      // Limpa listas UL
+      document.getElementById('lista-encomendas').innerHTML = '';
+      document.getElementById('lista-prestadores').innerHTML = '';
+      document.getElementById('lista-outros').innerHTML = '';
+    }
+  }
+
+  // Função para compilar as informações e enviar pelo WhatsApp
+  function enviarWhatsAppPlantao() {
+    const rawData = document.getElementById('dataPlantao').value;
+    let dataFormatada = rawData;
+    if (rawData) {
+      const partes = rawData.split('-');
+      if (partes.length === 3) dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+    const saindo = document.getElementById('porteiroSaindo').value || 'Não informado';
+    const assumindo = document.getElementById('porteiroAssumindo').value || 'Não informado';
+
+    let msg = `📋 *PASSAGEM DE PLANTÃO*\n`;
+    msg += `🏢 *Edifício Laguna Hall*\n`;
+    msg += `📅 *Data:* ${dataFormatada}\n`;
+    msg += `👤 *Saindo:* ${saindo}\n`;
+    msg += `👤 *Assumindo:* ${assumindo}\n\n`;
+
+    // Função auxiliar para capturar itens das listas
+    const obterItensLista = (ulId) => {
+      const itens = [];
+      const lis = document.querySelectorAll(`#${ulId} li .item-conteudo`);
+      lis.forEach(li => {
+        // Remove formatação HTML para texto limpo
+        itens.push(li.innerText.replace(/\n/g, ' '));
+      });
+      return itens;
+    };
+
+    const encomendas = obterItensLista('lista-encomendas');
+    const prestadores = obterItensLista('lista-prestadores');
+    const outros = obterItensLista('lista-outros');
+
+    // 1. Encomendas
+    msg += `📦 *1. ENCOMENDAS*\n`;
+    if (encomendas.length > 0) {
+      encomendas.forEach(i => msg += `• ${i}\n`);
+    } else {
+      msg += `• Nenhuma alteração/registro.\n`;
+    }
+    msg += `\n`;
+
+    // 2. Prestadores
+    msg += `🛠️ *2. PRESTADORES DE SERVIÇO*\n`;
+    if (prestadores.length > 0) {
+      prestadores.forEach(i => msg += `• ${i}\n`);
+    } else {
+      msg += `• Nenhum prestador registrado.\n`;
+    }
+    msg += `\n`;
+
+    // 3. Outros
+    msg += `📝 *3. DEMAIS OCORRÊNCIAS / OBSERVAÇÕES*\n`;
+    if (outros.length > 0) {
+      outros.forEach(i => msg += `• ${i}\n`);
+    } else {
+      msg += `• Sem alterações no plantão.\n`;
+    }
+
+    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+</script>
+
 </body>
 </html>
