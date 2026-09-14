@@ -4,248 +4,740 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="estilo/style.css">
-  <title>Passagem de Plantão - Edifício Laguna Hall</title>
+  <title>Passagem de Plantão & Encomendas - Laguna Hall</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background-color: #f4f6f9; padding: 20px; color: #333; }
-    .container { max-width: 850px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    .header-title { text-align: center; margin-bottom: 20px; }
-    .header-title h1 { color: #1a2a3a; font-size: 1.4rem; }
-    .header-title p { color: #666; font-size: 0.9rem; margin-top: 4px; }
-    .nav-bar { display: flex; justify-content: space-between; align-items: center; background: #e2e8f0; padding: 10px 15px; border-radius: 6px; margin-bottom: 20px; }
-    .nav-links a { text-decoration: none; color: #334155; font-weight: bold; margin-right: 10px; padding: 6px 12px; border-radius: 4px; }
-    .nav-links a.active { background: #1e3a8a; color: white; }
-    .section-box { border: 1px solid #e0e0e0; background: #fafafa; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
-    .section-box h3 { margin-bottom: 12px; color: #2c3e50; font-size: 1.1rem; }
-    .form-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 10px; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.88rem; }
-    input[type="text"], input[type="date"], select, textarea { width: 100%; padding: 9px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-    textarea { height: 85px; resize: vertical; }
-    .char-count { font-size: 12px; color: #666; text-align: right; margin-top: -6px; margin-bottom: 10px; }
-    button { background-color: #27ae60; color: white; border: none; padding: 9px 15px; font-size: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-    button:hover { background-color: #219150; }
-    .btn-danger { background-color: #dc2626; }
-    .btn-danger:hover { background-color: #b91c1c; }
-    .btn-whatsapp { background-color: #25d366; }
-    .btn-whatsapp:hover { background-color: #1ebd59; }
-    .records-list { margin-top: 10px; list-style: none; }
-    .records-list li { background: #fff; border: 1px solid #ddd; padding: 8px 12px; margin-bottom: 6px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-    .btn-del { background-color: #e74c3c; padding: 4px 8px; font-size: 12px; }
-    .actions-bar { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
+    /* RESET & ESTILOS GERAIS */
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* CABEÇALHOS E CARDS */
+    .header {
+      background: #ffffff;
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .header h1 { margin: 0; font-size: 1.6rem; color: #1a252f; }
+    .subtitle { margin: 5px 0 0 0; font-size: 0.9rem; color: #6c757d; }
+    .operator-badge {
+      background: #e9ecef;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #495057;
+    }
+
+    .section-card {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+    .section-card h2 {
+      font-size: 1.25rem;
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 18px;
+      border-bottom: 2px solid #e9ecef;
+      padding-bottom: 8px;
+    }
+    .section-card h3 { font-size: 1rem; color: #495057; margin-top: 0; margin-bottom: 12px; }
+
+    /* FORMULÁRIOS E CAMPOS */
+    .form-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+    .form-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.88rem; font-weight: 600; color: #495057; }
+    
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background-color: #fff;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    }
+
+    /* HARMONIZAÇÃO DOS TEXTAREAS */
+    textarea {
+      min-height: 110px;
+      max-height: 250px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .char-counter { font-size: 0.8rem; color: #6c757d; text-align: right; margin-top: 4px; }
+
+    /* BOTÕES ESTILIZADOS E SIMÉTRICOS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      height: 42px;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary { background-color: #0d6efd; color: #ffffff; }
+    .btn-primary:hover { background-color: #0b5ed7; }
+    .btn-whatsapp { background-color: #198754; color: #ffffff; }
+    .btn-whatsapp:hover { background-color: #157347; }
+    .btn-danger { background-color: #dc3545; color: #ffffff; }
+    .btn-danger:hover { background-color: #bb2d3b; }
+
+    .actions-bar {
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    /* TABELAS DINÂMICAS SIMÉTRICAS */
+    .table-dynamic { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; border-radius: 8px; overflow: hidden; border: 1px solid #dee2e6; }
+    .table-dynamic th { background-color: #f8f9fa; color: #495057; font-size: 0.88rem; padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; }
+    .table-dynamic td { padding: 8px 12px; border-bottom: 1px solid #dee2e6; vertical-align: middle; }
+    .table-dynamic tr:last-child td { border-bottom: none; }
+    .table-dynamic input { padding: 6px 10px; font-size: 0.9rem; }
+
+    /* CARDS DE ENCOMENDAS */
+    .encomendas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 15px; margin-top: 15px; }
+    .encomenda-card {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-left: 5px solid #0d6efd;
+      padding: 16px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .encomenda-header { font-weight: bold; font-size: 1.05rem; color: #1a252f; border-bottom: 1px solid #dee2e6; padding-bottom: 6px; }
+    .empty-notice { color: #6c757d; font-style: italic; font-size: 0.9rem; }
+
+    footer { text-align: center; margin-top: 30px; padding-bottom: 20px; }
+    footer img { max-width: 120px; opacity: 0.8; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="header-title">
-    <h1>Sistema Operacional do Edifício Laguna Hall</h1>
-    <p>Módulo de Passagem de Plantão</p>
-  </div>
+  <header class="header">
+    <div>
+      <h1>Sistema Operacional do Edifício Laguna Hall</h1>
+      <p class="subtitle">Módulo Unificado: Plantão, Ocorrências & Encomendas</p>
+    </div>
+    <div class="user-session">
+      <div class="operator-badge">Operador Logado: <strong id="nomeOperador">-</strong></div>
+    </div>
+  </header>
 
-  <div class="nav-bar">
-    <div class="nav-links" id="menuNavegacao"></div>
-    <div>Operador: <strong id="nomeOperador">-</strong> | <a href="#" onclick="fazerLogout()" style="color: #dc2626; text-decoration: none; font-weight: bold;">Sair</a></div>
-  </div>
-
-  <!-- SEÇÃO: DADOS DO TURNO -->
-  <div class="section-box">
-    <h3>Dados do Plantão</h3>
+  <!-- CABEÇALHO DE TROCA DE TURNO -->
+  <section class="section-card">
+    <h2>🔄 Troca de Turno</h2>
     <div class="form-grid-3">
-      <div>
-        <label for="dataPlantao">Data do Plantão:</label>
-        <input type="date" id="dataPlantao">
-      </div>
-      <div>
-        <label for="porteiroSaindo">Porteiro Saindo:</label>
-        <select id="porteiroSaindo">
-          <option value="">-- Selecione --</option>
-          <option value="Germano Santos">Germano Santos</option>
-          <option value="Jonas Paulo">Jonas Paulo</option>
-          <option value="Alexandre Florêncio">Alexandre Florêncio</option>
-          <option value="Luiz Carlos">Luiz Carlos</option>
+      <div class="form-group">
+        <label for="tipo-plantao">Período do Plantão:</label>
+        <select id="tipo-plantao" onchange="salvarPorteirosAuto()">
+          <option value="Diurno — 07h às 19h">Diurno — 07h às 19h</option>
+          <option value="Noturno — 19h às 07h">Noturno — 19h às 07h</option>
         </select>
       </div>
-      <div>
-        <label for="porteiroAssumindo">Porteiro Assumindo:</label>
-        <select id="porteiroAssumindo">
-          <option value="">-- Selecione --</option>
-          <option value="Germano Santos">Germano Santos</option>
-          <option value="Jonas Paulo">Jonas Paulo</option>
-          <option value="Alexandre Florêncio">Alexandre Florêncio</option>
-          <option value="Luiz Carlos">Luiz Carlos</option>
-        </select>
+      <div class="form-group">
+        <label for="porteiro-saindo">Porteiro que sai:</label>
+        <input type="text" id="porteiro-saindo" placeholder="Nome do porteiro que está saindo..." oninput="salvarPorteirosAuto()">
+      </div>
+      <div class="form-group">
+        <label for="porteiro-assumindo">Porteiro que entra:</label>
+        <input type="text" id="porteiro-assumindo" placeholder="Nome do porteiro que está entrando..." oninput="salvarPorteirosAuto()">
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- 1. SEÇÃO DE ENCOMENDAS -->
-  <div class="section-box">
-    <h3>1. Encomendas</h3>
-    <input type="text" id="enc-titulo" placeholder="Apto / Nome / Quantidade / Tipo">
-    <textarea id="enc-texto" maxlength="1000" placeholder="Digite as observações da encomenda (máx. 1.000 caracteres)..." oninput="atualizarContador('enc-texto', 'enc-count')"></textarea>
-    <div id="enc-count" class="char-count">0 / 1000 caracteres</div>
-    <button type="button" onclick="adicionarRegistro('enc-titulo', 'enc-texto', 'lista-encomendas')">➕ Adicionar Encomenda</button>
-    <ul id="lista-encomendas" class="records-list"></ul>
-  </div>
+  <!-- RECEBIMENTO DE ENCOMENDAS -->
+  <section class="section-card">
+    <h2>📦 Recebimento de Encomendas & Correspondências</h2>
 
-  <!-- 2. SEÇÃO DE PRESTADORES DE SERVIÇO -->
-  <div class="section-box">
-    <h3>2. Prestador de Serviço</h3>
-    <input type="text" id="prest-titulo" placeholder="Nome / Empresa / Serviço / Horário">
-    <textarea id="prest-texto" maxlength="1000" placeholder="Digite as observações sobre o serviço (máx. 1.000 caracteres)..." oninput="atualizarContador('prest-texto', 'prest-count')"></textarea>
-    <div id="prest-count" class="char-count">0 / 1000 caracteres</div>
-    <button type="button" onclick="adicionarRegistro('prest-titulo', 'prest-texto', 'lista-prestadores')">➕ Adicionar Prestador</button>
-    <ul id="lista-prestadores" class="records-list"></ul>
-  </div>
+    <div style="background: #f8f9fa; padding: 18px; border-radius: 8px; border: 1px solid #e9ecef;">
+      <h3>Cadastrar Nova Encomenda / Correspondência</h3>
+      
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label for="enc-apto">Nº do Apartamento:</label>
+          <select id="enc-apto" onchange="carregarMoradoresPorApto()">
+            <option value="">-- Selecione o Apto --</option>
+          </select>
+        </div>
 
-  <!-- 3. SEÇÃO DE DEMAIS OCORRÊNCIAS -->
-  <div class="section-box">
-    <h3>3. Demais Ocorrências / Observações</h3>
-    <input type="text" id="outros-titulo" placeholder="Chaves, Envelopes, Cartas ou Ocorrências">
-    <textarea id="outros-texto" maxlength="1000" placeholder="Digite o registro detalhado (máx. 1.000 caracteres)..." oninput="atualizarContador('outros-texto', 'outros-count')"></textarea>
-    <div id="outros-count" class="char-count">0 / 1000 caracteres</div>
-    <button type="button" onclick="adicionarRegistro('outros-titulo', 'outros-texto', 'lista-outros')">➕ Adicionar Registro</button>
-    <ul id="lista-outros" class="records-list"></ul>
-  </div>
+        <div class="form-group">
+          <label for="enc-morador">Morador:</label>
+          <select id="enc-morador" disabled>
+            <option value="">-- Selecione o Apto Primeiro --</option>
+          </select>
+        </div>
 
-  <!-- BARRA DE AÇÕES COM OS BOTÕES SOLICITADOS -->
+        <div class="form-group">
+          <label for="enc-tipo">Tipo de Entrega:</label>
+          <select id="enc-tipo">
+            <option value="">-- Selecione o Tipo --</option>
+            <option value="Compras">Compras</option>
+            <option value="Envelope">Envelope</option>
+            <option value="Boleto Condomínio">Boleto Condomínio</option>
+            <option value="Boleto Gás">Boleto Gás</option>
+            <option value="Conta Neoenergia">Conta Neoenergia</option>
+            <option value="Cartas">Cartas</option>
+            <option value="TEMU">TEMU</option>
+            <option value="Mercado Livre">Mercado Livre</option>
+            <option value="Shopee">Shopee</option>
+            <option value="Shein">Shein</option>
+            <option value="Netshoes">Netshoes</option>
+            <option value="iFood">iFood</option>
+            <option value="99">99</option>
+            <option value="Zé Delivery">Zé Delivery</option>
+            <option value="Comida">Comida</option>
+            <option value="Farmácia">Farmácia</option>
+            <option value="C&A">C&A</option>
+            <option value="Correios">Correios</option>
+            <option value="Magazine Luiza">Magazine Luiza</option>
+            <option value="Ferreira Costa">Ferreira Costa</option>
+            <option value="Riachuelo">Riachuelo</option>
+            <option value="Eletrodomésticos">Eletrodomésticos</option>
+            <option value="Comunicados do condomínio">Comunicados do condomínio</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid-2" style="margin-top: 15px;">
+        <div class="form-group">
+          <label for="enc-qtd">Quantidade de Volumes:</label>
+          <input type="number" id="enc-qtd" value="1" min="1" placeholder="Ex: 1">
+        </div>
+
+        <div class="form-group">
+          <label for="enc-descricao">Descrição / Observação (opcional):</label>
+          <input type="text" id="enc-descricao" placeholder="Ex: Caixa média, sacola...">
+        </div>
+      </div>
+
+      <div style="margin-top: 18px; display: flex; justify-content: flex-end;">
+        <button type="button" class="btn btn-primary" onclick="registrarEncomenda()">➕ Registrar Encomenda</button>
+      </div>
+    </div>
+
+    <div style="margin-top: 25px;">
+      <h3>Encomendas Registradas no Plantão</h3>
+      <div id="lista-encomendas" class="encomendas-grid"></div>
+    </div>
+  </section>
+
+  <!-- OCORRÊNCIAS -->
+  <section class="section-card">
+    <h2>📝 Ocorrências do Plantão</h2>
+    <div class="form-group">
+      <textarea id="texto-ocorrencias" maxlength="1000" placeholder="Digite aqui todas as ocorrências observadas durante o plantão..." oninput="atualizarContador('texto-ocorrencias', 'cnt-ocorrencias'); salvarOcorrenciasAuto();"></textarea>
+      <div id="cnt-ocorrencias" class="char-counter">0 / 1000 caracteres</div>
+    </div>
+  </section>
+
+  <!-- OBSERVAÇÕES -->
+  <section class="section-card">
+    <h2>📌 Observações Gerais</h2>
+    <div class="form-group">
+      <textarea id="texto-observacoes" maxlength="1000" placeholder="Digite aqui observações gerais ou lembretes para a próxima equipe..." oninput="atualizarContador('texto-observacoes', 'cnt-observacoes'); salvarObservacoesAuto();"></textarea>
+      <div id="cnt-observacoes" class="char-counter">0 / 1000 caracteres</div>
+    </div>
+  </section>
+
+  <!-- PRESTADORES DE SERVIÇO -->
+  <section class="section-card">
+    <h2>🛠️ Prestadores de Serviço</h2>
+    <table class="table-dynamic" id="tb-prestadores">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Empresa</th>
+          <th>Serviço</th>
+          <th>Observações</th>
+          <th style="width: 60px; text-align: center;">Ação</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div style="margin-top: 12px;">
+      <button type="button" class="btn btn-primary" onclick="addLinhaPrestador()">➕ Adicionar Prestador</button>
+    </div>
+  </section>
+
+  <!-- ENCOMENDAS PARA RECOLHIMENTO -->
+  <section class="section-card">
+    <h2>📦 Encomendas para Recolhimento</h2>
+    <table class="table-dynamic" id="tb-recolhimento">
+      <thead>
+        <tr>
+          <th style="width: 100px;">Apto</th>
+          <th>Nome</th>
+          <th style="width: 90px;">Qtd</th>
+          <th>Recolhedor</th>
+          <th style="width: 60px; text-align: center;">Ação</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div style="margin-top: 12px;">
+      <button type="button" class="btn btn-primary" onclick="addLinhaRecolhimento()">➕ Adicionar Item</button>
+    </div>
+  </section>
+
+  <!-- CHAVES NA PORTARIA -->
+  <section class="section-card">
+    <h2>🔑 Chaves na Portaria</h2>
+    <table class="table-dynamic" id="tb-chaves">
+      <thead>
+        <tr>
+          <th style="width: 100px;">Apto</th>
+          <th>Nome</th>
+          <th style="width: 90px;">Qtd</th>
+          <th style="width: 60px; text-align: center;">Ação</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div style="margin-top: 12px;">
+      <button type="button" class="btn btn-primary" onclick="addLinhaChave()">➕ Adicionar Chave</button>
+    </div>
+  </section>
+
+  <!-- BARRAS DE AÇÕES FINAIS -->
   <div class="actions-bar">
-    <button type="button" class="btn-danger" onclick="limparFormulario()">🗑️ Limpar Tudo</button>
-    <button type="button" class="btn-whatsapp" onclick="enviarWhatsAppPlantao()">📲 Enviar via WhatsApp</button>
+    <button type="button" class="btn btn-whatsapp" onclick="enviarResumoWhatsApp()">📲 Enviar Relatório do Plantão</button>
+    <button type="button" class="btn btn-danger" onclick="encerrarPlantao()">🔒 Encerrar Plantão</button>
   </div>
-   <figure class="logo-gs">
-                <img src="imagem/logo-login-p.png" alt="">
+
+  <footer>
+    <figure style="margin: 0;">
+      <img src="imagem/logo-login-p.png" alt="Logo GS">
     </figure>
+  </footer>
 </div>
 
-<script src="js/auth.js"></script>
 <script>
-  // Define a data atual por padrão
-  document.addEventListener("DOMContentLoaded", () => {
-    const hoje = new Date().toISOString().split('T')[0];
-    document.getElementById('dataPlantao').value = hoje;
+  const BASE_MORADORES = {
+    "101": [{ nome: "Kleber Buarque", telefone: "81997942579" }, { nome: "Marcia Buarque", telefone: "81981330816" }],
+    "102": [{ nome: "Reginaldo", telefone: "81988835898" }, { nome: "Mauriceia", telefone: "81988835827" }, { nome: "Artur", telefone: "81986216540" }],
+    "103": [{ nome: "Silvio", telefone: "81983001991" }, { nome: "Eudenice (Nice)", telefone: "81988124715" }],
+    "104": [{ nome: "José Armando", telefone: "81991044523" }, { nome: "Ana Cláudia", telefone: "81973029325" }],
+    "201": [{ nome: "Morador 1 (Apto 201)", telefone: "81992336350" }],
+    "202": [{ nome: "Danilo", telefone: "81998048515" }, { nome: "Nathalia", telefone: "81998699877" }],
+    "203": [{ nome: "David", telefone: "81999546754" }, { nome: "Gerson", telefone: "81997211054" }, { nome: "Davison", telefone: "81992996837" }],
+    "204": [{ nome: "Wilker", telefone: "81996154986" }],
+    "301": [{ nome: "Clecio", telefone: "81995474759" }],
+    "302": [{ nome: "Dayana", telefone: "81998384045" }, { nome: "José", telefone: "81993772000" }],
+    "303": [{ nome: "Priscila Cristyne", telefone: "81993058994" }, { nome: "Anderson", telefone: "81996388485" }, { nome: "Thiago", telefone: "81999892689" }, { nome: "Priscila Coutinho", telefone: "8196199296" }],
+    "304": [{ nome: "Saulo", telefone: "81984130142" }],
+    "401": [{ nome: "Viviane", telefone: "81997065031" }],
+    "402": [{ nome: "José Arnaldo", telefone: "81979056826" }],
+    "403": [{ nome: "Gustavo", telefone: "81999540122" }],
+    "404": [{ nome: "Viviane", telefone: "81992864065" }],
+    "501": [{ nome: "Mauricio", telefone: "81998929442" }, { nome: "Larissa", telefone: "81999470639" }],
+    "502": [{ nome: "Edna", telefone: "81988040802" }, { nome: "Rosali", telefone: "81988048020" }],
+    "503": [{ nome: "Alexandre", telefone: "81998842852" }, { nome: "Gabriela", telefone: "81994071630" }],
+    "504": [{ nome: "Thales", telefone: "81981036318" }, { nome: "Rafaela", telefone: "81999790107" }],
+    "601": [{ nome: "Amanda", telefone: "81981077486" }, { nome: "Gabriel", telefone: "81982088900" }],
+    "602": [{ nome: "Arlan", telefone: "81986956775" }, { nome: "Suhelen", telefone: "81985768399" }],
+    "603": [{ nome: "Raissa", telefone: "81999064865" }],
+    "604": [{ nome: "Marcilia", telefone: "81997161145" }],
+    "701": [{ nome: "Emanuel", telefone: "81992785516" }, { nome: "Shirlene", telefone: "81988541669" }],
+    "702": [{ nome: "Danilo Brun", telefone: "81979139104" }, { nome: "Daniel Brun", telefone: "81981033340" }, { nome: "Eudenice (Nice)", telefone: "81981156868" }],
+    "703": [{ nome: "Josy", telefone: "81997622478" }],
+    "704": [{ nome: "Ana Flora", telefone: "81988669091" }, { nome: "Jailson", telefone: "81998024248" }, { nome: "José Henrique", telefone: "81987582555" }],
+    "801": [{ nome: "Antonio", telefone: "81999763416" }, { nome: "Dadiane", telefone: "81987737326" }, { nome: "Darliane (Ananda)", telefone: "81997029579" }],
+    "802": [{ nome: "Edvaldo", telefone: "8199386681" }],
+    "803": [{ nome: "Bruno", telefone: "81992184733" }, { nome: "Flávia", telefone: "81992741443" }],
+    "804": [{ nome: "Romulo", telefone: "81973224994" }, { nome: "Amanda", telefone: "81988884836" }],
+    "901": [{ nome: "Ademir", telefone: "81984127959" }, { nome: "Caroline", telefone: "81984472474" }],
+    "902": [{ nome: "Gianina", telefone: "81988261549" }, { nome: "Gabriel", telefone: "81997669050" }, { nome: "Alice", telefone: "81994181840" }],
+    "903": [{ nome: "Ladjane", telefone: "8196166139" }],
+    "904": [{ nome: "Luiz Fernando", telefone: "81982372905" }, { nome: "Joanna", telefone: "81981214381" }],
+    "1001": [{ nome: "Gabriel", telefone: "81992767111" }, { nome: "Karla", telefone: "81992761357" }],
+    "1003": [{ nome: "Joel", telefone: "81999606066" }, { nome: "Nathalia", telefone: "81998752222" }],
+    "1004": [{ nome: "MIlena", telefone: "81988396485" }, { nome: "Enio", telefone: "81988435707" }],
+    "1101": [{ nome: "Geofred", telefone: "81988141245" }, { nome: "Tatiana", telefone: "81987950231" }],
+    "1102": [{ nome: "Etiene", telefone: "81991206752" }],
+    "1103": [{ nome: "Debora", telefone: "81997757073" }, { nome: "Antonio", telefone: "81987627340" }],
+    "1104": [{ nome: "Juliana Carla", telefone: "81984464368" }],
+    "1201": [{ nome: "Andre", telefone: "81991916975" }, { nome: "Juliana", telefone: "81996836112" }],
+    "1202": [{ nome: "Rodrigo Brito", telefone: "81994213383" }, { nome: "Luize", telefone: "81989507868" }],
+    "1203": [{ nome: "Gleybson", telefone: "81991003252" }, { nome: "Jeane", telefone: "81992776477" }],
+    "1204": [{ nome: "Janser", telefone: "81999597414" }, { nome: "Shirley", telefone: "81987297966" }, { nome: "Lucas", telefone: "81981849254" }, { nome: "Taina", telefone: "81981847295" }]
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const op = localStorage.getItem('operador_logado');
+    if (op) document.getElementById('nomeOperador').textContent = op;
+
+    popularApartamentos();
+    carregarPorteiros();
+    carregarOcorrencias();
+    carregarObservacoes();
+    renderizarEncomendas();
+    carregarTabelas();
   });
 
-  function atualizarContador(textareaId, countId) {
-    const textarea = document.getElementById(textareaId);
-    const countDisplay = document.getElementById(countId);
-    countDisplay.textContent = `${textarea.value.length} / 1000 caracteres`;
+  function popularApartamentos() {
+    const selectApto = document.getElementById('enc-apto');
+    selectApto.innerHTML = '<option value="">-- Selecione o Apto --</option>';
+    const aptosOrdenados = Object.keys(BASE_MORADORES).sort((a, b) => Number(a) - Number(b));
+    aptosOrdenados.forEach(apto => {
+      const opt = document.createElement('option');
+      opt.value = apto;
+      opt.textContent = `Apto ${apto}`;
+      selectApto.appendChild(opt);
+    });
   }
 
-  function adicionarRegistro(inputId, textareaId, ulId) {
-    const input = document.getElementById(inputId);
-    const textarea = document.getElementById(textareaId);
-    const ul = document.getElementById(ulId);
+  function carregarMoradoresPorApto() {
+    const apto = document.getElementById('enc-apto').value;
+    const selectMorador = document.getElementById('enc-morador');
+    selectMorador.innerHTML = '<option value="">-- Selecione o Morador --</option>';
+    if (!apto || !BASE_MORADORES[apto]) {
+      selectMorador.disabled = true;
+      return;
+    }
+    BASE_MORADORES[apto].forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.nome;
+      opt.dataset.tel = m.telefone.replace(/\D/g, '');
+      opt.textContent = m.nome;
+      selectMorador.appendChild(opt);
+    });
+    selectMorador.disabled = false;
+  }
 
-    const titulo = input.value.trim();
-    const texto = textarea.value.trim();
+  function salvarPorteirosAuto() {
+    localStorage.setItem('tipo_plantao', document.getElementById('tipo-plantao').value);
+    localStorage.setItem('porteiro_saindo', document.getElementById('porteiro-saindo').value);
+    localStorage.setItem('porteiro_assumindo', document.getElementById('porteiro-assumindo').value);
+  }
 
-    if (texto === '' && titulo === '') {
-      alert('Preencha ao menos um campo para adicionar!');
+  function carregarPorteiros() {
+    document.getElementById('tipo-plantao').value = localStorage.getItem('tipo_plantao') || 'Diurno — 07h às 19h';
+    document.getElementById('porteiro-saindo').value = localStorage.getItem('porteiro_saindo') || '';
+    document.getElementById('porteiro-assumindo').value = localStorage.getItem('porteiro_assumindo') || '';
+  }
+
+  function registrarEncomenda() {
+    const apto = document.getElementById('enc-apto').value;
+    const selectMorador = document.getElementById('enc-morador');
+    const moradorNome = selectMorador.value;
+    const moradorTel = selectMorador.options[selectMorador.selectedIndex]?.dataset.tel || '';
+    const tipo = document.getElementById('enc-tipo').value;
+    const qtd = document.getElementById('enc-qtd').value || 1;
+    const descricao = document.getElementById('enc-descricao').value.trim();
+
+    if (!apto || !moradorNome || !tipo) {
+      alert('Por favor, selecione o Apartamento, Morador e Tipo de entrega.');
       return;
     }
 
-    const li = document.createElement('li');
-    const rotulo = titulo ? `<strong>${titulo}:</strong> ` : '';
-    li.innerHTML = `<span class="item-conteudo">${rotulo}${texto}</span>`;
-
-    const btnRemover = document.createElement('button');
-    btnRemover.textContent = '✕';
-    btnRemover.className = 'btn-del';
-    btnRemover.onclick = () => li.remove();
-
-    li.appendChild(btnRemover);
-    ul.appendChild(li);
-
-    input.value = '';
-    textarea.value = '';
-    atualizarContador(textareaId, textareaId === 'enc-texto' ? 'enc-count' : textareaId === 'prest-texto' ? 'prest-count' : 'outros-count');
-  }
-
-  // Função para limpar todos os campos e listas
-  function limparFormulario() {
-    if (confirm("Tem certeza que deseja limpar todos os campos e registros do plantão?")) {
-      document.getElementById('porteiroSaindo').value = '';
-      document.getElementById('porteiroAssumindo').value = '';
-
-      // Limpa os inputs e textareas
-      ['enc-titulo', 'enc-texto', 'prest-titulo', 'prest-texto', 'outros-titulo', 'outros-texto'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-
-      // Reseta contadores
-      ['enc-count', 'prest-count', 'outros-count'].forEach(id => {
-        document.getElementById(id).textContent = '0 / 1000 caracteres';
-      });
-
-      // Limpa listas UL
-      document.getElementById('lista-encomendas').innerHTML = '';
-      document.getElementById('lista-prestadores').innerHTML = '';
-      document.getElementById('lista-outros').innerHTML = '';
-    }
-  }
-
-  // Função para compilar as informações e enviar pelo WhatsApp
-  function enviarWhatsAppPlantao() {
-    const rawData = document.getElementById('dataPlantao').value;
-    let dataFormatada = rawData;
-    if (rawData) {
-      const partes = rawData.split('-');
-      if (partes.length === 3) dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
-    }
-
-    const saindo = document.getElementById('porteiroSaindo').value || 'Não informado';
-    const assumindo = document.getElementById('porteiroAssumindo').value || 'Não informado';
-
-    let msg = `📋 *PASSAGEM DE PLANTÃO*\n`;
-    msg += `🏢 *Edifício Laguna Hall*\n`;
-    msg += `📅 *Data:* ${dataFormatada}\n`;
-    msg += `👤 *Saindo:* ${saindo}\n`;
-    msg += `👤 *Assumindo:* ${assumindo}\n\n`;
-
-    // Função auxiliar para capturar itens das listas
-    const obterItensLista = (ulId) => {
-      const itens = [];
-      const lis = document.querySelectorAll(`#${ulId} li .item-conteudo`);
-      lis.forEach(li => {
-        // Remove formatação HTML para texto limpo
-        itens.push(li.innerText.replace(/\n/g, ' '));
-      });
-      return itens;
+    const novaEncomenda = {
+      id: Date.now(),
+      apto,
+      moradorNome,
+      moradorTel,
+      tipo,
+      qtd,
+      descricao,
+      dataHora: new Date().toLocaleString('pt-BR')
     };
 
-    const encomendas = obterItensLista('lista-encomendas');
-    const prestadores = obterItensLista('lista-prestadores');
-    const outros = obterItensLista('lista-outros');
+    const lista = JSON.parse(localStorage.getItem('encomendas_plantao')) || [];
+    lista.unshift(novaEncomenda);
+    localStorage.setItem('encomendas_plantao', JSON.stringify(lista));
 
-    // 1. Encomendas
-    msg += `📦 *1. ENCOMENDAS*\n`;
-    if (encomendas.length > 0) {
-      encomendas.forEach(i => msg += `• ${i}\n`);
-    } else {
-      msg += `• Nenhuma alteração/registro.\n`;
-    }
-    msg += `\n`;
+    document.getElementById('enc-apto').value = '';
+    selectMorador.innerHTML = '<option value="">-- Selecione o Apto Primeiro --</option>';
+    selectMorador.disabled = true;
+    document.getElementById('enc-tipo').value = '';
+    document.getElementById('enc-qtd').value = '1';
+    document.getElementById('enc-descricao').value = '';
 
-    // 2. Prestadores
-    msg += `🛠️ *2. PRESTADORES DE SERVIÇO*\n`;
-    if (prestadores.length > 0) {
-      prestadores.forEach(i => msg += `• ${i}\n`);
-    } else {
-      msg += `• Nenhum prestador registrado.\n`;
-    }
-    msg += `\n`;
+    renderizarEncomendas();
+  }
 
-    // 3. Outros
-    msg += `📝 *3. DEMAIS OCORRÊNCIAS / OBSERVAÇÕES*\n`;
-    if (outros.length > 0) {
-      outros.forEach(i => msg += `• ${i}\n`);
-    } else {
-      msg += `• Sem alterações no plantão.\n`;
+  function renderizarEncomendas() {
+    const container = document.getElementById('lista-encomendas');
+    container.innerHTML = '';
+    const lista = JSON.parse(localStorage.getItem('encomendas_plantao')) || [];
+
+    if (lista.length === 0) {
+      container.innerHTML = '<p class="empty-notice">Nenhuma encomenda registrada neste plantão.</p>';
+      return;
     }
 
-    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
+    lista.forEach(enc => {
+      const card = document.createElement('div');
+      card.className = 'encomenda-card';
+      card.innerHTML = `
+        <div class="encomenda-header">Apto ${enc.apto} - ${enc.moradorNome}</div>
+        <div><strong>Tipo:</strong> ${enc.tipo}</div>
+        <div><strong>Quantidade:</strong> ${enc.qtd} volume(s)</div>
+        ${enc.descricao ? `<div><strong>Obs:</strong> ${enc.descricao}</div>` : ''}
+        <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 5px;"><strong>Entrada:</strong> ${enc.dataHora}</div>
+        <div style="display: flex; gap: 8px; margin-top: auto;">
+          ${enc.moradorTel ? `<button type="button" class="btn btn-whatsapp" style="flex: 1; font-size: 0.82rem;" onclick="notificarMoradorWhatsApp(${enc.id})">📲 Notificar</button>` : ''}
+          <button type="button" class="btn btn-primary" style="flex: 1; font-size: 0.82rem;" onclick="darBaixaEncomenda(${enc.id})">✅ Entregar</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function darBaixaEncomenda(id) {
+    let lista = JSON.parse(localStorage.getItem('encomendas_plantao')) || [];
+    lista = lista.filter(e => e.id !== id);
+    localStorage.setItem('encomendas_plantao', JSON.stringify(lista));
+    renderizarEncomendas();
+  }
+
+  function obterSaudacao() {
+    const hora = new Date().getHours();
+    if (hora >= 5 && hora < 12) return "Bom dia";
+    if (hora >= 12 && hora < 18) return "Boa tarde";
+    return "Boa noite";
+  }
+
+  function notificarMoradorWhatsApp(id) {
+    const lista = JSON.parse(localStorage.getItem('encomendas_plantao')) || [];
+    const item = lista.find(e => e.id === id);
+    if (!item) return;
+
+    let numFormatado = item.moradorTel.replace(/\D/g, '');
+    if (!numFormatado.startsWith('55')) numFormatado = '55' + numFormatado;
+
+    const saudacao = obterSaudacao();
+    const operador = localStorage.getItem('operador_logado') || 'Portaria';
+    const dataHoraAtual = new Date().toLocaleString('pt-BR');
+
+    let msg = `AVISO DE ENCOMENDA CHEGOU!\n`;
+    msg += `🏢 *Edifício Laguna Hall*\n\n`;
+    msg += `${saudacao}, *${item.moradorNome}* (Apto ${item.apto})!\n`;
+    msg += `Informamos que chegou uma entrega para você na portaria:\n\n`;
+    msg += `📦 *Tipo:* ${item.tipo}\n`;
+    msg += `🔢 *Quantidade:* ${item.qtd}\n`;
+
+    if (item.descricao) {
+      msg += `📝 *Obs:* ${item.descricao}\n`;
+    }
+
+    msg += `\nAtenciosamente,\n`;
+    msg += `*${operador}* - Portaria Edifício Laguna Hall\n`;
+    msg += `_Data/Hora: ${dataHoraAtual}_`;
+
+    window.open(`https://api.whatsapp.com/send?phone=${numFormatado}&text=${encodeURIComponent(msg)}`, '_blank');
+  }
+
+  function atualizarContador(inputId, labelId) {
+    const el = document.getElementById(inputId);
+    document.getElementById(labelId).textContent = `${el.value.length} / 1000 caracteres`;
+  }
+
+  function salvarOcorrenciasAuto() {
+    localStorage.setItem('ocorrencias_plantao', document.getElementById('texto-ocorrencias').value);
+  }
+
+  function carregarOcorrencias() {
+    const t = localStorage.getItem('ocorrencias_plantao') || '';
+    document.getElementById('texto-ocorrencias').value = t;
+    atualizarContador('texto-ocorrencias', 'cnt-ocorrencias');
+  }
+
+  function salvarObservacoesAuto() {
+    localStorage.setItem('observacoes_plantao', document.getElementById('texto-observacoes').value);
+  }
+
+  function carregarObservacoes() {
+    const t = localStorage.getItem('observacoes_plantao') || '';
+    document.getElementById('texto-observacoes').value = t;
+    atualizarContador('texto-observacoes', 'cnt-observacoes');
+  }
+
+  function addLinhaPrestador(dados = {nome: '', empresa: '', serviço: '', obs: ''}) {
+    const tb = document.getElementById('tb-prestadores').querySelector('tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" class="p-nome" value="${dados.nome}" oninput="salvarTabelasAuto()"></td>
+      <td><input type="text" class="p-empresa" value="${dados.empresa}" oninput="salvarTabelasAuto()"></td>
+      <td><input type="text" class="p-servico" value="${dados.serviço}" oninput="salvarTabelasAuto()"></td>
+      <td><input type="text" class="p-obs" value="${dados.obs}" oninput="salvarTabelasAuto()"></td>
+      <td style="text-align: center;"><button type="button" class="btn btn-danger" style="padding: 4px 10px; height: 32px;" onclick="removerLinha(this)">✕</button></td>
+    `;
+    tb.appendChild(tr);
+  }
+
+  function addLinhaRecolhimento(dados = {apto: '', nome: '', qtd: '', recolhedor: ''}) {
+    const tb = document.getElementById('tb-recolhimento').querySelector('tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" class="r-apto" value="${dados.apto}" oninput="salvarTabelasAuto()"></td>
+      <td><input type="text" class="r-nome" value="${dados.nome}" oninput="salvarTabelasAuto()"></td>
+      <td><input type="number" class="r-qtd" value="${dados.qtd}" oninput="salvarTabelasAuto()"></td>
+      <td><input type="text" class="r-recolhedor" value="${dados.recolhedor}" oninput="salvarTabelasAuto()"></td>
+      <td style="text-align: center;"><button type="button" class="btn btn-danger" style="padding: 4px 10px; height: 32px;" onclick="removerLinha(this)">✕</button></td>
+    `;
+    tb.appendChild(tr);
+  }
+
+  function addLinhaChave(dados = {apto: '', nome: '', qtd: ''}) {
+    const tb = document.getElementById('tb-chaves').querySelector('tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" class="c-apto" value="${dados.apto}" oninput="salvarTabelasAuto()"></td>
+      <td><input type="text" class="c-nome" value="${dados.nome}" oninput="salvarTabelasAuto()"></td>
+      <td><input type="number" class="c-qtd" value="${dados.qtd}" oninput="salvarTabelasAuto()"></td>
+      <td style="text-align: center;"><button type="button" class="btn btn-danger" style="padding: 4px 10px; height: 32px;" onclick="removerLinha(this)">✕</button></td>
+    `;
+    tb.appendChild(tr);
+  }
+
+  function removerLinha(btn) {
+    btn.closest('tr').remove();
+    salvarTabelasAuto();
+  }
+
+  function salvarTabelasAuto() {
+    const prestadores = Array.from(document.querySelectorAll('#tb-prestadores tbody tr')).map(tr => ({
+      nome: tr.querySelector('.p-nome').value,
+      empresa: tr.querySelector('.p-empresa').value,
+      serviço: tr.querySelector('.p-servico').value,
+      obs: tr.querySelector('.p-obs').value
+    }));
+
+    const recolhimentos = Array.from(document.querySelectorAll('#tb-recolhimento tbody tr')).map(tr => ({
+      apto: tr.querySelector('.r-apto').value,
+      nome: tr.querySelector('.r-nome').value,
+      qtd: tr.querySelector('.r-qtd').value,
+      recolhedor: tr.querySelector('.r-recolhedor').value
+    }));
+
+    const chaves = Array.from(document.querySelectorAll('#tb-chaves tbody tr')).map(tr => ({
+      apto: tr.querySelector('.c-apto').value,
+      nome: tr.querySelector('.c-nome').value,
+      qtd: tr.querySelector('.c-qtd').value
+    }));
+
+    localStorage.setItem('tb_prestadores', JSON.stringify(prestadores));
+    localStorage.setItem('tb_recolhimentos', JSON.stringify(recolhimentos));
+    localStorage.setItem('tb_chaves', JSON.stringify(chaves));
+  }
+
+  function carregarTabelas() {
+    const p = JSON.parse(localStorage.getItem('tb_prestadores')) || [];
+    const r = JSON.parse(localStorage.getItem('tb_recolhimentos')) || [];
+    const c = JSON.parse(localStorage.getItem('tb_chaves')) || [];
+
+    p.forEach(d => addLinhaPrestador(d));
+    r.forEach(d => addLinhaRecolhimento(d));
+    c.forEach(d => addLinhaChave(d));
+  }
+
+  function encerrarPlantao() {
+    if (confirm('Deseja realmente encerrar o plantão? Todos os dados registrados localmente serão limpos para a próxima equipe.')) {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+  }
+
+  /* NOVO FORMATO DA MENSAGEM DO PLANTÃO */
+  function enviarResumoWhatsApp() {
+    const tipoPlantao = localStorage.getItem('tipo_plantao') || 'Diurno — 07h às 19h';
+    const pSaindo = localStorage.getItem('porteiro_saindo') || '-';
+    const pAssumindo = localStorage.getItem('porteiro_assumindo') || '-';
+    
+    const hoje = new Date();
+    const dataAtual = hoje.toLocaleDateString('pt-BR');
+    const horaAtual = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    const ocorrencias = localStorage.getItem('ocorrencias_plantao') || 'Nenhuma.';
+    const observacoes = localStorage.getItem('observacoes_plantao') || 'Nenhuma.';
+    const encomendas = JSON.parse(localStorage.getItem('encomendas_plantao')) || [];
+    const prestadores = JSON.parse(localStorage.getItem('tb_prestadores')) || [];
+    const recolhimentos = JSON.parse(localStorage.getItem('tb_recolhimentos')) || [];
+    const chaves = JSON.parse(localStorage.getItem('tb_chaves')) || [];
+
+    let msg = `🏢 *Edifício Laguna Hall*\n`;
+    msg += `📅 *Data:* ${dataAtual}\n`;
+    msg += `⏰ *Plantão:* ${tipoPlantao}\n`;
+    msg += `👤 *Porteiro que sai:* ${pSaindo}\n`;
+    msg += `👤 *Porteiro que entra:* ${pAssumindo}\n\n`;
+
+    msg += `📝 *Ocorrências:*\n${ocorrencias}\n\n`;
+    msg += `📌 *Observações:*\n${observacoes}\n\n`;
+    
+    msg += `📦 *Encomendas Pendentes (${encomendas.length}):*\n`;
+    if (encomendas.length === 0) {
+      msg += `Nenhuma.\n`;
+    } else {
+      encomendas.forEach((e, i) => msg += `${i+1}. Apto ${e.apto} - ${e.moradorNome} (${e.tipo} - Qtd: ${e.qtd})\n`);
+    }
+    
+    msg += `\n🛠️ *Prestadores de Serviço (${prestadores.length}):*\n`;
+    if (prestadores.length === 0) {
+      msg += `Nenhum.\n`;
+    } else {
+      prestadores.forEach((p, i) => msg += `${i+1}. ${p.nome} - ${p.empresa} (${p.serviço}) - Obs: ${p.obs}\n`);
+    }
+
+    msg += `\n📦 *Encomendas para Recolhimento (${recolhimentos.length}):*\n`;
+    if (recolhimentos.length === 0) {
+      msg += `Nenhuma.\n`;
+    } else {
+      recolhimentos.forEach((r, i) => msg += `${i+1}. Apto ${r.apto} - ${r.nome} (Qtd: ${r.qtd}) - Rec: ${r.recolhedor}\n`);
+    }
+
+    msg += `\n🔑 *Chaves na Portaria (${chaves.length}):*\n`;
+    if (chaves.length === 0) {
+      msg += `Nenhuma.\n`;
+    } else {
+      chaves.forEach((c, i) => msg += `${i+1}. Apto ${c.apto} - ${c.nome} (Qtd: ${c.qtd})\n`);
+    }
+
+    msg += `\nAtenciosamente,\n`;
+    msg += `*${pSaindo}*\n`;
+    msg += `_Horário de Registro: ${dataAtual} às ${horaAtual}_`;
+
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
   }
 </script>
 

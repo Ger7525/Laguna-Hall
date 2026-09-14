@@ -1,45 +1,141 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="estilo/style.css">
-    <title>Acesso - Sistema Operacional do Edifício Laguna Hall</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="estilo/style.css">
+  <title>Login - Portaria Laguna Hall</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .login-card {
+      background: #ffffff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .login-card img {
+      max-width: 140px;
+      margin-bottom: 20px;
+    }
+    .login-card h2 {
+      font-size: 1.4rem;
+      color: #1a252f;
+      margin-bottom: 8px;
+    }
+    .login-card p {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 5px;
+    }
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background-color: #fff;
+    }
+    .form-group select:focus {
+      outline: none;
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    }
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .btn-login:hover {
+      background-color: #0b5ed7;
+      transform: translateY(-1px);
+    }
+    .btn-login:active {
+      transform: translateY(0);
+    }
+    .error-message {
+      color: #dc3545;
+      font-size: 0.85rem;
+      margin-top: 12px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h1>Sistema Operacional</h1>
-                <h1>Condomínio Laguna Hall</h1>
-                <p>Acesso e Identificação de Operador</p>
-            </div>
+  <div class="login-card">
+    <img src="imagem/logo-login-p.png" alt="Logo Laguna Hall" onerror="this.style.display='none'">
+    <h2>Edifício Laguna Hall</h2>
+    <p>Acesso ao Sistema de Portaria</p>
 
-            <form onsubmit="iniciarSessao(event)">
-                <div class="form-group">
-                    <label for="selectUsuarioLogin">Selecione o Colaborador:</label>
-                    <select id="selectUsuarioLogin" required>
-                        <option value="">-- Selecione seu Nome --</option>
-                        <option value="Germano Santos">Germano Santos (Porteiro)</option>
-                        <option value="Jonas Paulo">Jonas Paulo (Porteiro)</option>
-                        <option value="Alexandre Florêncio">Alexandre Florêncio (Porteiro)</option>
-                        <option value="Luiz Carlos">Luiz Carlos (Porteiro)</option>
-                        <option value="Cícero">Cícero (Zelador)</option>
-                    </select>
-                </div>
+    <form id="form-login" onsubmit="autenticarUsuario(event)">
+      <div class="form-group">
+        <label for="usuario">Selecione o Porteiro / Operador:</label>
+        <select id="usuario" required>
+          <option value="" disabled selected>Selecione o operador...</option>
+          <option value="Germano Santos">Germano Santos</option>
+          <option value="Jonas Paulo">Jonas Paulo</option>
+          <option value="Luiz Carlos">Luiz Carlos</option>
+          <option value="Alexandre Florencio">Alexandre Florencio</option>
+        </select>
+      </div>
 
-                <button type="submit" class="btn btn-primary btn-full" style="margin-top: 20px;">🔓 Entrar no Sistema</button>
-            </form>
-            <figure class="logo-gs">
-                <img src="imagem/gs-p.png" alt="">
-            </figure>
-            
-        </div>
-        
-    </div>
-   
+      <button type="submit" class="btn-login">Entrar no Sistema</button>
+      
+      <div id="msg-erro" class="error-message">Selecione um operador para continuar!</div>
+    </form>
+  </div>
 
-    <script src="js/auth.js"></script>
+  <script>
+    function autenticarUsuario(event) {
+      event.preventDefault();
+
+      const usuarioSelect = document.getElementById('usuario');
+      const usuario = usuarioSelect.value;
+      const msgErro = document.getElementById('msg-erro');
+
+      if (usuario !== '') {
+        localStorage.setItem('operador_logado', usuario);
+        window.location.href = 'plantao.html';
+      } else {
+        msgErro.style.display = 'block';
+      }
+    }
+  </script>
+
 </body>
 </html>
