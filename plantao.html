@@ -74,161 +74,166 @@
 
 
 
-<div class="container">
+        <div class="container">
 
-  <div class="header-title">
+          <div class="header-title">
 
-    <h1>Sistema Operacional do Edifício Laguna Hall</h1>
+            <h1>Sistema Operacional do Edifício Laguna Hall</h1>
 
-    <p>Módulo de Passagem de Plantão</p>
+            <p>Módulo de Passagem de Plantão</p>
 
-  </div>
+          </div>
 
 
 
-  <div class="nav-bar">
+          <div class="nav-bar">
 
-    <div class="nav-links" id="menuNavegacao"></div>
+            <div class="nav-links" id="menuNavegacao"></div>
 
-    <div>Operador: <strong id="nomeOperador">-</strong> | <a href="#" onclick="fazerLogout()" style="color: #dc2626; text-decoration: none; font-weight: bold;">Sair</a></div>
+            <div>Operador: <strong id="nomeOperador">-</strong> | <a href="#" onclick="fazerLogout()" style="color: #dc2626; text-decoration: none; font-weight: bold;">Sair</a></div>
 
-  </div>
+          </div>
 
 
 
-  <!-- SEÇÃO: DADOS DO TURNO -->
+          <!-- SEÇÃO: DADOS DO TURNO -->
 
-  <div class="section-box">
+          <div class="section-box">
 
-    <h3>Dados do Plantão</h3>
+            <h3>Dados do Plantão</h3>
 
-    <div class="form-grid-3">
+            <div class="form-grid-3">
 
-      <div>
+              <div>
 
-        <label for="dataPlantao">Data do Plantão:</label>
+                <label for="dataPlantao">Data do Plantão:</label>
 
-        <input type="date" id="dataPlantao">
+                <input type="date" id="dataPlantao">
 
-      </div>
+              </div>
 
-      <div>
+              <div>
 
-        <label for="porteiroSaindo">Porteiro Saindo:</label>
+                <label for="porteiroSaindo">Porteiro Saindo:</label>
 
-        <select id="porteiroSaindo">
+                <select id="porteiroSaindo">
 
-          <option value="">-- Selecione --</option>
+                  <option value="">-- Selecione --</option>
 
-          <option value="Germano Santos">Germano Santos</option>
+                  <option value="Germano Santos">Germano Santos</option>
 
-          <option value="Jonas Paulo">Jonas Paulo</option>
+                  <option value="Jonas Paulo">Jonas Paulo</option>
 
-          <option value="Alexandre Florêncio">Alexandre Florêncio</option>
+                  <option value="Alexandre Florêncio">Alexandre Florêncio</option>
 
-          <option value="Luiz Carlos">Luiz Carlos</option>
+                  <option value="Luiz Carlos">Luiz Carlos</option>
 
-        </select>
+                </select>
 
-      </div>
+              </div>
 
-      <div>
+              <div>
 
-        <label for="porteiroAssumindo">Porteiro Assumindo:</label>
+                <label for="porteiroAssumindo">Porteiro Assumindo:</label>
 
-        <select id="porteiroAssumindo">
+                <select id="porteiroAssumindo">
 
-          <option value="">-- Selecione --</option>
+                  <option value="">-- Selecione --</option>
 
-          <option value="Germano Santos">Germano Santos</option>
+                  <option value="Germano Santos">Germano Santos</option>
 
-          <option value="Jonas Paulo">Jonas Paulo</option>
+                  <option value="Jonas Paulo">Jonas Paulo</option>
 
-          <option value="Alexandre Florêncio">Alexandre Florêncio</option>
+                  <option value="Alexandre Florêncio">Alexandre Florêncio</option>
 
-          <option value="Luiz Carlos">Luiz Carlos</option>
+                  <option value="Luiz Carlos">Luiz Carlos</option>
 
-        </select>
+                </select>
 
-      </div>
+              </div>
 
-    </div>
+            </div>
 
-  </div>
+          </div>
 
 
 
-  <!-- 1. SEÇÃO DE ENCOMENDAS -->
+          <!-- 1. SEÇÃO DE ENCOMENDAS -->
 
-  <div class="section-box">
+          <div class="section-box">
 
-    <h3>1. Encomendas</h3>
+            <h3>1. Encomendas</h3>
 
-    <input type="text" id="enc-titulo" placeholder="Apto / Nome / Quantidade / Tipo">
+            <input type="text" id="enc-titulo" placeholder="Apto / Nome / Quantidade / Tipo">
 
-    <textarea id="enc-texto" maxlength="1000" placeholder="Digite as observações da encomenda (máx. 1.000 caracteres)..." oninput="atualizarContador('enc-texto', 'enc-count')"></textarea>
+            <textarea id="enc-texto" maxlength="1000" placeholder="Digite as observações da encomenda (máx. 1.000 caracteres)..." oninput="atualizarContador('enc-texto', 'enc-count')"></textarea>
 
-    <div id="enc-count" class="char-count">0 / 1000 caracteres</div>
+            <div id="enc-count" class="char-count">0 / 1000 caracteres</div>
 
-    <button type="button" onclick="adicionarRegistro('enc-titulo', 'enc-texto', 'lista-encomendas')">➕ Adicionar Encomenda</button>
+            <button type="button" onclick="adicionarRegistro('enc-titulo', 'enc-texto', 'lista-encomendas')">➕ Adicionar Encomenda</button>
 
-    <ul id="lista-encomendas" class="records-list"></ul>
+            <ul id="lista-encomendas" class="records-list"></ul>
 
-  </div>
+          </div>
 
 
 
-  <!-- 2. SEÇÃO DE PRESTADORES DE SERVIÇO -->
+          <!-- 2. SEÇÃO DE PRESTADORES DE SERVIÇO -->
 
-  <div class="section-box">
+          <div class="section-box">
 
-    <h3>2. Prestador de Serviço</h3>
+            <h3>2. Prestador de Serviço</h3>
 
-    <input type="text" id="prest-titulo" placeholder="Nome / Empresa / Serviço / Horário">
+            <input type="text" id="prest-titulo" placeholder="Nome / Empresa / Serviço / Horário">
 
-    <textarea id="prest-texto" maxlength="1000" placeholder="Digite as observações sobre o serviço (máx. 1.000 caracteres)..." oninput="atualizarContador('prest-texto', 'prest-count')"></textarea>
+            <textarea id="prest-texto" maxlength="1000" placeholder="Digite as observações sobre o serviço (máx. 1.000 caracteres)..." oninput="atualizarContador('prest-texto', 'prest-count')"></textarea>
 
-    <div id="prest-count" class="char-count">0 / 1000 caracteres</div>
+            <div id="prest-count" class="char-count">0 / 1000 caracteres</div>
 
-    <button type="button" onclick="adicionarRegistro('prest-titulo', 'prest-texto', 'lista-prestadores')">➕ Adicionar Prestador</button>
+            <button type="button" onclick="adicionarRegistro('prest-titulo', 'prest-texto', 'lista-prestadores')">➕ Adicionar Prestador</button>
 
-    <ul id="lista-prestadores" class="records-list"></ul>
+            <ul id="lista-prestadores" class="records-list"></ul>
 
-  </div>
+          </div>
 
 
 
-  <!-- 3. SEÇÃO DE DEMAIS OCORRÊNCIAS -->
+          <!-- 3. SEÇÃO DE DEMAIS OCORRÊNCIAS -->
 
-  <div class="section-box">
+          <div class="section-box">
 
-    <h3>3. Demais Ocorrências / Observações</h3>
+            <h3>3. Demais Ocorrências / Observações</h3>
 
-    <input type="text" id="outros-titulo" placeholder="Chaves, Envelopes, Cartas ou Ocorrências">
+            <input type="text" id="outros-titulo" placeholder="Chaves, Envelopes, Cartas ou Ocorrências">
 
-    <textarea id="outros-texto" maxlength="1000" placeholder="Digite o registro detalhado (máx. 1.000 caracteres)..." oninput="atualizarContador('outros-texto', 'outros-count')"></textarea>
+            <textarea id="outros-texto" maxlength="1000" placeholder="Digite o registro detalhado (máx. 1.000 caracteres)..." oninput="atualizarContador('outros-texto', 'outros-count')"></textarea>
 
-    <div id="outros-count" class="char-count">0 / 1000 caracteres</div>
+            <div id="outros-count" class="char-count">0 / 1000 caracteres</div>
 
-    <button type="button" onclick="adicionarRegistro('outros-titulo', 'outros-texto', 'lista-outros')">➕ Adicionar Registro</button>
+            <button type="button" onclick="adicionarRegistro('outros-titulo', 'outros-texto', 'lista-outros')">➕ Adicionar Registro</button>
 
-    <ul id="lista-outros" class="records-list"></ul>
+            <ul id="lista-outros" class="records-list"></ul>
 
-  </div>
+          </div>
 
 
 
-  <!-- BARRA DE AÇÕES -->
+          <!-- BARRA DE AÇÕES -->
 
-  <div class="actions-bar">
+          <div class="actions-bar">
 
-    <button type="button" class="btn-danger" onclick="limparFormulario()">🗑️ Limpar Tudo</button>
+            <button type="button" class="btn-danger" onclick="limparFormulario()">🗑️ Limpar Tudo</button>
 
-    <button type="button" class="btn-whatsapp" onclick="enviarWhatsAppPlantao()">📲 Enviar via WhatsApp</button>
+            <button type="button" class="btn-whatsapp" onclick="enviarWhatsAppPlantao()">📲 Enviar via WhatsApp</button>
 
-  </div>
+          </div>
 
-</div>
+          <footer class="logo-gs">
+            <img src="imagem/logo-azul-removebg-preview-removebg-preview.png" alt="">
+
+          </footer>
+
+        </div>
 
 
 
