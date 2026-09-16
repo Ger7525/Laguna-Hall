@@ -144,12 +144,16 @@ input:focus, select:focus, textarea:focus {
 
 /* --- BOTÕES --- */
 button, .btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     padding: 10px 18px;
     border: none;
     border-radius: 6px;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
+    text-decoration: none;
     transition: all 0.2s ease;
 }
 
@@ -161,3 +165,61 @@ button, .btn {
 
 .btn-danger { background-color: var(--danger); color: white; }
 .btn-danger:hover { background-color: var(--danger-hover); }
+
+.btn-whatsapp { background-color: var(--whatsapp); color: white; }
+.btn-whatsapp:hover { background-color: var(--whatsapp-hover); }
+
+/* ==========================================================================
+   MEDIA QUERIES (RESPONSIVIDADE PARA TELAS PEQUENAS)
+   ========================================================================== */
+
+/* Telas até 768px (Tablets e Celulares) */
+@media (max-width: 768px) {
+    /* Faz as caixas principais ocuparem 90% da tela */
+    .container,
+    .login-card {
+        width: 90%;
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Ajuste no padding das caixas para aproveitar melhor o espaço em telas pequenas */
+    .card,
+    .login-card {
+        padding: 20px 16px;
+    }
+
+    /* Alinha o Header verticalmente e centraliza elementos */
+    header {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+        text-align: center;
+    }
+
+    nav#menuNavegacao {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    nav#menuNavegacao a {
+        padding: 6px 12px;
+        font-size: 0.88rem;
+    }
+}
+
+/* Telas muito pequenas (Celulares menores que 480px) */
+@media (max-width: 480px) {
+    .container,
+    .login-card {
+        width: 90%;
+        padding: 16px 12px;
+    }
+
+    /* Botões ocupam 100% da largura em celulares para facilitar o clique com o polegar */
+    button, .btn {
+        width: 100%;
+    }
+}
