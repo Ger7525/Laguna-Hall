@@ -40,7 +40,7 @@ const APARTAMENTOS_LAGUNA = {
     "1004": [{ nome: "MIlena", telefone: "81988396485" }, { nome: "Enio", telefone: "81988435707" }],
     "1101": [{ nome: "Geofred", telefone: "81988141245" }, { nome: "Tatiana", telefone: "81987950231" }],
     "1102": [{ nome: "Etiene", telefone: "81991206752" }],
-    "1103": [{ nome: "Debora", telefone: "81997757073" }, { nome: "Antonio", telefone: "81987627340" }],
+    "1103": [{ nome: "Debora", telefone: "81997757073" }, { nome: "Géssica", telefone: "81997892937" }],
     "1104": [{ nome: "Juliana Carla", telefone: "81984464368" }],
     "1201": [{ nome: "Andre", telefone: "81991916975" }, { nome: "Juliana", telefone: "81996836112" }],
     "1202": [{ nome: "Rodrigo Brito", telefone: "81994213383" }, { nome: "Luize", telefone: "81989507868" }],
