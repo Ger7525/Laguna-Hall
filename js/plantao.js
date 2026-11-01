@@ -1,280 +1,303 @@
-const STORAGE_KEY_PLANTAO_ESTADO = "estado_plantao_laguna";
+(function () {
+   "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Data padrão de hoje (se ainda não houver data salva)
-    const elData = document.getElementById('dataPlantao');
-    if (elData && !elData.value) {
-        elData.value = new Date().toISOString().split('T')[0];
-    }
+   /* Sem operador logado, volta para o login */
+   const operador = Armazenamento.ler("operador");
+   if (!operador) { window.location.replace("../index.html"); return; }
 
-    // 2. Restaura todos os dados salvos previamente
-    carregarEstadoSalvo();
+   const $ = function (id) { return document.getElementById(id); };
+   document.querySelector(".cabecalho h1").textContent = DADOS.condominio;
 
-    // 3. Adiciona ouvintes para salvar inputs e textareas em tempo real enquanto digita
-    const seletoresCampos = [
-        '#dataPlantao', 
-        '#porteiroSaindo', 
-        '#porteiroAssumindo',
-        '#enc-titulo', 
-        '#enc-texto',
-        '#prest-titulo', 
-        '#prest-texto',
-        '#outros-titulo', 
-        '#outros-texto'
-    ];
+   /* Como cada seção aparece na lista */
+   const SECOES = {
+      entregas: {
+         titulo: function (r) { return "Apto " + r.apto; },
+         detalhes: function (r) {
+            const d = ["Morador: " + r.nome + (r.avulso ? " (não cadastrado)" : ""), "Tipo: " + r.tipo + " · Qtd: " + (r.qtd || 1)];
+            if (r.descricao) d.push(r.descricao);
+            return d;
+         }
+      },
+      ocorrencias: {
+         titulo: function (r) { return r.tipo; },
+         detalhes: function (r) { return [r.descricao]; }
+      },
+      observacoes: {
+         titulo: function (r) { return r.titulo; },
+         detalhes: function (r) { return [r.descricao]; }
+      },
+      prestadores: {
+         titulo: function (r) { return r.empresa; },
+         detalhes: function (r) { return ["Prestador: " + r.nome, "Serviço: " + r.servico]; }
+      },
+      avisos: {
+         titulo: function (r) { return r.assunto; },
+         detalhes: function (r) { return ["Para: " + r.destino, r.descricao]; }
+      }
+   };
 
-    seletoresCampos.forEach(seletor => {
-        const campo = document.querySelector(seletor);
-        if (campo) {
-            campo.addEventListener('input', salvarEstadoAtual);
-            campo.addEventListener('change', salvarEstadoAtual);
-        }
-    });
-});
+   /* ---------- Estado salvo ---------- */
+   function dataHoje() {
+      const d = new Date();
+      const dois = function (n) { return String(n).padStart(2, "0"); };
+      return d.getFullYear() + "-" + dois(d.getMonth() + 1) + "-" + dois(d.getDate());
+   }
+   function horaAgora() {
+      return new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+   }
+   function plantaoVazio() {
+      return { data: dataHoje(), saindo: "", entrando: "",
+               entregas: [], ocorrencias: [], observacoes: [], prestadores: [], avisos: [] };
+   }
 
-// Atualiza o contador de caracteres e salva o estado
-function atualizarContador(textareaId, countId) {
-    const textarea = document.getElementById(textareaId);
-    const countDisplay = document.getElementById(countId);
-    if (textarea && countDisplay) {
-        countDisplay.textContent = `${textarea.value.length} / 1000 caracteres`;
-    }
-    salvarEstadoAtual();
-}
+   let plantao = Object.assign(plantaoVazio(), Armazenamento.ler("plantao") || {});
+   function salvar() { Armazenamento.salvar("plantao", plantao); }
 
-// Salva todo o formulário (campos e listas) no localStorage
-function salvarEstadoAtual() {
-    const estado = {
-        dataPlantao: document.getElementById('dataPlantao')?.value || '',
-        porteiroSaindo: document.getElementById('porteiroSaindo')?.value || '',
-        porteiroAssumindo: document.getElementById('porteiroAssumindo')?.value || '',
-        
-        // Rascunhos dos campos de entrada
-        encTitulo: document.getElementById('enc-titulo')?.value || '',
-        encTexto: document.getElementById('enc-texto')?.value || '',
-        prestTitulo: document.getElementById('prest-titulo')?.value || '',
-        prestTexto: document.getElementById('prest-texto')?.value || '',
-        outrosTitulo: document.getElementById('outros-titulo')?.value || '',
-        outrosTexto: document.getElementById('outros-texto')?.value || '',
+   /* ---------- Avisos ---------- */
+   let temporizador;
+   function avisar(texto) {
+      const el = $("aviso");
+      el.textContent = texto;
+      el.hidden = false;
+      clearTimeout(temporizador);
+      temporizador = setTimeout(function () { el.hidden = true; }, 3000);
+   }
 
-        // Listas de registros adicionados
-        encomendas: extrairDadosLista('lista-encomendas'),
-        prestadores: extrairDadosLista('lista-prestadores'),
-        outros: extrairDadosLista('lista-outros')
-    };
+   /* ---------- Preenchimento dos selects ---------- */
+   function preencher(select, itens, valorDe, textoDe) {
+      itens.forEach(function (item) {
+         const op = document.createElement("option");
+         op.value = valorDe(item);
+         op.textContent = textoDe(item);
+         select.appendChild(op);
+      });
+   }
 
-    localStorage.setItem(STORAGE_KEY_PLANTAO_ESTADO, JSON.stringify(estado));
-}
+   function iniciarSelects() {
+      const porteiro = function (p) { return p.valor; };
+      const nome = function (p) { return p.nome; };
+      preencher($("porteiro-saindo"), DADOS.porteiros, porteiro, nome);
+      preencher($("porteiro-entrando"), DADOS.porteiros, porteiro, nome);
 
-// Carrega os dados persistidos de volta para a tela
-function carregarEstadoSalvo() {
-    const dadosSalvos = localStorage.getItem(STORAGE_KEY_PLANTAO_ESTADO);
-    if (!dadosSalvos) return;
+      const igual = function (x) { return x; };
+      const aptos = (DADOS.apartamentos && DADOS.apartamentos.length)
+         ? DADOS.apartamentos
+         : Array.from(new Set(DADOS.moradores.map(function (m) { return m.apto; })))
+              .sort(function (a, b) { return a.localeCompare(b, "pt-BR", { numeric: true }); });
+      preencher($("entrega-apto"), aptos, igual, igual);
+      preencher($("entrega-tipo"), DADOS.tiposEntrega, igual, igual);
+      preencher($("avulso-tipo"), DADOS.tiposEntrega, igual, igual);
+   }
 
-    try {
-        const estado = JSON.parse(dadosSalvos);
+   function moradoresDaUnidade() {
+      const apto = $("entrega-apto").value;
+      return DADOS.moradores.filter(function (m) {
+         return !apto || m.apto === apto;
+      });
+   }
 
-        if (estado.dataPlantao) document.getElementById('dataPlantao').value = estado.dataPlantao;
-        if (estado.porteiroSaindo) document.getElementById('porteiroSaindo').value = estado.porteiroSaindo;
-        if (estado.porteiroAssumindo) document.getElementById('porteiroAssumindo').value = estado.porteiroAssumindo;
+   /* Sugestões de nome conforme o apto */
+   function atualizarMoradores() {
+      const lista = $("lista-moradores");
+      lista.replaceChildren();
+      const encontrados = moradoresDaUnidade();
+      encontrados.forEach(function (m) {
+         const op = document.createElement("option");
+         op.value = m.nome;
+         lista.appendChild(op);
+      });
+      if ($("entrega-apto").value && encontrados.length === 1) {
+         $("entrega-nome").value = encontrados[0].nome;
+      }
+   }
 
-        // Preenche rascunhos de texto
-        if (estado.encTitulo) document.getElementById('enc-titulo').value = estado.encTitulo;
-        if (estado.encTexto) document.getElementById('enc-texto').value = estado.encTexto;
-        if (estado.prestTitulo) document.getElementById('prest-titulo').value = estado.prestTitulo;
-        if (estado.prestTexto) document.getElementById('prest-texto').value = estado.prestTexto;
-        if (estado.outrosTitulo) document.getElementById('outros-titulo').value = estado.outrosTitulo;
-        if (estado.outrosTexto) document.getElementById('outros-texto').value = estado.outrosTexto;
+   /* ---------- Desenho das listas ---------- */
+   function botao(texto, classe, aoClicar) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn btn--mini " + classe;
+      b.textContent = texto;
+      b.addEventListener("click", aoClicar);
+      return b;
+   }
 
-        // Atualiza contadores
-        atualizarContadorVisual('enc-texto', 'enc-count');
-        atualizarContadorVisual('prest-texto', 'prest-count');
-        atualizarContadorVisual('outros-texto', 'outros-count');
+   function desenhar(secao) {
+      const cfg = SECOES[secao];
+      const ul = $("lista-" + secao);
+      ul.replaceChildren();
 
-        // Reconstrução das listas adicionadas
-        reconstruirLista('lista-encomendas', estado.encomendas);
-        reconstruirLista('lista-prestadores', estado.prestadores);
-        reconstruirLista('lista-outros', estado.outros);
+      plantao[secao].slice().reverse().forEach(function (r) {
+         const li = document.createElement("li");
+         li.className = "registro";
 
-    } catch (e) {
-        console.error("Erro ao carregar estado do plantão:", e);
-    }
-}
+         const corpo = document.createElement("div");
+         corpo.className = "registro__corpo";
 
-// Auxiliar para extrair dados das listas <ul>
-function extrairDadosLista(ulId) {
-    const itens = [];
-    const elementosLi = document.querySelectorAll(`#${ulId} li`);
-    
-    elementosLi.forEach(li => {
-        const span = li.querySelector('.item-conteudo');
-        if (span) {
-            const forte = span.querySelector('strong');
-            const titulo = forte ? forte.innerText.replace(':', '').trim() : '';
-            
-            // Remove o texto do <strong> para capturar apenas a descrição
-            let texto = span.innerText;
-            if (forte) {
-                texto = texto.replace(forte.innerText, '').trim();
-            }
-            
-            itens.push({ titulo, texto });
-        }
-    });
-    return itens;
-}
+         const topo = document.createElement("strong");
+         topo.textContent = cfg.titulo(r);
+         const hora = document.createElement("span");
+         hora.className = "registro__hora";
+         hora.textContent = r.hora;
+         topo.appendChild(hora);
+         corpo.appendChild(topo);
 
-// Auxiliar para re-inserir os itens salvos nas listas do HTML
-function reconstruirLista(ulId, listaItens) {
-    const ul = document.getElementById(ulId);
-    if (!ul || !Array.isArray(listaItens)) return;
+         cfg.detalhes(r).forEach(function (linha) {
+            const p = document.createElement("p");
+            p.textContent = linha;
+            corpo.appendChild(p);
+         });
 
-    ul.innerHTML = '';
-    listaItens.forEach(item => {
-        const li = document.createElement('li');
-        const rotulo = item.titulo ? `<strong>${item.titulo}:</strong> ` : '';
-        li.innerHTML = `<span class="item-conteudo">${rotulo}${item.texto}</span>`;
+         const acoes = document.createElement("div");
+         acoes.className = "registro__acoes";
+         if (secao === "entregas") {
+            acoes.appendChild(botao("WhatsApp", "btn--sucesso", function () { enviarEntrega(r); }));
+         }
+         acoes.appendChild(botao("Remover", "btn--perigo", function () { remover(secao, r.id); }));
 
-        const btnRemover = document.createElement('button');
-        btnRemover.textContent = '✕';
-        btnRemover.className = 'btn-del';
-        btnRemover.onclick = () => {
-            li.remove();
-            salvarEstadoAtual();
-        };
+         li.append(corpo, acoes);
+         ul.appendChild(li);
+      });
 
-        li.appendChild(btnRemover);
-        ul.appendChild(li);
-    });
-}
+      $("contador-" + secao).textContent = plantao[secao].length;
+   }
 
-// Função de adicionar registros das seções
-function adicionarRegistro(inputId, textareaId, ulId) {
-    const input = document.getElementById(inputId);
-    const textarea = document.getElementById(textareaId);
-    const ul = document.getElementById(ulId);
+   function desenharTudo() { Object.keys(SECOES).forEach(desenhar); }
 
-    const titulo = input.value.trim();
-    const texto = textarea.value.trim();
+   function remover(secao, id) {
+      plantao[secao] = plantao[secao].filter(function (r) { return r.id !== id; });
+      salvar();
+      desenhar(secao);
+   }
 
-    if (texto === '' && titulo === '') {
-        alert('Preencha ao menos um campo para adicionar!');
-        return;
-    }
+   /* ---------- WhatsApp ---------- */
+   function enviarEntrega(entrega) {
+      Whats.abrir(entrega.telefone, Whats.mensagemEntrega(entrega, operador));
+   }
 
-    const li = document.createElement('li');
-    const rotulo = titulo ? `<strong>${titulo}:</strong> ` : '';
-    li.innerHTML = `<span class="item-conteudo">${rotulo}${texto}</span>`;
+   /* ---------- Formulários de registro ---------- */
+   let enviarApos = false;
 
-    const btnRemover = document.createElement('button');
-    btnRemover.textContent = '✕';
-    btnRemover.className = 'btn-del';
-    btnRemover.onclick = () => {
-        li.remove();
-        salvarEstadoAtual();
-    };
+   function normalizarTelefone(valor) {
+      const numeros = String(valor || "").replace(/\D/g, "");
+      return (numeros.length === 10 || numeros.length === 11) ? "55" + numeros : numeros;
+   }
 
-    li.appendChild(btnRemover);
-    ul.appendChild(li);
+   function coletar(secao, form) {
+      const dados = Object.fromEntries(new FormData(form));
+      Object.keys(dados).forEach(function (k) { dados[k] = String(dados[k]).trim(); });
+      if (secao === "entregas") {
+        const m = DADOS.moradores.find(function (x) {
+            return x.apto === dados.apto &&
+                   x.nome.toLowerCase() === dados.nome.toLowerCase();
+         });
+         if (form.id === "form-avulso") {
+            dados.avulso = true;
+            dados.telefone = normalizarTelefone(dados.telefone);
+         } else {
+            dados.telefone = m ? m.telefone : "";
+         }
+         dados.data = dataHoje();
+         dados.porteiro = operador.nome;
+      }
+      return Object.assign({ id: Date.now() + Math.random(), hora: horaAgora() }, dados);
+   }
 
-    input.value = '';
-    textarea.value = '';
+   document.querySelectorAll("form[data-secao]").forEach(function (form) {
+      const secao = form.dataset.secao;
+      form.addEventListener("submit", function (ev) {
+         ev.preventDefault();
+         const registro = coletar(secao, form);
+         plantao[secao].push(registro);
+         salvar();
+         desenhar(secao);
+         form.reset();
+         if (secao === "entregas") atualizarMoradores();
+         if (form.id === "form-avulso") fecharAvulso();
+         avisar("Registro adicionado.");
+         if (enviarApos && secao === "entregas") enviarEntrega(registro);
+         enviarApos = false;
+      });
+   });
 
-    const countId = textareaId === 'enc-texto' ? 'enc-count' : textareaId === 'prest-texto' ? 'prest-count' : 'outros-count';
-    atualizarContadorVisual(textareaId, countId);
+   document.querySelectorAll("[data-enviar]").forEach(function (botaoEnviar) {
+      botaoEnviar.addEventListener("click", function () {
+         const form = botaoEnviar.closest("form");
+         const tel = form.elements.telefone;
+         if (tel && normalizarTelefone(tel.value).length < 12) {
+            avisar("Informe o telefone com DDD para enviar pelo WhatsApp.");
+            tel.focus();
+            return;
+         }
+         enviarApos = true;
+         if (form.checkValidity()) { form.requestSubmit(); }
+         else { enviarApos = false; form.reportValidity(); }
+      });
+   });
 
-    // Salva o novo estado atualizado
-    salvarEstadoAtual();
-}
+   /* Morador não cadastrado: formulário só aparece ao clicar no botão */
+   function abrirAvulso() {
+      $("form-avulso").hidden = false;
+      $("btn-avulso").setAttribute("aria-expanded", "true");
+      $("avulso-apto").focus();
+   }
+   function fecharAvulso() {
+      const f = $("form-avulso");
+      f.reset();
+      f.hidden = true;
+      $("btn-avulso").setAttribute("aria-expanded", "false");
+   }
+   $("btn-avulso").addEventListener("click", function () {
+      if ($("form-avulso").hidden) abrirAvulso(); else fecharAvulso();
+   });
+   $("btn-avulso-cancelar").addEventListener("click", fecharAvulso);
 
-// Auxiliar apenas visual para contador de caracteres
-function atualizarContadorVisual(textareaId, countId) {
-    const textarea = document.getElementById(textareaId);
-    const countDisplay = document.getElementById(countId);
-    if (textarea && countDisplay) {
-        countDisplay.textContent = `${textarea.value.length} / 1000 caracteres`;
-    }
-}
+   $("entrega-apto").addEventListener("change", atualizarMoradores);
 
-// Limpa completamente o formulário e apaga do localStorage
-function limparFormulario() {
-    if (confirm("Tem certeza que deseja limpar todos os campos e registros do plantão?")) {
-        document.getElementById('porteiroSaindo').value = '';
-        document.getElementById('porteiroAssumindo').value = '';
+   /* ---------- Dados da troca de plantão ---------- */
+   function iniciarTroca() {
+      $("data-plantao").value = plantao.data;
+      $("porteiro-saindo").value = plantao.saindo;
+      $("porteiro-entrando").value = plantao.entrando;
+   }
 
-        ['enc-titulo', 'enc-texto', 'prest-titulo', 'prest-texto', 'outros-titulo', 'outros-texto'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.value = '';
-        });
+   $("data-plantao").addEventListener("change", function (e) { plantao.data = e.target.value; salvar(); });
+   $("porteiro-saindo").addEventListener("change", function (e) { plantao.saindo = e.target.value; salvar(); });
+   $("porteiro-entrando").addEventListener("change", function (e) { plantao.entrando = e.target.value; salvar(); });
 
-        ['enc-count', 'prest-count', 'outros-count'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = '0 / 1000 caracteres';
-        });
+   /* ---------- Barra de ações ---------- */
+   $("btn-enviar-plantao").addEventListener("click", function () {
+      if (!plantao.saindo || !plantao.entrando) {
+         avisar("Informe o porteiro saindo e o entrando antes de enviar.");
+         $(plantao.saindo ? "porteiro-entrando" : "porteiro-saindo").focus();
+         return;
+      }
+      if (plantao.saindo === plantao.entrando) {
+         avisar("O porteiro saindo e o entrando não podem ser a mesma pessoa.");
+         return;
+      }
+      Whats.abrir(DADOS.whatsappRelatorio, Whats.mensagemPlantao(plantao, operador));
+   });
 
-        document.getElementById('lista-encomendas').innerHTML = '';
-        document.getElementById('lista-prestadores').innerHTML = '';
-        document.getElementById('lista-outros').innerHTML = '';
+   $("btn-limpar").addEventListener("click", function () {
+      if (!window.confirm("Apagar todos os registros deste plantão? Essa ação não pode ser desfeita.")) return;
+      plantao = plantaoVazio();
+      Armazenamento.remover("plantao");
+      document.querySelectorAll("form[data-secao]").forEach(function (f) { f.reset(); });
+      atualizarMoradores();
+      fecharAvulso();
+      iniciarTroca();
+      desenharTudo();
+      avisar("Plantão limpo.");
+   });
 
-        // Limpa a chave do localStorage
-        localStorage.removeItem(STORAGE_KEY_PLANTAO_ESTADO);
-    }
-}
+   $("btn-sair").addEventListener("click", function () {
+      Armazenamento.remover("operador");
+      window.location.href = "../index.html";
+   });
 
-// Monta a mensagem e abre o WhatsApp
-function enviarWhatsAppPlantao() {
-    const rawData = document.getElementById('dataPlantao').value;
-    let dataFormatada = rawData;
-    if (rawData) {
-        const partes = rawData.split('-');
-        if (partes.length === 3) dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
-    }
-
-    const saindo = document.getElementById('porteiroSaindo').value || 'Não informado';
-    const assumindo = document.getElementById('porteiroAssumindo').value || 'Não informado';
-
-    let msg = `📋 *PASSAGEM DE PLANTÃO*\n`;
-    msg += `🏢 *Edifício Laguna Hall*\n`;
-    msg += `📅 *Data:* ${dataFormatada}\n`;
-    msg += `👤 *Saindo:* ${saindo}\n`;
-    msg += `👤 *Assumindo:* ${assumindo}\n\n`;
-
-    const obterItensLista = (ulId) => {
-        const itens = [];
-        const lis = document.querySelectorAll(`#${ulId} li .item-conteudo`);
-        lis.forEach(li => {
-            itens.push(li.innerText.replace(/\n/g, ' '));
-        });
-        return itens;
-    };
-
-    const encomendas = obterItensLista('lista-encomendas');
-    const prestadores = obterItensLista('lista-prestadores');
-    const outros = obterItensLista('lista-outros');
-
-    msg += `📦 *1. ENCOMENDAS*\n`;
-    if (encomendas.length > 0) {
-        encomendas.forEach(i => msg += `• ${i}\n`);
-    } else {
-        msg += `• Nenhuma alteração/registro.\n`;
-    }
-    msg += `\n`;
-
-    msg += `🛠️ *2. PRESTADORES DE SERVIÇO*\n`;
-    if (prestadores.length > 0) {
-        prestadores.forEach(i => msg += `• ${i}\n`);
-    } else {
-        msg += `• Nenhum prestador registrado.\n`;
-    }
-    msg += `\n`;
-
-    msg += `📝 *3. DEMAIS OCORRÊNCIAS / OBSERVAÇÕES*\n`;
-    if (outros.length > 0) {
-        outros.forEach(i => msg += `• ${i}\n`);
-    } else {
-        msg += `• Sem alterações no plantão.\n`;
-    }
-
-    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
-}
+   /* ---------- Início ---------- */
+   $("operador-nome").textContent = operador.nome;
+   iniciarSelects();
+   iniciarTroca();
+   desenharTudo();
+})();

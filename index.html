@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Login - Portaria Laguna Hall</title>
-    <link rel="stylesheet" href="estilo/style.css">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>GS Interactive | Condomínio Edifício Laguna Hall</title>
+   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="login-page">
+<body class="pagina-login">
+   <header class="cabecalho">
+      <img class="logo" src="img/morada_sul-removebg-preview.png" alt="Logo do Edifício Laguna Hall">
+      <h1>Edifício Laguna Hall</h1>
+   </header>
 
-    <div class="login-card">
-        <h2>🏢 Acesso ao Sistema</h2>
-        <form onsubmit="iniciarSessao(event)">
-            <div class="form-group">
-                <label for="selectUsuarioLogin">Colaborador:</label>
-                <select id="selectUsuarioLogin" required>
-                    <option value="">-- Selecione seu nome --</option>
-                    <option value="Germano Santos">Germano Santos (Porteiro)</option>
-                    <option value="Jonas Paulo">Jonas Paulo (Porteiro)</option>
-                    <option value="Alexandre Florêncio">Alexandre Florêncio (Porteiro)</option>
-                    <option value="Luiz Carlos">Luiz Carlos (Porteiro)</option>
-                    <option value="Cícero">Cícero (Zelador)</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Entrar</button>
-        </form>
-        <footer class="logo-gs">
-          <img src="imagem/logo-azul-removebg-preview-removebg-preview.png" alt="">
-        </footer>
-    </div>
+   <main class="cartao login">
+      <h2>Acesso ao Sistema</h2>
+      <form id="form-login" novalidate>
+         <div class="campo campo--linha">
+            <label for="porteiro">Porteiro:</label>
+            <select id="porteiro" name="porteiro" required>
+               <option value="">Selecionar o colaborador</option>
+            </select>
+         </div>
+         <p id="erro-login" class="erro" role="alert" hidden>Selecione o colaborador para entrar.</p>
+         <button type="submit" class="btn btn--principal btn--cheio">Entrar</button>
+      </form>
+   </main>
 
-    <script src="js/auth.js"></script>
+   <footer class="rodape">
+      <img src="img/logo-footer-removebg-preview.png" alt="Logo GS Interactive">
+   </footer>
+
+   <script charset="UTF-8" src="js/dados.js"></script>
+   <script charset="UTF-8" src="js/storage.js"></script>
+   <script charset="UTF-8" src="js/login.js"></script>
 </body>
 </html>
