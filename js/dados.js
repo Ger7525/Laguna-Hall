@@ -22,7 +22,7 @@ const DADOS = {
       monta a lista sozinho a partir dos moradores cadastrados abaixo. */
    apartamentos: [],
 
-   tiposEntrega: ["Encomenda", "Carta", "Zé Delivery", "Documento", "Amazon","Ifood","Shopee", "Shein","Riachielo","TEMU","Imile","Netshoes","Boleto Condominio","Boleto da Neoenergia","Boleto do Gas", "Outros"],
+   tiposEntrega: ["Encomenda", "Carta", "Zé Delivery", "Documento", "Amazon","Ifood","Shopee", "Shein","Riachuelo","TEMU","Imile","Netshoes","Boleto Condominio","Boleto da Neoenergia","Boleto do Gas","Farmacia", "Outros"],
 
    /* Moradores: apto, nome e telefone (com 55 + DDD).
       Um apartamento pode ter mais de um morador: repita o apto em outra linha.
