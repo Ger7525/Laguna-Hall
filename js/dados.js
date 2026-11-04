@@ -12,20 +12,23 @@ const DADOS = {
 
    /* Porteiros (troque pelos nomes reais) */
    porteiros: [
-      { valor: "porteiro-1", nome: "Porteiro 1" },
-      { valor: "porteiro-2", nome: "Porteiro 2" }
+      { valor: "germano-santos", nome: "Germano Santos" },
+      { valor: "alexandre-florencio", nome: "Alexandre Florencio" },
+      { valor: "luis-carlos", nome: "Luis Carlos" },
+      { valor: "jonas-paulo", nome: "Jonas Paulo" }
    ],
 
    /* Lista de apartamentos do select. Se ficar vazia ([]), o sistema
       monta a lista sozinho a partir dos moradores cadastrados abaixo. */
    apartamentos: [],
 
-   tiposEntrega: ["Encomenda", "Carta", "Delivery", "Documento", "Outros"],
+   tiposEntrega: ["Encomenda", "Delivery", "Documento", "Outros"],
 
    /* Tipos da seção Correspondências e avisos.
       Os nomes precisam ser iguais aos modelos de mensagem em whatsapp.js */
    tiposCorrespondencia: [
       "Carta",
+      "Envelopes",
       "Boleto do condomínio",
       "Boleto do gás",
       "Boleto Neoenergia",
@@ -50,7 +53,7 @@ const DADOS = {
       { apto: "202", nome: "Nathalia", telefone: "5581998699877" },
       { apto: "203", nome: "David", telefone: "5581999546754" },
       { apto: "203", nome: "Gerson", telefone: "5581997211054" },
-      { apto: "203", nome: "Davison", telefone: "5581992996837" },
+      { apto: "203", nome: "Deyverson", telefone: "5581992996837" },
       { apto: "204", nome: "Wilker", telefone: "5581996154986" },
       { apto: "301", nome: "Clecio", telefone: "5581995474759" },
       { apto: "302", nome: "Dayana", telefone: "5581998384045" },
@@ -63,6 +66,7 @@ const DADOS = {
       { apto: "401", nome: "Viviane", telefone: "5581997065031" },
       { apto: "402", nome: "José Arnaldo", telefone: "5581979056826" },
       { apto: "403", nome: "Gustavo", telefone: "5581999540122" },
+      { apto: "403", nome: "Pietra", telefone: "5581989166666" },
       { apto: "404", nome: "Viviane", telefone: "5581992864065" },
       { apto: "501", nome: "Mauricio", telefone: "5581998929442" },
       { apto: "501", nome: "Larissa", telefone: "5581999470639" },
