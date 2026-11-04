@@ -14,15 +14,25 @@ const DADOS = {
    porteiros: [
       { valor: "germano-santos", nome: "Germano Santos" },
       { valor: "jonas-paulo", nome: "Jonas Paulo" },
-      { valor: "luis-carlos", nome: "Luis Carlos" },
-      { valor: "alexandre-florencio", nome: "Alexandre Florencio" }
+      { valor: "alexandre-florencio", nome: "Alexandre Florencio" },
+      { valor: "luis-carlos", nome: "Luis Carlos" }
    ],
 
    /* Lista de apartamentos do select. Se ficar vazia ([]), o sistema
       monta a lista sozinho a partir dos moradores cadastrados abaixo. */
    apartamentos: [],
 
-   tiposEntrega: ["Encomenda", "Carta", "Zé Delivery", "Documento", "Amazon","Ifood","Shopee", "Shein","Riachuelo","TEMU","Imile","Netshoes","Boleto Condominio","Boleto da Neoenergia","Boleto do Gas","Farmacia", "Outros"],
+   tiposEntrega: ["Encomenda", "Carta", "Delivery", "Documento", "Outros"],
+
+   /* Tipos da seção Correspondências e avisos.
+      Os nomes precisam ser iguais aos modelos de mensagem em whatsapp.js */
+   tiposCorrespondencia: [
+      "Carta",
+      "Boleto do condomínio",
+      "Boleto do gás",
+      "Boleto Neoenergia",
+      "Aviso do condomínio"
+   ],
 
    /* Moradores: apto, nome e telefone (com 55 + DDD).
       Um apartamento pode ter mais de um morador: repita o apto em outra linha.
@@ -42,7 +52,7 @@ const DADOS = {
       { apto: "202", nome: "Nathalia", telefone: "5581998699877" },
       { apto: "203", nome: "David", telefone: "5581999546754" },
       { apto: "203", nome: "Gerson", telefone: "5581997211054" },
-      { apto: "203", nome: "Davison", telefone: "5581992996837" },
+      { apto: "203", nome: "Deyverson", telefone: "5581992996837" },
       { apto: "204", nome: "Wilker", telefone: "5581996154986" },
       { apto: "301", nome: "Clecio", telefone: "5581995474759" },
       { apto: "302", nome: "Dayana", telefone: "5581998384045" },
@@ -55,7 +65,6 @@ const DADOS = {
       { apto: "401", nome: "Viviane", telefone: "5581997065031" },
       { apto: "402", nome: "José Arnaldo", telefone: "5581979056826" },
       { apto: "403", nome: "Gustavo", telefone: "5581999540122" },
-      { apto: "403", nome: "Pietra", telefone: "5581989166666" },
       { apto: "404", nome: "Viviane", telefone: "5581992864065" },
       { apto: "501", nome: "Mauricio", telefone: "5581998929442" },
       { apto: "501", nome: "Larissa", telefone: "5581999470639" },
