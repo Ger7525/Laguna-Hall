@@ -115,6 +115,7 @@ const DADOS = {
       { apto: "1004", nome: "Enio", telefone: "5581988435707" },
       { apto: "1101", nome: "Geofred", telefone: "5581988141245" },
       { apto: "1101", nome: "Tatiana", telefone: "5581987950231" },
+      { apto: "1101", nome: "Yoana", telefone: "5581985140456" },
       { apto: "1102", nome: "Etiene", telefone: "5581991206752" },
       { apto: "1103", nome: "Debora", telefone: "5581997757073" },
       { apto: "1103", nome: "Géssica", telefone: "5581997892937" },
