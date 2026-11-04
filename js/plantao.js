@@ -23,6 +23,8 @@
    const SECOES = {
       entregas:        { morador: true, titulo: tituloMorador, detalhes: detalhesMorador },
       correspondencias:{ morador: true, titulo: tituloMorador, detalhes: detalhesMorador },
+      /* Sem "morador: true" = sem botão de WhatsApp */
+      recolhimentos:   { titulo: tituloMorador, detalhes: detalhesMorador },
       ocorrencias: {
          titulo: function (r) { return r.tipo; },
          detalhes: function (r) { return [r.descricao]; }

@@ -130,6 +130,10 @@ const Whats = (function () {
             (aviso ? "" : ` (${c.qtd || 1} un.)`) +
             (c.descricao ? ` – ${c.descricao}` : "");
       });
+      msg += secao("ENTREGAS E ENCOMENDAS A RECOLHER", p.recolhimentos || [], function (r) {
+         return `*Apto ${r.apto}* – ${r.nome} – ${r.tipo} (${r.qtd || 1} un.)` +
+            (r.descricao ? ` – ${r.descricao}` : "");
+      });
       msg += secao("OCORRÊNCIAS", p.ocorrencias, function (o) {
          return `*${o.tipo}:* ${o.descricao}`;
       });

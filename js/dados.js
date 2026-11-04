@@ -12,17 +12,15 @@ const DADOS = {
 
    /* Porteiros (troque pelos nomes reais) */
    porteiros: [
-      { valor: "germano-santos", nome: "Germano Santos" },
-      { valor: "jonas-paulo", nome: "Jonas Paulo" },
-      { valor: "alexandre-florencio", nome: "Alexandre Florencio" },
-      { valor: "luis-carlos", nome: "Luis Carlos" }
+      { valor: "porteiro-1", nome: "Porteiro 1" },
+      { valor: "porteiro-2", nome: "Porteiro 2" }
    ],
 
    /* Lista de apartamentos do select. Se ficar vazia ([]), o sistema
       monta a lista sozinho a partir dos moradores cadastrados abaixo. */
    apartamentos: [],
 
-   tiposEntrega: ["Encomenda", "Delivery", "Farmacia", "Outros"],
+   tiposEntrega: ["Encomenda", "Carta", "Delivery", "Documento", "Outros"],
 
    /* Tipos da seção Correspondências e avisos.
       Os nomes precisam ser iguais aos modelos de mensagem em whatsapp.js */
@@ -31,8 +29,7 @@ const DADOS = {
       "Boleto do condomínio",
       "Boleto do gás",
       "Boleto Neoenergia",
-      "Aviso do condomínio",
-      "Envelopes"
+      "Aviso do condomínio"
    ],
 
    /* Moradores: apto, nome e telefone (com 55 + DDD).
@@ -53,7 +50,7 @@ const DADOS = {
       { apto: "202", nome: "Nathalia", telefone: "5581998699877" },
       { apto: "203", nome: "David", telefone: "5581999546754" },
       { apto: "203", nome: "Gerson", telefone: "5581997211054" },
-      { apto: "203", nome: "Deyverson", telefone: "5581992996837" },
+      { apto: "203", nome: "Davison", telefone: "5581992996837" },
       { apto: "204", nome: "Wilker", telefone: "5581996154986" },
       { apto: "301", nome: "Clecio", telefone: "5581995474759" },
       { apto: "302", nome: "Dayana", telefone: "5581998384045" },
