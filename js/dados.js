@@ -22,7 +22,7 @@ const DADOS = {
       monta a lista sozinho a partir dos moradores cadastrados abaixo. */
    apartamentos: [],
 
-   tiposEntrega: ["Encomenda", "Carta", "Delivery", "Documento", "Outros"],
+   tiposEntrega: ["Encomenda", "Delivery", "Farmacia", "Outros"],
 
    /* Tipos da seção Correspondências e avisos.
       Os nomes precisam ser iguais aos modelos de mensagem em whatsapp.js */
@@ -31,7 +31,8 @@ const DADOS = {
       "Boleto do condomínio",
       "Boleto do gás",
       "Boleto Neoenergia",
-      "Aviso do condomínio"
+      "Aviso do condomínio",
+      "Envelopes"
    ],
 
    /* Moradores: apto, nome e telefone (com 55 + DDD).
