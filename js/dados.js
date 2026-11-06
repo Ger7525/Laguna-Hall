@@ -107,6 +107,7 @@ const DADOS = {
       { apto: "901", nome: "Caroline", telefone: "5581984472474" },
       { apto: "902", nome: "Gianina", telefone: "5581988261549" },
       { apto: "902", nome: "Gabriel", telefone: "5581997669050" },
+      { apto: "902", nome: "Danielle Sales", telefone: "5584988327883" },
       { apto: "902", nome: "Alice", telefone: "5581994181840" },
       { apto: "903", nome: "Ladjane", telefone: "558196166139" },  // CONFERIR: telefone com 10 dígitos
       { apto: "904", nome: "Luiz Fernando", telefone: "5581982372905" },
@@ -119,6 +120,7 @@ const DADOS = {
       { apto: "1004", nome: "Enio", telefone: "5581988435707" },
       { apto: "1101", nome: "Geofred", telefone: "5581988141245" },
       { apto: "1101", nome: "Tatiana", telefone: "5581987950231" },
+      { apto: "1101", nome: "Yoana Graziella", telefone: "5581985140456" },
       { apto: "1102", nome: "Etiene", telefone: "5581991206752" },
       { apto: "1103", nome: "Debora", telefone: "5581997757073" },
       { apto: "1103", nome: "Géssica", telefone: "5581997892937" },
