@@ -25,6 +25,11 @@
       correspondencias:{ morador: true, titulo: tituloMorador, detalhes: detalhesMorador },
       /* Sem "morador: true" = sem botão de WhatsApp */
       recolhimentos:   { titulo: tituloMorador, detalhes: detalhesMorador },
+      ocorrenciasMoradores: {
+         documento: true,
+         titulo: function (r) { return "Apto " + r.apto + " · " + r.nome; },
+         detalhes: function (r) { return [r.descricao]; }
+      },
       ocorrencias: {
          titulo: function (r) { return r.tipo; },
          detalhes: function (r) { return [r.descricao]; }
@@ -159,10 +164,22 @@
             corpo.appendChild(p);
          });
 
+         if (r.assinatura) {
+            const img = document.createElement("img");
+            img.className = "registro__assinatura";
+            img.src = r.assinatura;
+            img.alt = "Assinatura de " + r.nome;
+            corpo.appendChild(img);
+         }
+
          const acoes = document.createElement("div");
          acoes.className = "registro__acoes";
          if (cfg.morador) {
             acoes.appendChild(botao("WhatsApp", "btn--sucesso", function () { enviar(secao, r); }));
+         }
+         if (cfg.documento) {
+            acoes.appendChild(botao("WhatsApp", "btn--sucesso", function () { enviarOcorrenciaMorador(r); }));
+            acoes.appendChild(botao("PDF", "btn--principal", function () { enviarPdfOcorrencia(r); }));
          }
          acoes.appendChild(botao("Remover", "btn--perigo", function () { remover(secao, r.id); }));
 
@@ -187,6 +204,37 @@
          ? Whats.mensagemCorrespondencia(registro, operador)
          : Whats.mensagemEntrega(registro, operador);
       Whats.abrir(registro.telefone, texto);
+   }
+
+   /* ---------- Ocorrências de moradores (assinatura, mensagem e PDF) ---------- */
+   const pad = Assinatura.iniciar($("ocmor-assinatura"));
+   const destinoOcorrencias = function () { return DADOS.whatsappOcorrencias || DADOS.whatsappRelatorio; };
+
+   $("ocmor-limpar-assinatura").addEventListener("click", pad.limpar);
+   function atualizarContagem() {
+      $("ocmor-contagem").textContent = $("ocmor-descricao").value.length + " / 1000";
+   }
+   $("ocmor-descricao").addEventListener("input", atualizarContagem);
+   $("form-ocorrenciasMoradores").addEventListener("reset", function () {
+      pad.limpar();
+      setTimeout(atualizarContagem, 0);
+   });
+
+   function resultadoPdf(resultado) {
+      if (resultado === "baixado") avisar("PDF gerado. Anexe o arquivo na conversa do WhatsApp.");
+      else if (resultado === "compartilhado") avisar("PDF compartilhado.");
+   }
+
+   function enviarOcorrenciaMorador(r) {
+      Whats.abrir(destinoOcorrencias(), Whats.mensagemOcorrenciaMorador(r, operador));
+   }
+   function enviarPdfOcorrencia(r) {
+      Documentos.enviar(
+         Documentos.ocorrenciaMorador(r, operador),
+         "ocorrencia-apto-" + r.apto + "-" + (r.data || dataHoje()) + ".pdf",
+         Whats.mensagemOcorrenciaMorador(r, operador),
+         destinoOcorrencias()
+      ).then(resultadoPdf);
    }
 
    /* ---------- Formulários de registro ---------- */
@@ -214,6 +262,11 @@
          dados.data = dataHoje();
          dados.porteiro = operador.nome;
       }
+      if (secao === "ocorrenciasMoradores") {
+         dados.data = dataHoje();
+         dados.porteiro = operador.nome;
+         dados.assinatura = pad.imagem();
+      }
       return Object.assign({ id: Date.now() + Math.random(), hora: horaAgora() }, dados);
    }
 
@@ -223,6 +276,11 @@
 
       form.addEventListener("submit", function (ev) {
          ev.preventDefault();
+         if (secao === "ocorrenciasMoradores" && pad.vazio()) {
+            avisar("Peça ao morador para assinar no quadro.");
+            enviarApos = false;
+            return;
+         }
          const registro = coletar(secao, form);
 
          if (secao === "correspondencias" && registro.tipo === TIPO_AVISO && !registro.descricao) {
@@ -238,8 +296,15 @@
          form.reset();
          if (form.classList.contains("formulario-avulso")) fecharAvulso(form);
          avisar("Registro adicionado.");
-         if (enviarApos && SECOES[secao].morador) enviar(secao, registro);
+         const modo = enviarApos;
          enviarApos = false;
+         if (modo) {
+            if (secao === "ocorrenciasMoradores") {
+               if (modo === "pdf") enviarPdfOcorrencia(registro); else enviarOcorrenciaMorador(registro);
+            } else if (SECOES[secao].morador) {
+               enviar(secao, registro);
+            }
+         }
       });
    });
 
@@ -252,7 +317,7 @@
             tel.focus();
             return;
          }
-         enviarApos = true;
+         enviarApos = botaoEnviar.dataset.enviar || "whats";
          if (form.checkValidity()) { form.requestSubmit(); }
          else { enviarApos = false; form.reportValidity(); }
       });
@@ -294,17 +359,32 @@
    $("porteiro-entrando").addEventListener("change", function (e) { plantao.entrando = e.target.value; salvar(); });
 
    /* ---------- Barra de ações ---------- */
-   $("btn-enviar-plantao").addEventListener("click", function () {
+   function plantaoPronto() {
       if (!plantao.saindo || !plantao.entrando) {
          avisar("Informe o porteiro saindo e o entrando antes de enviar.");
          $(plantao.saindo ? "porteiro-entrando" : "porteiro-saindo").focus();
-         return;
+         return false;
       }
       if (plantao.saindo === plantao.entrando) {
          avisar("O porteiro saindo e o entrando não podem ser a mesma pessoa.");
-         return;
+         return false;
       }
+      return true;
+   }
+
+   $("btn-enviar-plantao").addEventListener("click", function () {
+      if (!plantaoPronto()) return;
       Whats.abrir(DADOS.whatsappRelatorio, Whats.mensagemPlantao(plantao, operador));
+   });
+
+   $("btn-enviar-plantao-pdf").addEventListener("click", function () {
+      if (!plantaoPronto()) return;
+      Documentos.enviar(
+         Documentos.plantao(plantao, operador),
+         "plantao-" + plantao.data + ".pdf",
+         "Passagem de plantão – " + DADOS.condominio + " – " + Whats.formatarData(plantao.data),
+         DADOS.whatsappRelatorio
+      ).then(resultadoPdf);
    });
 
    $("btn-limpar").addEventListener("click", function () {

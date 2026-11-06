@@ -1,7 +1,10 @@
-/* Monta as mensagens e abre o WhatsApp. */
+/* Monta as mensagens e abre o WhatsApp.
+   Todas seguem a mesma organização: cabeçalho, blocos com título em negrito
+   e rodapé separados por uma linha. */
 const Whats = (function () {
    "use strict";
 
+   const LINHA = "--------------------------------";
 
    function abrir(telefone, texto) {
       const numero = String(telefone || "").replace(/\D/g, "");
@@ -20,21 +23,38 @@ const Whats = (function () {
       return p ? p.nome : "—";
    }
 
+   function quando(item) {
+      return item.data ? formatarData(item.data) + " às " + item.hora : item.hora;
+   }
+
+   /* ---------- Peças das mensagens ---------- */
+   function cabecalho(titulo) {
+      return "*" + DADOS.condominio.toUpperCase() + "*\n" + titulo + "\n" + LINHA + "\n\n";
+   }
+   function bloco(titulo, linhas) {
+      return "*" + titulo + "*\n" + linhas.filter(Boolean).join("\n") + "\n\n";
+   }
+   function rodape(texto) { return LINHA + "\n" + texto; }
+
+   function blocoRegistro(item, operador) {
+      return bloco("REGISTRO", [
+         "Registrado por: " + (item.porteiro || operador.nome),
+         "Data/Hora: " + quando(item)
+      ]);
+   }
+
    /* ---------- Aviso de entrega (para o morador) ---------- */
    function mensagemEntrega(item, operador) {
-      const qtd = item.qtd || 1;
-      const quando = item.data ? formatarData(item.data) + " às " + item.hora : item.hora;
-
-      let msg = `*AVISO DE ENTREGA*\n`;
-      msg += `*${DADOS.condominio}*\n\n`;
-      msg += `Olá, *${item.nome}* (Apto ${item.apto})!\n`;
-      msg += `Informamos que chegou uma entrega para você na portaria:\n\n`;
-      msg += `*Tipo:* ${item.tipo}\n`;
-      msg += `*Quantidade:* ${qtd} unidade(s)\n`;
-      if (item.descricao) msg += `*Detalhes:* ${item.descricao}\n`;
-      msg += `*Registrado por:* ${item.porteiro || operador.nome}\n`;
-      msg += `*Data/Hora:* ${quando}\n\n`;
-      msg += `Por favor, retire na portaria assim que possível. Tenha um ótimo dia!`;
+      let msg = cabecalho("Aviso de entrega");
+      msg += "Olá, *" + item.nome + "* (Apto " + item.apto + ").\n";
+      msg += "Informamos que chegou uma entrega para você na portaria.\n\n";
+      msg += bloco("DETALHES", [
+         "Tipo: " + item.tipo,
+         "Quantidade: " + (item.qtd || 1) + " unidade(s)",
+         item.descricao ? "Descrição: " + item.descricao : ""
+      ]);
+      msg += blocoRegistro(item, operador);
+      msg += rodape("Por favor, retire na portaria assim que possível. Tenha um ótimo dia!");
       return msg;
    }
 
@@ -43,39 +63,39 @@ const Whats = (function () {
       iguais aos de tiposCorrespondencia em dados.js. */
    const MODELOS_CORRESPONDENCIA = {
       "Carta": {
-         assunto: "AVISO DE CORRESPONDÊNCIA",
+         titulo: "Aviso de correspondência",
          texto: "Informamos que chegou uma carta em seu nome na portaria.",
          unidade: "carta(s)",
          fecho: "Por favor, retire na portaria assim que possível."
       },
       "Boleto do condomínio": {
-         assunto: "BOLETO DO CONDOMÍNIO",
+         titulo: "Boleto do condomínio",
          texto: "Informamos que o boleto do condomínio está disponível na portaria para retirada.",
          unidade: "boleto(s)",
          fecho: "Confira o valor e a data de vencimento no próprio boleto. Em caso de dúvidas, procure a administração."
       },
       "Boleto do gás": {
-         assunto: "BOLETO DO GÁS",
+         titulo: "Boleto do gás",
          texto: "Informamos que chegou na portaria o boleto do gás referente à sua unidade.",
          unidade: "boleto(s)",
          fecho: "Por favor, retire na portaria e confira o valor e o vencimento no próprio boleto."
       },
       "Boleto Neoenergia": {
-         assunto: "BOLETO NEOENERGIA",
+         titulo: "Boleto Neoenergia",
          texto: "Informamos que chegou na portaria a fatura de energia elétrica (Neoenergia) em seu nome.",
          unidade: "fatura(s)",
          fecho: "Por favor, retire na portaria e confira o valor e o vencimento no próprio boleto."
       },
       "Aviso do condomínio": {
-         assunto: "AVISO DO CONDOMÍNIO",
-         texto: "Informamos que há um aviso do condomínio para você:",
+         titulo: "Aviso do condomínio",
+         texto: "Informamos que há um aviso do condomínio para você.",
          aviso: true,
          fecho: "Em caso de dúvidas, procure a administração."
       }
    };
 
    const MODELO_PADRAO = {
-      assunto: "AVISO DE CORRESPONDÊNCIA",
+      titulo: "Aviso de correspondência",
       texto: "Informamos que chegou uma correspondência para você na portaria.",
       unidade: "item(ns)",
       fecho: "Por favor, retire na portaria assim que possível."
@@ -83,73 +103,84 @@ const Whats = (function () {
 
    function mensagemCorrespondencia(item, operador) {
       const modelo = MODELOS_CORRESPONDENCIA[item.tipo] || MODELO_PADRAO;
-      const quando = item.data ? formatarData(item.data) + " às " + item.hora : item.hora;
-
-      let msg = `*${modelo.assunto}*\n`;
-      msg += `*${DADOS.condominio}*\n\n`;
-      msg += `Olá, *${item.nome}* (Apto ${item.apto})!\n`;
-      msg += `${modelo.texto}\n\n`;
+      let msg = cabecalho(modelo.titulo);
+      msg += "Olá, *" + item.nome + "* (Apto " + item.apto + ").\n" + modelo.texto + "\n\n";
       if (modelo.aviso) {
-         msg += `${item.descricao}\n\n`;
+         msg += bloco("AVISO", [item.descricao]);
       } else {
-         msg += `*Tipo:* ${item.tipo}\n`;
-         msg += `*Quantidade:* ${item.qtd || 1} ${modelo.unidade}\n`;
-         if (item.descricao) msg += `*Detalhes:* ${item.descricao}\n`;
+         msg += bloco("DETALHES", [
+            "Tipo: " + item.tipo,
+            "Quantidade: " + (item.qtd || 1) + " " + modelo.unidade,
+            item.descricao ? "Descrição: " + item.descricao : ""
+         ]);
       }
-      msg += `*Registrado por:* ${item.porteiro || operador.nome}\n`;
-      msg += `*Data/Hora:* ${quando}\n\n`;
-      msg += `${modelo.fecho} Tenha um ótimo dia!`;
+      msg += blocoRegistro(item, operador);
+      msg += rodape(modelo.fecho + " Tenha um ótimo dia!");
       return msg;
    }
 
-   /* ---------- Passagem de plantão (relatório completo) ---------- */
-   function secao(titulo, itens, formatar) {
-      let msg = `\n*${titulo} (${itens.length})*\n`;
-      if (!itens.length) return msg + `Nenhum registro.\n`;
-      itens.forEach(function (item, i) {
-         msg += `${i + 1}. ${item.hora} – ${formatar(item)}\n`;
-      });
+   /* ---------- Ocorrência de morador (para a administração) ---------- */
+   function mensagemOcorrenciaMorador(r, operador) {
+      let msg = cabecalho("Ocorrência de morador");
+      msg += bloco("MORADOR", ["Apartamento: " + r.apto, "Nome: " + r.nome]);
+      msg += bloco("OCORRÊNCIA", [r.descricao]);
+      msg += blocoRegistro(r, operador);
+      msg += rodape("Assinatura do morador colhida na portaria.");
       return msg;
+   }
+
+   /* ---------- Passagem de plantão ----------
+      estruturaPlantao() também alimenta o PDF do plantão. */
+   function estruturaPlantao(p) {
+      const un = function (r) { return (r.qtd || 1) + " un."; };
+      const morador = function (r) { return ["Apto " + r.apto, r.nome]; };
+      const defs = [
+         ["ENTREGAS", p.entregas, function (r) { return [morador(r), [r.tipo + " (" + un(r) + ")", r.descricao]]; }],
+         ["ENTREGAS E ENCOMENDAS A RECOLHER", p.recolhimentos, function (r) { return [morador(r), [r.tipo + " (" + un(r) + ")", r.descricao]]; }],
+         ["CORRESPONDÊNCIAS E AVISOS", p.correspondencias, function (r) {
+            const aviso = r.tipo === "Aviso do condomínio";
+            return [morador(r), [aviso ? r.tipo : r.tipo + " (" + un(r) + ")", r.descricao]];
+         }],
+         ["OCORRÊNCIAS DE MORADORES", p.ocorrenciasMoradores, function (r) { return [morador(r), [r.descricao]]; }],
+         ["OCORRÊNCIAS", p.ocorrencias, function (r) { return [[r.tipo], [r.descricao]]; }],
+         ["OBSERVAÇÕES", p.observacoes, function (r) { return [[r.titulo], [r.descricao]]; }],
+         ["PRESTADORES DE SERVIÇO", p.prestadores, function (r) { return [[r.empresa, r.nome], [r.servico]]; }],
+         ["AVISOS", p.avisos, function (r) { return [[r.assunto], ["Para: " + r.destino, r.descricao]]; }]
+      ];
+      return defs.map(function (d) {
+         return {
+            titulo: d[0],
+            itens: (d[1] || []).map(function (r) {
+               const partes = d[2](r);
+               return { hora: r.hora, partes: partes[0], detalhes: partes[1].filter(Boolean), assinatura: r.assinatura || "" };
+            })
+         };
+      });
    }
 
    function mensagemPlantao(p, operador) {
-      let msg = `*PASSAGEM DE PLANTÃO*\n`;
-      msg += `*${DADOS.condominio}*\n\n`;
-      msg += `*Data:* ${formatarData(p.data)}\n`;
-      msg += `*Operador:* ${operador.nome}\n`;
-      msg += `*Porteiro saindo:* ${nomePorteiro(p.saindo)}\n`;
-      msg += `*Porteiro entrando:* ${nomePorteiro(p.entrando)}\n`;
-
-      msg += secao("ENTREGAS", p.entregas, function (e) {
-         return `*Apto ${e.apto}* – ${e.nome} – ${e.tipo} (${e.qtd || 1} un.)` +
-            (e.descricao ? ` – ${e.descricao}` : "");
+      let msg = cabecalho("Passagem de plantão");
+      msg += bloco("DADOS DO PLANTÃO", [
+         "Data: " + formatarData(p.data),
+         "Operador: " + operador.nome,
+         "Porteiro saindo: " + nomePorteiro(p.saindo),
+         "Porteiro entrando: " + nomePorteiro(p.entrando)
+      ]);
+      estruturaPlantao(p).forEach(function (s, i) {
+         const linhas = s.itens.length
+            ? s.itens.map(function (it, n) {
+                 const topo = (n + 1) + ") " + [it.hora].concat(it.partes).join(" | ");
+                 return [topo].concat(it.detalhes.map(function (d) { return "    " + d; })).join("\n");
+              })
+            : ["Nenhum registro."];
+         msg += bloco((i + 1) + ". " + s.titulo + " (" + s.itens.length + ")", linhas);
       });
-      msg += secao("CORRESPONDÊNCIAS E AVISOS", p.correspondencias || [], function (c) {
-         const aviso = c.tipo === "Aviso do condomínio";
-         return `*Apto ${c.apto}* – ${c.nome} – ${c.tipo}` +
-            (aviso ? "" : ` (${c.qtd || 1} un.)`) +
-            (c.descricao ? ` – ${c.descricao}` : "");
-      });
-      msg += secao("ENTREGAS E ENCOMENDAS A RECOLHER", p.recolhimentos || [], function (r) {
-         return `*Apto ${r.apto}* – ${r.nome} – ${r.tipo} (${r.qtd || 1} un.)` +
-            (r.descricao ? ` – ${r.descricao}` : "");
-      });
-      msg += secao("OCORRÊNCIAS", p.ocorrencias, function (o) {
-         return `*${o.tipo}:* ${o.descricao}`;
-      });
-      msg += secao("OBSERVAÇÕES", p.observacoes, function (o) {
-         return `*${o.titulo}:* ${o.descricao}`;
-      });
-      msg += secao("PRESTADORES DE SERVIÇO", p.prestadores, function (s) {
-         return `*${s.empresa}* – ${s.nome} – ${s.servico}`;
-      });
-      msg += secao("AVISOS", p.avisos || [], function (a) {
-         return `*${a.assunto}* (para: ${a.destino}): ${a.descricao}`;
-      });
-
-      msg += `\nBom plantão a todos!`;
+      msg += rodape("Bom plantão a todos!");
       return msg;
    }
 
-   return { abrir, formatarData, nomePorteiro, mensagemEntrega, mensagemCorrespondencia, mensagemPlantao };
+   return {
+      abrir, formatarData, nomePorteiro, estruturaPlantao,
+      mensagemEntrega, mensagemCorrespondencia, mensagemOcorrenciaMorador, mensagemPlantao
+   };
 })();

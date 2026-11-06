@@ -10,25 +10,29 @@ const DADOS = {
       Se ficar vazio, o WhatsApp abre para você escolher o contato. */
    whatsappRelatorio: "",
 
+   /* Número que recebe as ocorrências de moradores (mensagem e PDF).
+      Se ficar vazio, usa o número do relatório acima. */
+   whatsappOcorrencias: "",
+
    /* Porteiros (troque pelos nomes reais) */
    porteiros: [
       { valor: "germano-santos", nome: "Germano Santos" },
-      { valor: "alexandre-florencio", nome: "Alexandre Florencio" },
-      { valor: "luis-carlos", nome: "Luis Carlos" },
-      { valor: "jonas-paulo", nome: "Jonas Paulo" }
+      { valor: "jonas-paulo", nome: "Jonas Paulo" },
+      { valor: "alexandre-florencio", nome: "Alexandre Florêncio" },
+      { valor: "luis-carlos", nome: "Luis Carlos" }
    ],
 
    /* Lista de apartamentos do select. Se ficar vazia ([]), o sistema
       monta a lista sozinho a partir dos moradores cadastrados abaixo. */
    apartamentos: [],
 
-   tiposEntrega: ["Encomenda", "Delivery", "Documento", "Outros"],
+   tiposEntrega: ["Encomenda", "Delivery","Amazon" ,"Mercado Livre" ,"Shopee","Shein","TEMU" ,"Farmacia" ,"Correios","Magazine Luiza" ,"Ferreira Costa" , "Outros"],
 
    /* Tipos da seção Correspondências e avisos.
       Os nomes precisam ser iguais aos modelos de mensagem em whatsapp.js */
    tiposCorrespondencia: [
       "Carta",
-      "Envelopes",
+      "Envelope",
       "Boleto do condomínio",
       "Boleto do gás",
       "Boleto Neoenergia",
@@ -115,7 +119,6 @@ const DADOS = {
       { apto: "1004", nome: "Enio", telefone: "5581988435707" },
       { apto: "1101", nome: "Geofred", telefone: "5581988141245" },
       { apto: "1101", nome: "Tatiana", telefone: "5581987950231" },
-      { apto: "1101", nome: "Yoana", telefone: "5581985140456" },
       { apto: "1102", nome: "Etiene", telefone: "5581991206752" },
       { apto: "1103", nome: "Debora", telefone: "5581997757073" },
       { apto: "1103", nome: "Géssica", telefone: "5581997892937" },

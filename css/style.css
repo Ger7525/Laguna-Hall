@@ -132,7 +132,7 @@ form > .campo + .btn { margin-top: 12px; }
 .campo--linha { flex-direction: row; align-items: center; gap: 10px; }
 .campo--linha select { flex: 1; }
 
-label { color: var(--cor-texto-destaque); font-weight: 700; }
+label, .rotulo { color: var(--cor-texto-destaque); font-weight: 700; }
 
 input, select, textarea {
    width: 100%;
@@ -233,6 +233,30 @@ body.pagina-plantao { padding-bottom: 90px; }
    font-size: 1.3rem;
    color: var(--cor-texto-destaque);
    margin-bottom: 12px;
+}
+
+/* Ocorrências de moradores: assinatura */
+.assinatura {
+   display: block;
+   width: 100%;
+   max-width: 800px;
+   aspect-ratio: 10 / 3;
+   background-color: #FFFFFF;
+   border: 2px solid var(--cor-borda);
+   border-radius: var(--raio-pequeno);
+   cursor: crosshair;
+   touch-action: none;
+}
+.assinatura__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 6px; }
+.dica, .contagem { color: var(--cor-texto-secundario); font-size: 0.85rem; }
+.contagem { text-align: right; }
+.registro__assinatura {
+   display: block;
+   max-width: 220px;
+   max-height: 64px;
+   margin-top: 8px;
+   background-color: #FFFFFF;
+   border-radius: 4px;
 }
 
 /* Lista de registros */
