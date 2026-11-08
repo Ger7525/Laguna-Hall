@@ -129,32 +129,67 @@ const Whats = (function () {
       return msg;
    }
 
+   /* ---------- Ordem e agrupamento por apartamento ---------- */
+   function posicaoPrioridade(apto) {
+      return (DADOS.prioridadeApartamentos || []).map(String).indexOf(String(apto));
+   }
+
+   function compararApto(a, b) {
+      const pa = posicaoPrioridade(a), pb = posicaoPrioridade(b);
+      if (pa >= 0 || pb >= 0) {
+         if (pa < 0) return 1;
+         if (pb < 0) return -1;
+         return pa - pb;
+      }
+      return String(a).localeCompare(String(b), "pt-BR", { numeric: true });
+   }
+
+   /* Junta os registros do mesmo apartamento e ordena os apartamentos.
+      Dentro de cada apartamento, mantém a ordem em que foram registrados. */
+   function agruparPorApto(itens) {
+      const mapa = new Map();
+      itens.forEach(function (r) {
+         const apto = String(r.apto).trim();
+         const chave = apto.toLowerCase();
+         if (!mapa.has(chave)) mapa.set(chave, { apto: apto, itens: [] });
+         mapa.get(chave).itens.push(r);
+      });
+      return Array.from(mapa.values()).sort(function (x, y) { return compararApto(x.apto, y.apto); });
+   }
+
    /* ---------- Passagem de plantão ----------
       estruturaPlantao() também alimenta o PDF do plantão. */
    function estruturaPlantao(p) {
       const un = function (r) { return (r.qtd || 1) + " un."; };
-      const morador = function (r) { return ["Apto " + r.apto, r.nome]; };
+      const tipoQtd = function (r) { return r.tipo + " (" + un(r) + ")"; };
+      const pacote = function (r) { return [[r.nome], [tipoQtd(r), r.descricao]]; };
+      /* [título, lista, como montar cada item, agrupar por apartamento?] */
       const defs = [
-         ["ENTREGAS", p.entregas, function (r) { return [morador(r), [r.tipo + " (" + un(r) + ")", r.descricao]]; }],
-         ["ENTREGAS E ENCOMENDAS A RECOLHER", p.recolhimentos, function (r) { return [morador(r), [r.tipo + " (" + un(r) + ")", r.descricao]]; }],
+         ["ENTREGAS AGUARDANDO RETIRADA", p.entregas, pacote, true],
+         ["ENTREGAS RETIRADAS", p.entregues, function (r) {
+            return [[r.nome], [tipoQtd(r), r.descricao, "Retirado por: " + r.retiradoPor + " às " + r.horaRetirada]];
+         }, true],
+         ["ENTREGAS E ENCOMENDAS A RECOLHER", p.recolhimentos, pacote, true],
          ["CORRESPONDÊNCIAS E AVISOS", p.correspondencias, function (r) {
             const aviso = r.tipo === "Aviso do condomínio";
-            return [morador(r), [aviso ? r.tipo : r.tipo + " (" + un(r) + ")", r.descricao]];
-         }],
-         ["OCORRÊNCIAS DE MORADORES", p.ocorrenciasMoradores, function (r) { return [morador(r), [r.descricao]]; }],
-         ["OCORRÊNCIAS", p.ocorrencias, function (r) { return [[r.tipo], [r.descricao]]; }],
-         ["OBSERVAÇÕES", p.observacoes, function (r) { return [[r.titulo], [r.descricao]]; }],
-         ["PRESTADORES DE SERVIÇO", p.prestadores, function (r) { return [[r.empresa, r.nome], [r.servico]]; }],
-         ["AVISOS", p.avisos, function (r) { return [[r.assunto], ["Para: " + r.destino, r.descricao]]; }]
+            return [[r.nome], [aviso ? r.tipo : tipoQtd(r), r.descricao]];
+         }, true],
+         ["OCORRÊNCIAS DE MORADORES", p.ocorrenciasMoradores, function (r) { return [[r.nome], [r.descricao]]; }, true],
+         ["OCORRÊNCIAS", p.ocorrencias, function (r) { return [[r.tipo], [r.descricao]]; }, false],
+         ["OBSERVAÇÕES", p.observacoes, function (r) { return [[r.titulo], [r.descricao]]; }, false],
+         ["PRESTADORES DE SERVIÇO", p.prestadores, function (r) { return [[r.empresa, r.nome], [r.servico]]; }, false],
+         ["AVISOS", p.avisos, function (r) { return [[r.assunto], ["Para: " + r.destino, r.descricao]]; }, false]
       ];
       return defs.map(function (d) {
-         return {
-            titulo: d[0],
-            itens: (d[1] || []).map(function (r) {
-               const partes = d[2](r);
-               return { hora: r.hora, partes: partes[0], detalhes: partes[1].filter(Boolean), assinatura: r.assinatura || "" };
-            })
+         const lista = d[1] || [];
+         const montar = function (r) {
+            const partes = d[2](r);
+            return { hora: r.hora, partes: partes[0], detalhes: partes[1].filter(Boolean), assinatura: r.assinatura || "" };
          };
+         const grupos = d[3]
+            ? agruparPorApto(lista).map(function (g) { return { rotulo: "Apto " + g.apto, itens: g.itens.map(montar) }; })
+            : [{ rotulo: "", itens: lista.map(montar) }];
+         return { titulo: d[0], total: lista.length, grupos: grupos };
       });
    }
 
@@ -167,20 +202,24 @@ const Whats = (function () {
          "Porteiro entrando: " + nomePorteiro(p.entrando)
       ]);
       estruturaPlantao(p).forEach(function (s, i) {
-         const linhas = s.itens.length
-            ? s.itens.map(function (it, n) {
-                 const topo = (n + 1) + ") " + [it.hora].concat(it.partes).join(" | ");
-                 return [topo].concat(it.detalhes.map(function (d) { return "    " + d; })).join("\n");
-              })
-            : ["Nenhum registro."];
-         msg += bloco((i + 1) + ". " + s.titulo + " (" + s.itens.length + ")", linhas);
+         const linhas = [];
+         if (!s.total) linhas.push("Nenhum registro.");
+         s.grupos.forEach(function (g) {
+            if (g.rotulo) linhas.push("*" + g.rotulo + "* (" + g.itens.length + ")");
+            const recuo = g.rotulo ? "   " : "";
+            g.itens.forEach(function (it, n) {
+               const topo = recuo + (n + 1) + ") " + [it.hora].concat(it.partes).join(" | ");
+               linhas.push([topo].concat(it.detalhes.map(function (d) { return recuo + "    " + d; })).join("\n"));
+            });
+         });
+         msg += bloco((i + 1) + ". " + s.titulo + " (" + s.total + ")", linhas);
       });
       msg += rodape("Bom plantão a todos!");
       return msg;
    }
 
    return {
-      abrir, formatarData, nomePorteiro, estruturaPlantao,
+      abrir, formatarData, nomePorteiro, agruparPorApto, estruturaPlantao,
       mensagemEntrega, mensagemCorrespondencia, mensagemOcorrenciaMorador, mensagemPlantao
    };
 })();

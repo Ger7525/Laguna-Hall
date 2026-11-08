@@ -259,6 +259,55 @@ body.pagina-plantao { padding-bottom: 90px; }
    border-radius: 4px;
 }
 
+/* Grupo por apartamento */
+.grupo {
+   background-color: var(--cor-cartao);
+   border: 1px solid var(--cor-divisoria);
+   border-left: 4px solid var(--azul-eletrico);
+   border-radius: var(--raio-pequeno);
+   padding: 12px;
+}
+.grupo__cabecalho {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: baseline;
+   justify-content: space-between;
+   gap: 8px;
+   padding-bottom: 8px;
+   border-bottom: 1px solid var(--cor-divisoria);
+   font-family: var(--fonte-subtitulo);
+   font-size: 1.3rem;
+   color: var(--cor-texto-destaque);
+}
+.grupo__total { font-family: var(--fonte-texto); font-size: 0.85rem; color: var(--cor-texto-secundario); }
+.grupo__itens { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.grupo .registro { background-color: var(--cor-campo); border-left-width: 3px; }
+#lista-entregues .grupo { border-left-color: var(--verde-tecnologico); }
+
+/* Entregas retiradas */
+.subtitulo-lista {
+   font-family: var(--fonte-subtitulo);
+   font-size: 1.4rem;
+   color: var(--cor-texto-destaque);
+   margin-top: 28px;
+   padding-top: 18px;
+   border-top: 1px solid var(--cor-divisoria);
+}
+.subtitulo-lista .contador { font-size: 0.8rem; }
+#lista-entregues:empty::before { content: "Nenhuma entrega retirada ainda."; }
+#lista-entregues .registro { border-left-color: var(--verde-tecnologico); }
+.retirada {
+   flex-basis: 100%;
+   display: flex;
+   flex-wrap: wrap;
+   align-items: flex-end;
+   gap: 8px;
+   padding-top: 10px;
+   border-top: 1px dashed var(--cor-borda-ativa);
+}
+.retirada .campo { flex: 1 1 240px; }
+.retirada[hidden] { display: none; }
+
 /* Lista de registros */
 .registros { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
 .registros:empty::before {

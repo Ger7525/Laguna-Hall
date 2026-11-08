@@ -132,6 +132,12 @@ const Pdf = (function () {
             (detalhes || []).filter(Boolean).forEach(function (d) { linhas(d, 10, false, 22); });
             y += 6;
          },
+         grupo: function (titulo) {
+            garantir(60);
+            texto(M + 4, y + 12, titulo, 10.5, true, DESTAQUE);
+            traco(M + 4, LARG - M, y + 18, [0.80, 0.86, 0.93], 0.6);
+            y += 26;
+         },
          paragrafo: function (txt, tam) { linhas(txt, tam || 10.5, false, 0); },
          nada: function (txt) { linhas(txt, 10, false, 6, CINZA); y += 4; },
          espaco: function (h) { y += h; },

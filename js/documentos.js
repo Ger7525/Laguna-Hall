@@ -14,11 +14,14 @@ const Documentos = (function () {
          ["Porteiro entrando", Whats.nomePorteiro(p.entrando)]
       ], 2);
       Whats.estruturaPlantao(p).forEach(function (s, i) {
-         d.secao((i + 1) + ". " + s.titulo + " (" + s.itens.length + ")");
-         if (!s.itens.length) d.nada("Nenhum registro.");
-         s.itens.forEach(function (it) {
-            d.registro(it.hora + "  |  " + it.partes.join("  |  "), it.detalhes);
-            if (it.assinatura) d.imagem(it.assinatura, 170, 52, 22);
+         d.secao((i + 1) + ". " + s.titulo + " (" + s.total + ")");
+         if (!s.total) d.nada("Nenhum registro.");
+         s.grupos.forEach(function (g) {
+            if (g.rotulo) d.grupo(g.rotulo + "  ·  " + g.itens.length + (g.itens.length === 1 ? " registro" : " registros"));
+            g.itens.forEach(function (it) {
+               d.registro(it.hora + "  |  " + it.partes.join("  |  "), it.detalhes);
+               if (it.assinatura) d.imagem(it.assinatura, 170, 52, 22);
+            });
          });
          d.espaco(8);
       });

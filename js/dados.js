@@ -18,7 +18,7 @@ const DADOS = {
    porteiros: [
       { valor: "germano-santos", nome: "Germano Santos" },
       { valor: "jonas-paulo", nome: "Jonas Paulo" },
-      { valor: "alexandre-florencio", nome: "Alexandre Florêncio" },
+      { valor: "alexandre-florencio", nome: "Alexandre Florencio" },
       { valor: "luis-carlos", nome: "Luis Carlos" }
    ],
 
@@ -26,13 +26,20 @@ const DADOS = {
       monta a lista sozinho a partir dos moradores cadastrados abaixo. */
    apartamentos: [],
 
-   tiposEntrega: ["Encomenda", "Delivery","Amazon" ,"Mercado Livre" ,"Shopee","Shein","TEMU" ,"Farmacia" ,"Correios","Magazine Luiza" ,"Ferreira Costa" , "Outros"],
+   /* Ordem de exibição nas listas e nos documentos: os apartamentos daqui
+      aparecem primeiro, na ordem em que forem escritos (ex.: ["101", "102"]).
+      Os demais vêm depois, em ordem numérica. Deixe [] para usar só a ordem numérica. */
+   prioridadeApartamentos: [],
+
+   tiposEntrega: ["Encomenda","Delivery","Shopee","Mercado Livre","Amazon", "Magalu", "Ferreira Costa","TEMU", "imile", "Correios","", "Outros"],
 
    /* Tipos da seção Correspondências e avisos.
       Os nomes precisam ser iguais aos modelos de mensagem em whatsapp.js */
    tiposCorrespondencia: [
       "Carta",
-      "Envelope",
+      "Envelopes",
+      "Documentos",
+      "Cartão",
       "Boleto do condomínio",
       "Boleto do gás",
       "Boleto Neoenergia",
@@ -107,7 +114,6 @@ const DADOS = {
       { apto: "901", nome: "Caroline", telefone: "5581984472474" },
       { apto: "902", nome: "Gianina", telefone: "5581988261549" },
       { apto: "902", nome: "Gabriel", telefone: "5581997669050" },
-      { apto: "902", nome: "Danielle Sales", telefone: "5584988327883" },
       { apto: "902", nome: "Alice", telefone: "5581994181840" },
       { apto: "903", nome: "Ladjane", telefone: "558196166139" },  // CONFERIR: telefone com 10 dígitos
       { apto: "904", nome: "Luiz Fernando", telefone: "5581982372905" },
@@ -120,7 +126,7 @@ const DADOS = {
       { apto: "1004", nome: "Enio", telefone: "5581988435707" },
       { apto: "1101", nome: "Geofred", telefone: "5581988141245" },
       { apto: "1101", nome: "Tatiana", telefone: "5581987950231" },
-      { apto: "1101", nome: "Yoana Graziella", telefone: "5581985140456" },
+      { apto: "1101", nome: "Yoana", telefone: "5581985140456" },
       { apto: "1102", nome: "Etiene", telefone: "5581991206752" },
       { apto: "1103", nome: "Debora", telefone: "5581997757073" },
       { apto: "1103", nome: "Géssica", telefone: "5581997892937" },
