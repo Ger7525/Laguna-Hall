@@ -4,7 +4,7 @@ const Pdf = (function () {
    "use strict";
 
    const LARG = 595.28, ALT = 841.89, M = 48;           // A4 em pontos
-   const AZUL = [0.03, 0.10, 0.22], DESTAQUE = [0.03, 0.40, 0.85];
+   const AZUL = [0.047, 0.055, 0.071], DESTAQUE = [0.573, 0.251, 0.055];
    const TEXTO = [0.10, 0.13, 0.18], CINZA = [0.42, 0.46, 0.52];
    const MAPA = { 0x2013: 0x96, 0x2014: 0x97, 0x2022: 0x95, 0x2018: 0x91, 0x2019: 0x92, 0x201C: 0x93, 0x201D: 0x94, 0x2026: 0x85 };
 
@@ -102,7 +102,7 @@ const Pdf = (function () {
          faixa: function (titulo, sub) {
             retangulo(0, 0, LARG, 78, AZUL);
             texto(M, 36, titulo, 17, true, [1, 1, 1]);
-            texto(M, 58, sub, 11, false, [0.66, 0.72, 0.79]);
+            texto(M, 58, sub, 11, false, [0.61, 0.64, 0.69]);
             y = 78 + 24;
          },
          campos: function (pares, colunas) {
@@ -121,7 +121,7 @@ const Pdf = (function () {
          },
          secao: function (titulo) {
             garantir(70);
-            retangulo(M, y, LARG - 2 * M, 22, [0.90, 0.94, 0.98]);
+            retangulo(M, y, LARG - 2 * M, 22, [0.96, 0.95, 0.92]);
             retangulo(M, y, 3, 22, DESTAQUE);
             texto(M + 12, y + 15, titulo, 10.5, true, AZUL);
             y += 32;
@@ -135,7 +135,7 @@ const Pdf = (function () {
          grupo: function (titulo) {
             garantir(60);
             texto(M + 4, y + 12, titulo, 10.5, true, DESTAQUE);
-            traco(M + 4, LARG - M, y + 18, [0.80, 0.86, 0.93], 0.6);
+            traco(M + 4, LARG - M, y + 18, [0.84, 0.80, 0.72], 0.6);
             y += 26;
          },
          paragrafo: function (txt, tam) { linhas(txt, tam || 10.5, false, 0); },

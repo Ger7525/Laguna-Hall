@@ -7,15 +7,15 @@ const Assinatura = (function () {
       let desenhando = false, vazio = true, ultimo = null;
 
       function fundo() {
-         ctx.fillStyle = "#FFFFFF";
+         ctx.fillStyle = "#F5F2EB";
          ctx.fillRect(0, 0, canvas.width, canvas.height);
-         ctx.strokeStyle = "#C8D0DA";           /* linha-guia */
+         ctx.strokeStyle = "#C9C4B8";           /* linha-guia */
          ctx.lineWidth = 2;
          ctx.beginPath();
          ctx.moveTo(40, canvas.height * 0.78);
          ctx.lineTo(canvas.width - 40, canvas.height * 0.78);
          ctx.stroke();
-         ctx.strokeStyle = "#0A1F44";           /* traço da caneta */
+         ctx.strokeStyle = "#111111";           /* traço da caneta */
          ctx.lineWidth = 4;
          ctx.lineCap = "round";
          ctx.lineJoin = "round";

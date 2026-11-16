@@ -31,7 +31,7 @@ const DADOS = {
       Os demais vêm depois, em ordem numérica. Deixe [] para usar só a ordem numérica. */
    prioridadeApartamentos: [],
 
-   tiposEntrega: ["Encomenda","Delivery","Shopee","Mercado Livre","Amazon", "Magalu", "Ferreira Costa","TEMU", "imile", "Correios","", "Outros"],
+   tiposEntrega: ["Encomenda","Delivery","Shopee","Mercado Livre","Amazon", "Magalu", "Ferreira Costa","TEMU", "imile", "Correios","Netshoes","Shein","Magazine Luiza", "riachuelo", "AliExpress", "Outros"],
 
    /* Tipos da seção Correspondências e avisos.
       Os nomes precisam ser iguais aos modelos de mensagem em whatsapp.js */
