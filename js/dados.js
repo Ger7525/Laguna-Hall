@@ -14,6 +14,25 @@ const DADOS = {
       Se ficar vazio, usa o número do relatório acima. */
    whatsappOcorrencias: "",
 
+   /* Número que recebe o aviso de prestador de serviço no condomínio
+      (ex.: síndico ou administração). Se ficar vazio, usa o número do
+      relatório acima; se este também estiver vazio, o WhatsApp abre para
+      você escolher o contato. */
+   whatsappPrestadores: "",
+
+   /* Mensagens: emoji discreto no título (true/false) */
+   usarEmojis: true,
+
+   /* Tamanho máximo do texto no link do WhatsApp (já codificado).
+      Acima disso o plantão é enviado em resumo, para anexar o PDF. */
+   limiteWhatsapp: 4000,
+
+   /* Rodapé dos avisos de entrega e correspondência. Deixe vazio ("") para não mostrar.
+      Ex.: horarioRetirada: "Seg a sex, 8h às 22h"
+           lembreteRetirada: "Leve um documento com foto." */
+   horarioRetirada: "",
+   lembreteRetirada: "",
+
    /* Porteiros (troque pelos nomes reais) */
    porteiros: [
       { valor: "germano-santos", nome: "Germano Santos" },

@@ -314,10 +314,17 @@
                   <input type="text" id="prestador-nome" name="nome" placeholder="Nome do prestador" required>
                </div>
                <div class="campo">
+                  <label for="prestador-apto">Apto atendido (opcional)</label>
+                  <select id="prestador-apto" name="apto"><option value="">Nenhum / área comum</option></select>
+               </div>
+               <div class="campo">
                   <label for="prestador-servico">Tipo de serviço</label>
                   <textarea id="prestador-servico" name="servico" maxlength="1000" rows="3" placeholder="Tipo de serviço" required></textarea>
                </div>
-               <button type="submit" class="btn btn--principal">Registrar serviço</button>
+               <div class="acoes">
+                  <button type="submit" class="btn btn--principal">Registrar serviço</button>
+                  <button type="button" id="btn-prestador-enviar" class="btn btn--sucesso" data-enviar>Registrar e avisar via WhatsApp</button>
+               </div>
             </form>
             <ul id="lista-prestadores" class="registros" aria-live="polite"></ul>
          </section>

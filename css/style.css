@@ -7,19 +7,19 @@
    ========================================== */
 
 :root {
-   /* Paleta enviada */
-   --cor-fundo-principal: #0c0e12;
-   --cor-fundo-secundario: #161a22;
-   --cor-papel-xilo: #f5f2eb;
-   --cor-tinta-nanquim: #111111;
-   --cor-destaque-terminal: #00e676;
-   --cor-destaque-sertao: #d97706;
-   --cor-destaque-sertao-escuro: #92400e;
-   --cor-texto-principal: #f3f4f6;
-   --cor-texto-secundario: #9ca3af;
-   --cor-texto-invertido: #0c0e12;
-   --cor-texto-sobre-papel: #3b3a36;
-   --cor-borda-sutil: #2a303c;
+   /* Paleta clara (padrão sistema de condomínio) */
+   --cor-fundo-principal: #EEF2F7;      /* fundo da página */
+   --cor-fundo-secundario: #FFFFFF;     /* cartões */
+   --cor-superficie: #F7F9FC;           /* áreas internas (grupos, listas) */
+   --cor-primaria: #1E5AA8;             /* azul institucional */
+   --cor-primaria-hover: #174A8C;
+   --cor-primaria-escura: #12365F;      /* azul-marinho: títulos, PDF, aviso */
+   --cor-sucesso: #1E8E4E;              /* verde: confirmar / WhatsApp */
+   --cor-sucesso-hover: #17773F;
+   --cor-texto-principal: #1B2A3D;
+   --cor-texto-secundario: #5B6B7F;
+   --cor-texto-invertido: #FFFFFF;      /* texto sobre botões coloridos */
+   --cor-borda-sutil: #CBD5E1;
 
    /* Fontes */
    --fonte-titulo: 'Space Grotesk', system-ui, sans-serif;
@@ -29,34 +29,33 @@
    --fonte-texto: var(--fonte-corpo);
 
    /* Papéis das cores no sistema */
-   --cor-fundo: var(--cor-fundo-principal);        /* fundo da página */
-   --cor-cartao: var(--cor-fundo-principal);       /* áreas internas (grupos, formulário extra) */
-   --cor-campo: var(--cor-fundo-principal);        /* campos de formulário */
+   --cor-fundo: var(--cor-fundo-principal);
+   --cor-cartao: var(--cor-superficie);            /* áreas internas (grupos, formulário extra) */
+   --cor-campo: #FFFFFF;                           /* campos de formulário */
    --cor-texto: var(--cor-texto-principal);
-   --cor-texto-destaque: var(--cor-destaque-terminal);
-   --verde-tecnologico: var(--cor-destaque-terminal);
+   --cor-texto-destaque: var(--cor-primaria);
    --cor-borda: var(--cor-borda-sutil);
-   --cor-borda-destaque: var(--cor-borda-sutil);
-   --cor-borda-ativa: var(--cor-destaque-terminal);
-   --cor-divisoria: var(--cor-borda-sutil);
+   --cor-borda-destaque: #D5DEEA;
+   --cor-borda-ativa: var(--cor-primaria);
+   --cor-divisoria: #E1E8F0;
 
    /* Botões (o texto dos botões usa --cor-texto-invertido) */
-   --botao-principal: var(--cor-destaque-sertao);
-   --botao-principal-hover: var(--cor-destaque-sertao);
-   --botao-secundario: var(--cor-borda-sutil);
-   --botao-secundario-hover: var(--cor-borda-sutil);
-   --botao-sucesso: var(--cor-destaque-terminal);
-   --botao-sucesso-hover: var(--cor-destaque-terminal);
-   --botao-perigo: #DC3545;
-   --botao-perigo-hover: #B92335;
+   --botao-principal: var(--cor-primaria);
+   --botao-principal-hover: var(--cor-primaria-hover);
+   --botao-secundario: #E4EAF2;
+   --botao-secundario-hover: #D6DFEA;
+   --botao-sucesso: var(--cor-sucesso);
+   --botao-sucesso-hover: var(--cor-sucesso-hover);
+   --botao-perigo: #C8323F;
+   --botao-perigo-hover: #A82733;
 
    /* Status */
-   --status-erro: #FF6B6B;
+   --status-erro: #C8323F;
 
    /* Efeitos */
-   --brilho-azul: 0 8px 24px rgba(0, 0, 0, 0.35);
-   --brilho-verde: 0 0 14px rgba(0, 230, 118, 0.25);
-   --brilho-foco: 0 0 0 3px rgba(0, 230, 118, 0.25);
+   --brilho-azul: 0 1px 3px rgba(18, 54, 95, 0.08), 0 6px 18px rgba(18, 54, 95, 0.07);
+   --brilho-verde: 0 1px 3px rgba(30, 142, 78, 0.12), 0 6px 18px rgba(30, 142, 78, 0.10);
+   --brilho-foco: 0 0 0 3px rgba(30, 90, 168, 0.22);
 
    /* Formas */
    --raio-pequeno: 6px;
@@ -95,6 +94,7 @@ img { display: block; max-width: 100%; height: auto; }
 .logo { width: min(220px, 60vw); }
 .cabecalho h1 {
    font-family: var(--fonte-titulo);
+   color: var(--cor-primaria-escura);
    font-size: clamp(1.5rem, 5vw, 2.4rem);
    text-align: center;
    line-height: 1.3;
@@ -119,6 +119,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .cartao h2 {
    font-family: var(--fonte-subtitulo);
+   color: var(--cor-primaria-escura);
    font-size: 1.35rem;
    line-height: 1.3;
    text-align: center;
@@ -153,7 +154,7 @@ input, select, textarea {
 textarea { resize: vertical; min-height: 70px; }
 input::placeholder, textarea::placeholder { color: var(--cor-texto-secundario); opacity: 0.8; }
 select option { color: var(--cor-texto); background-color: var(--cor-campo); }
-input[type="date"] { color-scheme: dark; }
+input[type="date"] { color-scheme: light; }
 
 input:focus-visible, select:focus-visible, textarea:focus-visible {
    outline: none;
@@ -178,12 +179,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
    cursor: pointer;
    transition: var(--transicao);
 }
-.btn:hover { filter: brightness(1.12); }
+.btn:hover { filter: none; }
 .btn:focus-visible { outline: 2px solid var(--cor-borda-ativa); outline-offset: 2px; }
 .btn--cheio { width: 100%; margin-top: 20px; }
 .btn--principal { background-color: var(--botao-principal); }
 .btn--principal:hover { background-color: var(--botao-principal-hover); }
-.btn--secundario { background-color: var(--botao-secundario); color: var(--cor-texto-principal); }
+.btn--secundario { background-color: var(--botao-secundario); color: var(--cor-texto-principal); border-color: var(--cor-borda); }
 .btn--secundario:hover { background-color: var(--botao-secundario-hover); }
 .btn--sucesso { background-color: var(--botao-sucesso); }
 .btn--sucesso:hover { background-color: var(--botao-sucesso-hover); }
@@ -215,7 +216,7 @@ body.pagina-plantao { padding-bottom: 90px; }
    justify-content: space-between;
    gap: 12px;
    background-color: var(--cor-fundo-secundario);
-   border: 2px solid var(--verde-tecnologico);
+   border: 2px solid var(--cor-sucesso);
    border-radius: var(--raio-medio);
    box-shadow: var(--brilho-verde);
    padding: 14px 20px;
@@ -224,7 +225,7 @@ body.pagina-plantao { padding-bottom: 90px; }
 .operador__nome {
    font-family: var(--fonte-titulo);
    font-size: clamp(1.1rem, 4vw, 1.6rem);
-   color: var(--verde-tecnologico);
+   color: var(--cor-primaria-escura);
 }
 
 .grade { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: stretch; }
@@ -250,7 +251,7 @@ body.pagina-plantao { padding-bottom: 90px; }
    width: 100%;
    max-width: 800px;
    aspect-ratio: 10 / 3;
-   background-color: var(--cor-papel-xilo);
+   background-color: #FFFFFF;
    border: 2px solid var(--cor-borda);
    border-radius: var(--raio-pequeno);
    cursor: crosshair;
@@ -264,7 +265,8 @@ body.pagina-plantao { padding-bottom: 90px; }
    max-width: 220px;
    max-height: 64px;
    margin-top: 8px;
-   background-color: var(--cor-papel-xilo);
+   background-color: #FFFFFF;
+   border: 1px solid var(--cor-borda);
    border-radius: 4px;
 }
 
@@ -272,7 +274,7 @@ body.pagina-plantao { padding-bottom: 90px; }
 .grupo {
    background-color: var(--cor-cartao);
    border: 1px solid var(--cor-divisoria);
-   border-left: 4px solid var(--cor-destaque-sertao);
+   border-left: 4px solid var(--cor-primaria);
    border-radius: var(--raio-pequeno);
    padding: 12px;
 }
@@ -286,25 +288,25 @@ body.pagina-plantao { padding-bottom: 90px; }
    border-bottom: 1px solid var(--cor-divisoria);
    font-family: var(--fonte-subtitulo);
    font-size: 1.05rem;
-   color: var(--cor-destaque-sertao);
+   color: var(--cor-primaria);
 }
 .grupo__total { font-family: var(--fonte-texto); font-size: 0.85rem; color: var(--cor-texto-secundario); }
 .grupo__itens { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
 .grupo .registro { border-left-width: 3px; }
-#lista-entregues .grupo { border-left-color: var(--verde-tecnologico); }
+#lista-entregues .grupo { border-left-color: var(--cor-sucesso); }
 
 /* Entregas retiradas */
 .subtitulo-lista {
    font-family: var(--fonte-subtitulo);
    font-size: 1.1rem;
-   color: var(--cor-destaque-sertao);
+   color: var(--cor-primaria);
    margin-top: 28px;
    padding-top: 18px;
    border-top: 1px solid var(--cor-divisoria);
 }
 .subtitulo-lista .contador { font-size: 0.8rem; }
 #lista-entregues:empty::before { content: "Nenhuma entrega retirada ainda."; }
-#lista-entregues .registro { border-left-color: var(--verde-tecnologico); }
+#lista-entregues .registro { border-left-color: var(--cor-sucesso); }
 .retirada {
    flex-basis: 100%;
    display: flex;
@@ -332,13 +334,13 @@ body.pagina-plantao { padding-bottom: 90px; }
    gap: 10px;
    background-color: var(--cor-cartao);
    border: 1px solid var(--cor-divisoria);
-   border-left: 4px solid var(--cor-destaque-sertao);
+   border-left: 4px solid var(--cor-primaria);
    border-radius: var(--raio-pequeno);
    padding: 10px 12px;
 }
 .registro__corpo { flex: 1 1 200px; min-width: 0; overflow-wrap: anywhere; }
-.registro__corpo p { color: var(--cor-texto-sobre-papel); }
-.registro__hora { margin-left: 8px; font-weight: 400; color: var(--cor-destaque-sertao-escuro); font-size: 0.85rem; }
+.registro__corpo p { color: var(--cor-texto-secundario); }
+.registro__hora { margin-left: 8px; font-weight: 400; color: var(--cor-primaria); font-size: 0.85rem; }
 .registro__acoes { display: flex; gap: 6px; align-items: flex-start; flex-wrap: wrap; }
 
 .contador {
@@ -352,8 +354,8 @@ body.pagina-plantao { padding-bottom: 90px; }
    line-height: 1.6;
    text-align: center;
    vertical-align: middle;
-   background-color: var(--cor-destaque-sertao-escuro);
-   color: var(--cor-texto-principal);
+   background-color: var(--cor-primaria);
+   color: #FFFFFF;
    border-radius: 999px;
 }
 
@@ -367,7 +369,7 @@ body.pagina-plantao { padding-bottom: 90px; }
    justify-content: center;
    gap: 12px;
    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-   background-color: rgba(22, 26, 34, 0.96);
+   background-color: rgba(255, 255, 255, 0.97);
    border-top: 1px solid var(--cor-borda-destaque);
    box-shadow: var(--brilho-azul);
 }
@@ -382,9 +384,9 @@ body.pagina-plantao { padding-bottom: 90px; }
    z-index: 20;
    max-width: calc(100% - 32px);
    text-align: center;
-   background-color: var(--cor-papel-xilo);
-   color: var(--cor-tinta-nanquim);
-   border: 1px solid var(--cor-destaque-sertao);
+   background-color: var(--cor-primaria-escura);
+   color: #FFFFFF;
+   border: 1px solid var(--cor-primaria-escura);
    border-radius: var(--raio-pequeno);
    box-shadow: var(--brilho-azul);
    padding: 10px 16px;
@@ -417,12 +419,14 @@ body.pagina-plantao { padding-bottom: 90px; }
    * { transition: none !important; }
 }
 
-/* Lista de registros: "papel" com tinta */
+/* Lista de registros */
 .registro {
-   background-color: var(--cor-papel-xilo);
-   color: var(--cor-tinta-nanquim);
-   border-color: var(--cor-papel-xilo);
+   background-color: #FFFFFF;
+   color: var(--cor-texto-principal);
+   border-top-color: var(--cor-divisoria);
+   border-right-color: var(--cor-divisoria);
+   border-bottom-color: var(--cor-divisoria);
 }
-.registro label { color: var(--cor-texto-sobre-papel); }
-.registro .retirada { border-top-color: var(--cor-destaque-sertao); }
-.registro input { background-color: #FFFFFF; color: var(--cor-tinta-nanquim); border-color: #C9C4B8; }
+.registro label { color: var(--cor-texto-secundario); }
+.registro .retirada { border-top-color: var(--cor-primaria); }
+.registro input { background-color: #FFFFFF; color: var(--cor-texto-principal); border-color: var(--cor-borda); }

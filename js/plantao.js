@@ -29,7 +29,7 @@
       /* agrupar: true = um cartão por apartamento, em ordem (ver prioridadeApartamentos em dados.js) */
       entregas:        { agrupar: true, morador: true, entregar: true, titulo: tituloMorador, detalhes: detalhesMorador,
                          tituloItem: tituloItem, detalhesItem: detalhesItem },
-      entregues:       { agrupar: true, desfazer: true, titulo: tituloMorador, detalhes: detalhesEntregue,
+      entregues:       { agrupar: true, desfazer: true, avisoRetirada: true, titulo: tituloMorador, detalhes: detalhesEntregue,
                          tituloItem: tituloItem, detalhesItem: function (r) { return detalhesItem(r).concat([retiradaLinha(r)]); } },
       correspondencias:{ agrupar: true, morador: true, titulo: tituloMorador, detalhes: detalhesMorador,
                          tituloItem: tituloItem, detalhesItem: detalhesItem },
@@ -52,9 +52,14 @@
          titulo: function (r) { return r.titulo; },
          detalhes: function (r) { return [r.descricao]; }
       },
+      /* "prestador: true" = botões de WhatsApp (chegada) e de saída do prestador */
       prestadores: {
+         prestador: true,
          titulo: function (r) { return r.empresa; },
-         detalhes: function (r) { return ["Prestador: " + r.nome, "Serviço: " + r.servico]; }
+         detalhes: function (r) {
+            return ["Prestador: " + r.nome, r.apto ? "Apto atendido: " + r.apto : "", "Serviço: " + r.servico,
+                    r.horaSaida ? "Saída: " + r.horaSaida : ""].filter(Boolean);
+         }
       },
       avisos: {
          titulo: function (r) { return r.assunto; },
@@ -198,6 +203,17 @@
       if (cfg.desfazer) {
          acoes.appendChild(botao("Desfazer", "btn--secundario", function () { desfazerEntrega(r); }));
       }
+      if (cfg.prestador) {
+         acoes.appendChild(botao("WhatsApp", "btn--sucesso", function () { enviarPrestador(r); }));
+         if (r.horaSaida) {
+            acoes.appendChild(botao("WhatsApp saída", "btn--sucesso", function () { enviarSaidaPrestador(r); }));
+         } else {
+            acoes.appendChild(botao("Saída e avisar", "btn--principal", function () { registrarSaida(r); }));
+         }
+      }
+      if (cfg.avisoRetirada) {
+         acoes.appendChild(botao("WhatsApp", "btn--sucesso", function () { enviarRetirada(r); }));
+      }
       if (cfg.documento) {
          acoes.appendChild(botao("WhatsApp", "btn--sucesso", function () { enviarOcorrenciaMorador(r); }));
          acoes.appendChild(botao("PDF", "btn--principal", function () { enviarPdfOcorrencia(r); }));
@@ -272,34 +288,37 @@
       entrada.autocomplete = "off";
       campo.append(rotulo, entrada);
 
-      function confirmar() {
+      function confirmar(avisarMorador) {
          const nome = entrada.value.trim();
          if (!nome) { avisar("Informe o nome de quem retirou."); entrada.focus(); return; }
-         entregarItem(r, nome);
+         entregarItem(r, nome, avisarMorador);
       }
       entrada.addEventListener("keydown", function (e) {
-         if (e.key === "Enter") { e.preventDefault(); confirmar(); }
+         if (e.key === "Enter") { e.preventDefault(); confirmar(false); }
       });
 
       caixa.append(
          campo,
-         botao("Confirmar", "btn--sucesso", confirmar),
+         botao("Confirmar", "btn--principal", function () { confirmar(false); }),
+         botao("Confirmar e avisar morador", "btn--sucesso", function () { confirmar(true); }),
          botao("Cancelar", "btn--secundario", function () { entrada.value = ""; caixa.hidden = true; })
       );
       return caixa;
    }
 
-   function entregarItem(r, nome) {
+   function entregarItem(r, nome, avisarMorador) {
       plantao.entregas = plantao.entregas.filter(function (x) { return x.id !== r.id; });
-      plantao.entregues.push(Object.assign({}, r, {
+      const item = Object.assign({}, r, {
          retiradoPor: nome,
          dataRetirada: dataHoje(),
          horaRetirada: horaAgora()
-      }));
+      });
+      plantao.entregues.push(item);
       salvar();
       desenhar("entregas");
       desenhar("entregues");
       avisar("Entrega registrada como retirada.");
+      if (avisarMorador) enviarRetirada(item);
    }
 
    function desfazerEntrega(r) {
@@ -321,6 +340,30 @@
          ? Whats.mensagemCorrespondencia(registro, operador)
          : Whats.mensagemEntrega(registro, operador);
       Whats.abrir(registro.telefone, texto);
+   }
+
+   /* ---------- Aviso de retirada para o morador ---------- */
+   function enviarRetirada(r) {
+      Whats.abrir(r.telefone, Whats.mensagemRetirada(r, operador));
+   }
+
+   /* ---------- Prestador de serviço: chegada e saída por WhatsApp ---------- */
+   function destinoPrestadores() { return DADOS.whatsappPrestadores || DADOS.whatsappRelatorio; }
+   function enviarPrestador(r) {
+      Whats.abrir(destinoPrestadores(), Whats.mensagemPrestador(r, operador));
+   }
+   function enviarSaidaPrestador(r) {
+      Whats.abrir(destinoPrestadores(), Whats.mensagemPrestadorSaida(r, operador));
+   }
+   function registrarSaida(r) {
+      const reg = plantao.prestadores.find(function (x) { return x.id === r.id; });
+      if (!reg) return;
+      reg.horaSaida = horaAgora();
+      reg.dataSaida = dataHoje();
+      salvar();
+      desenhar("prestadores");
+      avisar("Saída registrada.");
+      enviarSaidaPrestador(reg);
    }
 
    /* ---------- Ocorrências de moradores (assinatura, mensagem e PDF) ---------- */
@@ -379,6 +422,10 @@
          dados.data = dataHoje();
          dados.porteiro = operador.nome;
       }
+      if (secao === "prestadores") {
+         dados.data = dataHoje();
+         dados.porteiro = operador.nome;
+      }
       if (secao === "ocorrenciasMoradores") {
          dados.data = dataHoje();
          dados.porteiro = operador.nome;
@@ -418,6 +465,8 @@
          if (modo) {
             if (secao === "ocorrenciasMoradores") {
                if (modo === "pdf") enviarPdfOcorrencia(registro); else enviarOcorrenciaMorador(registro);
+            } else if (secao === "prestadores") {
+               enviarPrestador(registro);
             } else if (SECOES[secao].morador) {
                enviar(secao, registro);
             }
@@ -491,7 +540,12 @@
 
    $("btn-enviar-plantao").addEventListener("click", function () {
       if (!plantaoPronto()) return;
-      Whats.abrir(DADOS.whatsappRelatorio, Whats.mensagemPlantao(plantao, operador));
+      let texto = Whats.mensagemPlantao(plantao, operador);
+      if (!Whats.cabe(texto)) {
+         texto = Whats.mensagemPlantao(plantao, operador, true);
+         avisar("Plantão extenso: enviado o resumo. Envie também o PDF.");
+      }
+      Whats.abrir(DADOS.whatsappRelatorio, texto);
    });
 
    $("btn-enviar-plantao-pdf").addEventListener("click", function () {
