@@ -50,7 +50,7 @@ const DADOS = {
       Os demais vêm depois, em ordem numérica. Deixe [] para usar só a ordem numérica. */
    prioridadeApartamentos: [],
 
-   tiposEntrega: ["Encomenda","Delivery","Shopee","Mercado Livre","Amazon", "Magalu", "Ferreira Costa","TEMU", "imile", "Correios","Netshoes","Shein","Magazine Luiza", "riachuelo", "AliExpress", "Outros"],
+   tiposEntrega: ["Encomenda","Delivery","Shopee","Mercado Livre","Amazon", "Magalu", "Ferreira Costa","TEMU", "imile", "Correios","Netshoes","Shein","Magazine Luiza", "riachuelo", "AliExpress", "Farmácia" "Outros"],
 
    /* Tipos da seção Correspondências e avisos.
       Os nomes precisam ser iguais aos modelos de mensagem em whatsapp.js */
@@ -112,8 +112,7 @@ const DADOS = {
       { apto: "602", nome: "Suhelen", telefone: "5581985768399" },
       { apto: "603", nome: "Raissa", telefone: "5581999064865" },
       { apto: "604", nome: "Marcilia", telefone: "5581997161145" },
-      { apto: "701", nome: "Emanuel", telefone: "5581992785516" },
-      { apto: "701", nome: "Shirlene", telefone: "5581988541669" },
+      { apto: "701", nome: "D'Angelo Tenório", telefone: "5581988293987" },
       { apto: "702", nome: "Danilo Brun", telefone: "5581979139104" },
       { apto: "702", nome: "Daniel Brun", telefone: "5581981033340" },
       { apto: "702", nome: "Eudenice (Nice)", telefone: "5581981156868" },
